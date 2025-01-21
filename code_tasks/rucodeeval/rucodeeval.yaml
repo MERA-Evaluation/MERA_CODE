@@ -1,11 +1,16 @@
-include: ../custom_generate_task.yaml
-tag:
-  - mera
-  - mera_gen
-  - mera_all
 task: rucodeeval
 dataset_name: rucodeeval
+dataset_path: MERA-evaluation/MERA
+output_type: generate_until
+
 training_split: null
+test_split: test
+fewshot_delimiter: "\n\n"
+target_delimiter: " "
+should_decontaminate: false
+doc_to_choice: null
+num_fewshot: null
+
 repeats: 10
 fewshot_config:
   sampler: !function ../custom_samplers.FewshotSampler  # processes no instruction doc and changes doc_to_text
@@ -14,7 +19,8 @@ fewshot_config:
 # ruHumanEval does not use targets in shots
 # LM is required to generate func continuation
 doc_to_target: "{{meta['canonical_solution']}}"
-num_fewshot: null
+doc_to_text: "{{instruction.format(**inputs).strip() if inputs is mapping else instruction.format(inputs=inputs).strip()}}"
+
 generation_kwargs:
   do_sample: false
   until:
