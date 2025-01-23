@@ -1,0 +1,30 @@
+dataset_path: data
+dataset_name: unit_tests
+task: my_unit_tests
+training_split: train
+validation_split: val
+test_split: val
+fewshot_split: train
+output_type: generate_until
+doc_to_text: !function utils.doc_to_text
+doc_to_target: "test_func"
+process_results: !function utils.process_results
+metric_list:
+  - metric: code_bleu
+    aggregation: mean
+    higher_is_better: true
+  - metric: dataflow_match
+    aggregation: mean
+    higher_is_better: true
+  - metric: syntax_match
+    aggregation: mean
+    higher_is_better: true
+generation_kwargs:
+  do_sample: false
+  max_length: input_ids.shape[1] + 512
+  until:
+    - tokenizer.eos_token_id
+repeats: 1
+num_fewshot: null
+metadata:
+  version: 0.1
