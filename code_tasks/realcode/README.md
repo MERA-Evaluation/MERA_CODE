@@ -108,7 +108,7 @@ lm_eval \
   --trust_remote_code \
   --gen_kwargs max_tokens=1024 \
   --log_samples \
-  --output_path data/out -w \
+  --output_path data/out \
   --include_path=./code_tasks
 ```
 
@@ -125,7 +125,7 @@ lm_eval \
   --trust_remote_code \
   --gen_kwargs max_tokens=1024 \
   --log_samples \
-  --output_path data/out -w \
+  --output_path data/out \
   --include_path=./code_tasks
 ```
 
