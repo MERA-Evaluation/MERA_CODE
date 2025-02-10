@@ -31,17 +31,18 @@ MIT License
 Before running the evaluation, ensure that your environment is set up correctly.
 
 ### Prerequisites
-- Python 3.8 or higher.
+- Python 3.9 or higher.
 - [Conda](https://docs.conda.io/en/latest/) for managing environments.
 - A running instance of the VLLM server.
 - Install the RealCode Eval package:
   ```bash
-  pip install git+https://github.com/NLP-Core-Team/RealCode_eval.git@v3_pip_package
+  pip install 'RealCode_eval[build,test] @ git+https://github.com/NLP-Core-Team/RealCode_eval.git@v3_pip_package'
   ```
   or
   ```bash
-  pip install git+ssh://git@gitlab.ai.cloud.ru:2222/rnd-core-team/plp/RealCode_eval.git@v3_pip_package
+  pip install 'RealCode_eval[build,test] @ git+ssh://git@gitlab.ai.cloud.ru:2222/rnd-core-team/plp/RealCode_eval.git@v3_pip_package'
   ```
+
 ### Installing lm-eval with API Support
    ```bash
    pip install lm-eval[api]
@@ -51,31 +52,23 @@ Before running the evaluation, ensure that your environment is set up correctly.
    pip install -e ."[api]"
    ```
 
-### Step 1: Download Dataset and Setup Environments
-
-Download the dataset:
+### Download Dataset and Setup Environments
 
 ```bash
-wget https://zenodo.org/records/13378983/files/realcode_v3_repos_upd.tar.gz
+cd MERA_CODE
 ```
-
-Extract the dataset:
 
 ```bash
-mkdir -p data && tar -xvf realcode_v3_repos_upd.tar.gz -C data
+realcode-download-data --workspace-path "workspace" && \
+realcode-build-envs --workspace-path "workspace" --num-jobs 8  && \
+realcode-run-tests --workspace-path "workspace"
 ```
 
-Note: Ensure the dataset is placed in the root folder of the lm_eval package. This is required because the build_envs.py script looks for data in the lm_eval directory.
-
-Build required environments for repositories:
-
-```bash
-python lm_eval/tasks/realcode/build_envs.py
-```
+This will install the dataset and set up environments under the `workspace` directory in `MERA_CODE`.
 
 ### Using an Existing Dataset
 
-To use an existing dataset, update the `fg.yaml` and `sg.yaml` configuration files located in `lm_eval/tasks/realcode/`. Below are the parameters you need to modify.
+To use an existing dataset, update the `realcode_fg.yaml` and `realcode_sg.yaml` configuration files located in `code_tasks/realcode/`. Below are the parameters you need to modify.
 
 #### Parameters to Update
 
@@ -110,7 +103,7 @@ Run the following command to evaluate your model in Function Generation mode:
 lm_eval \
   --model local-completions \
   --model_args model=Qwen2.5-32B-Instruct,base_url=http://localhost:6002/v1/completions,num_concurrent=1,max_retries=3,tokenized_requests=True,max_length=2048,max_gen_toks=1024,tokenizer=Qwen/Qwen2.5-32B-Instruct \
-  --tasks FG \
+  --tasks realcode_fg \
   --batch_size 8 \
   --trust_remote_code \
   --gen_kwargs max_tokens=1024 \
@@ -127,7 +120,7 @@ For Snippet Generation mode, use the following:
 lm_eval \
   --model local-completions \
   --model_args model=Qwen2.5-32B-Instruct,base_url=http://localhost:6002/v1/completions,num_concurrent=1,max_retries=3,tokenized_requests=True,max_length=2048,max_gen_toks=1024,tokenizer=Qwen/Qwen2.5-32B-Instruct \
-  --tasks SG \
+  --tasks realcode_sg \
   --batch_size 8 \
   --trust_remote_code \
   --gen_kwargs max_tokens=1024 \
