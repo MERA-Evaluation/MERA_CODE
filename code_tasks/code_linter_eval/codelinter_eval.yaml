@@ -1,0 +1,44 @@
+task: code_linter_eval
+dataset_name: code_linter_eval
+dataset_path: MERA-evaluation/MERA
+output_type: generate_until
+
+
+training_split: null
+test_split: test
+fewshot_delimiter: "\n\n"
+target_delimiter: " "
+should_decontaminate: false
+doc_to_choice: null
+num_fewshot: null
+
+repeats: 10
+fewshot_config:
+  sampler: !function ../custom_samplers.FewshotSampler  # processes no instruction doc and changes doc_to_text
+  doc_to_text_without_instruction: "Код:\n{{inputs.code.rstrip()}} Ошибки от линтера: {{inputs.feedback.rstrip()}}"
+  query: "{{instruction.format(**inputs).strip()}}"
+# ruHumanEval does not use targets in shots
+# LM is required to generate func continuation
+doc_to_target: "{{meta['canonical_solution']}}"
+doc_to_text: "{{instruction.format(**inputs).strip() if inputs is mapping else instruction.format(inputs=inputs).strip()}}"
+
+generation_kwargs:
+  do_sample: false
+  until: 
+process_results: !function utils.process_results
+filter_list:
+  - name: "scoring"
+    filter:
+      - function: rucodelinterevalscoring
+metric_list:
+  - metric: pass@1
+    aggregation: mean
+    higher_is_better: true
+  - metric: pass@5
+    aggregation: mean
+    higher_is_better: true
+  - metric: pass@10
+    aggregation: mean
+    higher_is_better: true
+metadata:
+  version: 1.0
