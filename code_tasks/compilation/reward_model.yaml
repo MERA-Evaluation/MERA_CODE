@@ -1,9 +1,9 @@
 metadata:
   version: 0.1
 
-dataset_path: C:/Users/PL/sibnn/Reward_Model_Dataset
-dataset_name: default
-task: reward_model
+dataset_path: C:/Users/PL/sibnn/Reward_Model_Dataset # указать hf датасет
+dataset_name: default # поменять название в hf датасете
+task: compilation
 output_type: generate_until # поддерживается многими моделями. для тех моделей, которые не возвращают логиты (например, Gigachat, YandexGPT), другие типы задач не применимы.
 
 training_split: train
@@ -15,14 +15,6 @@ doc_to_target: "label"
 target_delimiter: " = "
 
 process_results: !function utils.process_results
-
-#filter_list:
-#  - name: "scoring"
-#    filter:
-#      - function: "regex"
-#        regex_pattern: "(\\b([01])\\b)"
-#        group_select: 0
-#        fallback: '-1'
 
 metric_list:
   - metric: acc
