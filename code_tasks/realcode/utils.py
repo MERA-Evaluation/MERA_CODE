@@ -1,6 +1,7 @@
 import json
 import os
 from typing import Dict, List
+from pathlib import Path
 
 try:
     from realcode_eval.lm_eval.evaluator import Evaluator
@@ -98,11 +99,11 @@ class ScoringFilter(Filter):
         self.metrics_output_filepath = metrics_output_filepath
 
         self.evaluator = Evaluator(
-            dataset_root=self.dataset_root,
+            dataset_root=str(Path(self.dataset_root).resolve()),
             num_samples=1,
             pass_k_list=[1],
             njobs=self.test_n_jobs,
-            working_dir=self.working_dir,
+            working_dir=str(Path(self.working_dir).resolve()),
         )
 
     def apply(self, resps, docs):

@@ -34,7 +34,7 @@ filter_list:
       - function: extract_from_tag
       - function: scoring
         dataset_root: ./workspace/realcode_v3/
-        working_dir: working_dir
+        working_dir: ./workspace/workdir
         test_n_jobs: 8
         generations_output_filepath: ./workspace/data/generations_fg.json
         metrics_output_filepath: ./workspace/data/metrics_fg.json
