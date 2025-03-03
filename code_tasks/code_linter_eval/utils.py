@@ -18,6 +18,7 @@ from lm_eval.api.registry import register_filter
 import uuid
 import os
 import subprocess
+import json
 
 
 def process_results(doc: Dict, results: List[str]) -> Dict[str, float]:
@@ -47,7 +48,7 @@ class ruCodeLinterEvalScoring(Filter):
         Считывание необходимых для фильтра параметров
         """
 
-    def apply(self, resps):
+    def apply(self, resps, docs):
         """
         Метод, который отвечает за применение фильтра
         """
@@ -75,6 +76,7 @@ def preprocess_generation(completion):
 def execute_function(processed_completion):
     id = str(uuid.uuid4())
     LINTER_PATH = os.getenv("LINTER_PATH")
+    os.makedirs('./extracted_codes', exist_ok=True)
     
     code_file_path = f'./extracted_codes/temporary_file_{id}.py'
     json_report_file = f'./reports/temporary_file_{id}.json'
