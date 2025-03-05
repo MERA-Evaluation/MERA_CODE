@@ -77,13 +77,15 @@ def execute_function(processed_completion):
     id = str(uuid.uuid4())
     LINTER_PATH = os.getenv("LINTER_PATH")
     os.makedirs('./extracted_codes', exist_ok=True)
+    os.makedirs('./reports', exist_ok=True)
     
     code_file_path = f'./extracted_codes/temporary_file_{id}.py'
     json_report_file = f'./reports/temporary_file_{id}.json'
     json_error_report_file = f'./reports/temporary_file_{id}.json'
     
     with open(code_file_path, 'w') as f:
-        f.write(code) 
+        f.write(processed_completion) 
+        
     try:
         proc = subprocess.Popen([LINTER_PATH, "--format=json", code_file_path], 
                                 stdout=open(json_report_file, "w"),
