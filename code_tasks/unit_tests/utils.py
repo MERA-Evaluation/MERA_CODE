@@ -89,7 +89,7 @@ def get_ru_default_chat_prompt(
     user_lang = "ru"
     language = dataset_item["language"]
     test_framework = None
-    if "test_framework" in dataset_item:
+    if "test_framework" in dataset_item and dataset_item["test_framework"] is not None:
         test_framework = dataset_item["test_framework"]
 
     focal_func_context, test_func_context = None, None

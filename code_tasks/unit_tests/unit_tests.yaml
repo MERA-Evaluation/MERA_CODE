@@ -2,8 +2,8 @@ dataset_path: data
 dataset_name: unit_tests
 task: my_unit_tests
 training_split: train
-validation_split: val
-test_split: val
+validation_split: test
+test_split: test
 fewshot_split: train
 output_type: generate_until
 doc_to_text: !function utils.doc_to_text
@@ -21,9 +21,7 @@ metric_list:
     higher_is_better: true
 generation_kwargs:
   do_sample: false
-  max_length: input_ids.shape[1] + 512
-  until:
-    - tokenizer.eos_token_id
+  max_gen_toks: 512
 repeats: 1
 num_fewshot: null
 metadata:
