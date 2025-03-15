@@ -1,0 +1,41 @@
+tag:
+  - java_testgen_eval
+task: java_testgen
+dataset_path: json
+dataset_kwargs:
+  data_files:
+    test: /data/adam/build_ecs_gigacode_worker/java_testgen_bench_v1/java_testgen_bench_v1.jsonl #./java_testgen_bench_v1.jsonl
+output_type: generate_until
+test_split: test
+doc_to_text: !function utils.doc_to_text_java_testgen
+doc_to_target: ""
+generation_kwargs:
+  do_sample: true
+  temperature: 0.2
+  top_p: 1.
+  until:
+    - "<|endoftext|>"
+    - "<|im_end|>"
+    - "\n\n\n"
+process_results: !function utils.process_results_java_testgen
+filter_list:
+  - name: "evaluation"
+    filter:
+      - function: extract_from_tag_java
+      - function: scoring_java_testgen
+        working_dir: ./workspace/java_testgen_workdir
+        generations_output_filepath: ./workspace/data/java_generations.json
+        metrics_output_filepath: ./workspace/data/java_metrics.json
+      - function: "take_first"
+metric_list:
+  - metric: "success_rate"
+    aggregation: mean
+    higher_is_better: true
+  - metric: "compilation_rate"
+    aggregation: mean
+    higher_is_better: true
+fewshot_config:
+  sampler: first_n
+  samples: []
+metadata:
+  version: 1.0
