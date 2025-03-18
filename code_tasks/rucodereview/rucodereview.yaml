@@ -1,7 +1,7 @@
 task: rucodereview
 task_alias: rucodereview
 
-dataset_path: /workdir/MERA_CODE/code_tasks/rucodereview
+dataset_path: ruCodeReviewDataset
 
 output_type: generate_until
 
@@ -19,6 +19,7 @@ generation_kwargs:
   max_length: 1500
 
 process_results: !function utils.process_results
+
 metric_list:
   - metric: bleu
     aggregation: mean
@@ -35,5 +36,6 @@ metric_list:
   - metric: pass@10
     aggregation: mean
     higher_is_better: true
+
 metadata:
   version: 1.0
