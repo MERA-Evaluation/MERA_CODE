@@ -4,7 +4,7 @@ task: java_testgen
 dataset_path: json
 dataset_kwargs:
   data_files:
-    test: /data/adam/build_ecs_gigacode_worker/java_testgen_bench_v1/java_testgen_bench_v1.jsonl #./java_testgen_bench_v1.jsonl
+    test: ./data/java_testgen_bench_v1.jsonl #./java_testgen_bench_v1.jsonl
 output_type: generate_until
 test_split: test
 doc_to_text: !function utils.doc_to_text_java_testgen
