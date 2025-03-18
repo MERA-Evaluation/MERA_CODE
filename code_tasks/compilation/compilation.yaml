@@ -1,17 +1,15 @@
 metadata:
-  version: 0.1
+  version: 1.0
 
-dataset_path: C:/Users/PL/sibnn/Reward_Model_Dataset # указать hf датасет
+dataset_path: mera_correctness_dataset # указать hf датасет
 dataset_name: default # поменять название в hf датасете
 task: compilation
 output_type: generate_until # поддерживается многими моделями. для тех моделей, которые не возвращают логиты (например, Gigachat, YandexGPT), другие типы задач не применимы.
 
-training_split: train
-validation_split: validation
 test_split: test
 
 doc_to_text: !function utils.doc_to_text
-doc_to_target: "label"
+doc_to_target: "status"
 target_delimiter: " = "
 
 process_results: !function utils.process_results

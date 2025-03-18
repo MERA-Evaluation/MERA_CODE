@@ -2,12 +2,12 @@ from typing import Dict, List
 
 
 INSTRUCTION = ("Даны два кода: фокальный и тест. Определи, скомпилируется ли тест. "
-               "Верни 0, если не скомпилируется, и 1, если скомпилируется.\n{inputs}")
+               "Верни failed, если не скомпилируется, и success, если скомпилируется.\n{inputs}")
 
 
 def doc_to_text(doc: dict) -> str:
-    focal = doc['focal']
-    test = doc['test']
+    focal = doc['focal_code']
+    test = doc['test_code']
     inputs = f'{focal}\n{test}'
     prompt = INSTRUCTION.format(inputs=inputs)
 
@@ -15,14 +15,14 @@ def doc_to_text(doc: dict) -> str:
 
 
 def process_results(doc: Dict, results: List[str]) -> Dict[str, float]:
-    has_outputs = doc['label'] is not None
+    has_outputs = doc['status'] is not None
     if has_outputs:
-        gold = doc['label']
+        gold = doc['status']
         pred = -1
-        if '1' in results[0]:
-            pred = 1
-        elif '0' in results[0]:
-            pred = 0
+        if 'failed' in results[0]:
+            pred = 'failed'
+        elif 'success' in results[0]:
+            pred = 'success'
         # метрика для данного сэмпла и ответа модели на него
         acc = float(pred == gold)
         # сохранение в словарь общей accuracy, а также запись 0 или 1 в acc.domain
