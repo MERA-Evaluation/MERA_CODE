@@ -4,7 +4,7 @@ task: java_testgen
 dataset_path: json
 dataset_kwargs:
   data_files:
-    test: ./data/java_testgen_bench_v1.jsonl #./java_testgen_bench_v1.jsonl
+    test: ./data/java_testgen_bench_v1.jsonl
 output_type: generate_until
 test_split: test
 doc_to_text: !function utils.doc_to_text_java_testgen
@@ -12,7 +12,7 @@ doc_to_target: ""
 generation_kwargs:
   do_sample: true
   temperature: 0.2
-  top_p: 1.
+  top_p: 0.9
   until:
     - "<|endoftext|>"
     - "<|im_end|>"
@@ -34,8 +34,3 @@ metric_list:
   - metric: "compilation_rate"
     aggregation: mean
     higher_is_better: true
-fewshot_config:
-  sampler: first_n
-  samples: []
-metadata:
-  version: 1.0
