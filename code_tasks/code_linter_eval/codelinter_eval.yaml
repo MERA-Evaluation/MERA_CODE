@@ -17,13 +17,13 @@ fewshot_config:
   sampler: !function ../custom_samplers.FewshotSampler  # processes no instruction doc and changes doc_to_text
   doc_to_text_without_instruction: "Код:\n{{inputs.code.rstrip()}} Ошибки от линтера: {{inputs.feedback.rstrip()}}"
   query: "{{instruction.format(**inputs).strip()}}"
-# ruHumanEval does not use targets in shots
-# LM is required to generate func continuation
+
 doc_to_target: "{{meta['canonical_code']}}"
 doc_to_text: "{{instruction.format(**inputs).strip() if inputs is mapping else instruction.format(inputs=inputs).strip()}}"
 
 generation_kwargs:
-  do_sample: false
+  do_sample: true
+  temperature: 1.0
 
 process_results: !function utils.process_results
 filter_list:
