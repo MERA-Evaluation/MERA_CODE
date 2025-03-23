@@ -23,9 +23,7 @@ def process_results(doc: Dict, results: List[str]) -> Dict[str, float]:
             pred = 'failed'
         elif 'success' in results[0]:
             pred = 'success'
-        # метрика для данного сэмпла и ответа модели на него
         acc = float(pred == gold)
-        # сохранение в словарь общей accuracy, а также запись 0 или 1 в acc.domain
         return {"acc": acc}
     if not has_outputs:
         # если ответов нет, то нули
