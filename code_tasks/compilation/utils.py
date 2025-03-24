@@ -1,15 +1,32 @@
 from typing import Dict, List
 
-
-INSTRUCTION = ("Даны два кода: фокальный и тест. Определи, скомпилируется ли тест. "
-               "Верни failed, если не скомпилируется, и success, если скомпилируется.\n{inputs}")
-
-
 def doc_to_text(doc: dict) -> str:
     focal = doc['focal_code']
     test = doc['test_code']
-    inputs = f'{focal}\n{test}'
-    prompt = INSTRUCTION.format(inputs=inputs)
+    lang = doc['lang']
+
+    prompt = f"""
+Ниже приведён код фокального файла и тестового файла. Определи, является ли тест корректным.
+
+Фокальный файл:
+
+```{lang}
+
+{focal}
+
+```
+
+
+Тестовый файл:
+
+```{lang}
+
+{test}
+
+```
+
+Ответь одним словом. Если тест не вызовет ошибок при запуске программы, то верни "succeed". Иначе верни "fail".
+    """
 
     return prompt.strip()
 
