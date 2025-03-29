@@ -52,5 +52,5 @@ Prompt example:
 
 Metrics for aggregated evaluation of responses:
 
-{computed["metrics"]}{computed["human_benchmark"]}
+{computed["metrics"]}
 """

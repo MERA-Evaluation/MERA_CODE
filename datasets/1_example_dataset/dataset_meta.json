@@ -12,7 +12,6 @@
         "Static counting"
     ],
     "domains": [],
-    "universal_domains": [],
     "synt_source_models": [
         "model-name"
     ],
@@ -139,8 +138,5 @@
             "ru": "Метрика Accuracy вычисляет долю правильных предсказаний модели среди всех обработанных вопросов.",
             "en": "Accuracy is the proportion of correct model predictions among the total number of cases processed."
         }
-    },
-    "human_benchmark": {
-        "Accuracy": 1.0
     }
 }

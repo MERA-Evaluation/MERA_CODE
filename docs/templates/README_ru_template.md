@@ -53,5 +53,5 @@ f"""# {meta["dataset_name"]}
 
 Для агрегированной оценки ответов моделей используются следующие метрики:
 
-{computed["metrics"]}{computed["human_benchmark"]}
+{computed["metrics"]}
 """
