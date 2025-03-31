@@ -6,12 +6,12 @@ import os
 REQUIRED_FIELDS = [
     "dataset_name",
     "modalities",
-    "universal_domains",
+    # "universal_domains",
     "data_example",
     "data_field_descriptions",
     "prompts",
     "metrics",
-    "human_benchmark",
+    # "human_benchmark",
     "skills",
     "license",
 ]
