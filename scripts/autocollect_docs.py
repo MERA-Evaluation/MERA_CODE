@@ -69,7 +69,7 @@ def format_data_field_desc(data_field_descriptions, lang, term_dict, data_ex):
                 fill_desc = field_value[lang]
             desc = get_string_desc(field_name, fill_desc, level=level, data_ex=data_ex)
         else:
-            desc_list = [get_string_desc(field_name, term_dict_value["_desc"][lang], level=level, 
+            desc_list = [get_string_desc(field_name, term_dict_value["_desc"][lang], level=level,
                                          is_leaf=False, data_ex=data_ex)]
             for sub_field, sub_field_value in field_value.items():
                 if not lang in sub_field_value or sub_field_value.get(lang, None) == "default":
@@ -94,7 +94,7 @@ def format_data_field_desc(data_field_descriptions, lang, term_dict, data_ex):
 
 def process_json_with_term_dict(json_data, term_dict):
     """
-    Process JSON structure by replacing "default" values 
+    Process JSON structure by replacing "default" values
     with descriptions from term_dict.
     """
     def process_field(current_value, field_path):
@@ -103,7 +103,7 @@ def process_json_with_term_dict(json_data, term_dict):
         for key in field_path:
             if key in current_dict:
                 current_dict = current_dict[key]
-        
+
         # If current_value is a dict with language keys
         if isinstance(current_value, dict):
             processed_value = {}
@@ -113,17 +113,17 @@ def process_json_with_term_dict(json_data, term_dict):
                 else:
                     processed_value[lang] = val
             return processed_value
-        
+
         return current_value
 
     def recursive_process(obj, path=None):
         path = path or []
-        
+
         if isinstance(obj, dict) and not "en" in obj:
             return {k: recursive_process(v, path + [k]) for k, v in obj.items()}
         else:
             return process_field(obj, path)
-    
+
     return recursive_process(json_data)
 
 
@@ -206,7 +206,7 @@ def complete_template(dataset_dir, language, meta, custom, term_dict):
     computed["data_example"] = json.dumps(meta["data_example"], indent=4, ensure_ascii=False)
     computed["metrics"] = format_metrics(meta["metrics"], lang=language, term_dict=term_dict)
     # computed["human_benchmark"] = format_hb(meta["human_benchmark"], custom["Human baseline"], lang=language)
-    # computed["skills"] = format_skills(meta["skills"])
+    computed["skills"] = format_skills(meta["skills"])
     computed["contributors"] = format_contributors(custom, lang=language)
 
     # format template
