@@ -54,7 +54,7 @@ def construct_user_prompt(
             test_file_path=test_file_path,
         )
     )
-    if test_framework is not None:
+    if test_framework is not None and test_framework.strip() != "":
         prompt_lines.append(
             prompts_dict_sampled["user_test_instruction_framework"].format(
                 test_framework=test_framework
