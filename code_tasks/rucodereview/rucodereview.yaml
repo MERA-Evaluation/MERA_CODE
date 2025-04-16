@@ -1,7 +1,7 @@
 task: rucodereview
 task_alias: rucodereview
 
-dataset_path: ruCodeReviewDataset
+dataset_path: /workdir/MERA_CODE/code_tasks/rucodereview
 
 output_type: generate_until
 
@@ -13,13 +13,16 @@ doc_to_text: !function utils.doc_to_text
 doc_to_target: "{{outputs}}"
 
 generation_kwargs:
-  temperature: 0.2
+  temperature: 0.0
   do_sample: false
-  max_new_tokens: 1000
-  max_length: 1500
+  max_gen_toks: 1000
 
 process_results: !function utils.process_results
 
+filter_list:
+  - name: "scoring"
+    filter:
+      - function: llmasajudgescoring
 metric_list:
   - metric: bleu
     aggregation: mean
