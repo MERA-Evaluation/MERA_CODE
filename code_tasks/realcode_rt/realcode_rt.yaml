@@ -1,0 +1,63 @@
+tag:
+  - realcode_eval
+task: realcode_rt
+dataset_path: json
+dataset_name: null
+dataset_kwargs:
+  data_files: 
+    test: /data/adam/build_ecs_gigacode_worker/realcode_fg_240412.jsonl
+output_type: generate_until
+training_split: null
+validation_split: null
+test_split: test
+doc_to_text: !function pipe.doc_to_text_rt
+doc_to_target: "{{gt}}"
+generation_kwargs:
+  do_sample: true
+  temperature: 0.7
+  repetition_penalty: 1.05
+  top_p: 0.8
+  until:
+    - "<|endoftext|>"
+    - "<|im_end|>"
+    - "\n\n\n"
+    - "\\sclass\\s"
+    - "\\sdef\\s"
+    - "^def\\s"
+    - "^class\\s"
+    - "^if\\s"
+    - "@"
+    - "^#"
+process_results: !function pipe.process_results
+filter_list:
+  - name: "evaluation"
+    filter:
+      - function: extract_from_tag_rt
+      - function: scoring_rt
+        dataset_root: ./workspace/realcode_v3/
+        working_dir: working_dir
+        test_n_jobs: 4
+        generations_output_filepath: ./workspace/data/generations_rt.json
+        metrics_output_filepath: ./workspace/data/metrics_rt.json
+      - function: "take_first"
+metric_list:
+  - metric: "pass_gen"
+    aggregation: mean
+    higher_is_better: true
+  - metric: "pass_dry_run"
+    aggregation: mean
+    higher_is_better: true
+  - metric: "pass_gt"
+    aggregation: mean
+    higher_is_better: true
+  - metric: "pass_pass"
+    aggregation: mean
+    higher_is_better: true
+  - metric: "pass_return_empty_str"
+    aggregation: mean
+    higher_is_better: true        
+  - metric: "evaluate_fail"
+    aggregation: mean
+    higher_is_better: false
+metadata:
+  version: 1.0
