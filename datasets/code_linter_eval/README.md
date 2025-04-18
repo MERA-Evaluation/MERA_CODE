@@ -66,7 +66,7 @@ Each dataset question includes data in the following fields:
 - `inputs` — Input data that forms the task for the model. Can include one or multiple modalities - video, audio, image, text.
     - `code` [str] — source code with errors
     - `feedback` [str] — list of errors with description from the linter.
-- `outputs` [int] — one-dimensional array of strings of size n_samples, where n_samples is the number of samples required to calculate the pass@k metric..
+- `outputs` [int] — one-dimensional array of strings of size n_samples, where n_samples is the number of samples required to calculate the pass@k metric.
 - `meta` — Metadata related to the test example, not used in the question (hidden from the tested model)
     - `id` [int] — Identification number of the question in the dataset.
     - `canonical_code` — canonical solution to the task (code without linter errors/warnings)
