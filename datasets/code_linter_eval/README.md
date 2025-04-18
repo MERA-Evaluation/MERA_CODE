@@ -133,6 +133,3 @@ Metrics for aggregated evaluation of responses:
 - `pass@k`: The pass@k metric measures the proportion of test cases that a program passes out of the total number of test cases.
 
 
-### Human baseline
-
-In developement
