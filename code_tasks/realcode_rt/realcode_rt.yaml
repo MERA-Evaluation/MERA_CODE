@@ -5,12 +5,12 @@ dataset_path: json
 dataset_name: null
 dataset_kwargs:
   data_files: 
-    test: /data/adam/build_ecs_gigacode_worker/realcode_fg_240412.jsonl
+    test: /Users/22530318/git/datasets/realcode/realcode_fg_240412.jsonl
 output_type: generate_until
 training_split: null
 validation_split: null
 test_split: test
-doc_to_text: !function pipe.doc_to_text_rt
+doc_to_text: !function pipe.doc_to_text_fg
 doc_to_target: "{{gt}}"
 generation_kwargs:
   do_sample: true
@@ -32,13 +32,19 @@ process_results: !function pipe.process_results
 filter_list:
   - name: "evaluation"
     filter:
-      - function: extract_from_tag_rt
-      - function: scoring_rt
+      - function: extract_from_tag
+      - function: scoring
         dataset_root: ./workspace/realcode_v3/
         working_dir: working_dir
-        test_n_jobs: 4
         generations_output_filepath: ./workspace/data/generations_rt.json
         metrics_output_filepath: ./workspace/data/metrics_rt.json
+        html_output_filepath: ./workspace/data/metrics_rt.html
+        mode: docker
+        n_jobs: 5
+        gen_columns: ["gt", "return_pass", "return_empty_str", "gen"]
+        raise_exception: true,
+        n_jobs_build: 5   
+        enable_full_logs:  false
       - function: "take_first"
 metric_list:
   - metric: "pass_gen"
@@ -50,14 +56,17 @@ metric_list:
   - metric: "pass_gt"
     aggregation: mean
     higher_is_better: true
-  - metric: "pass_pass"
+  - metric: "pass_return_pass"
     aggregation: mean
     higher_is_better: true
   - metric: "pass_return_empty_str"
     aggregation: mean
     higher_is_better: true        
-  - metric: "evaluate_fail"
+  - metric: "status"
     aggregation: mean
-    higher_is_better: false
+    higher_is_better: true
+  - metric: "num_of_samples"
+    aggregation: !function pipe.sum_metric
+    higher_is_better: true
 metadata:
   version: 1.0
