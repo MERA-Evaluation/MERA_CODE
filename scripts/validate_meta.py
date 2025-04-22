@@ -101,9 +101,11 @@ def get_domains(path_to_data):
 
 
 def get_shots_test_data(path_to_data, domains_split):
+    shots = []
     if not domains_split:
         # if no split for domains, just take jsons
-        shots = load_json(os.path.join(path_to_data, "shots.json"))["data"]
+        if os.path.exists(os.path.join(path_to_data, "shots.json")):
+            shots = load_json(os.path.join(path_to_data, "shots.json"))["data"]
         test = load_json(os.path.join(path_to_data, "test.json"))["data"]
     else:
         # if dataset is split into domains
@@ -111,13 +113,14 @@ def get_shots_test_data(path_to_data, domains_split):
         dirs = get_domains(path_to_data)
         # go through each domain to read jsons
         for folder in dirs:
-            shots_domain = load_json(os.path.join(path_to_data, folder, "shots.json"))[
-                "data"
-            ]
+            if os.path.exists(os.path.join(path_to_data, folder, "shots.json")):
+                shots_domain = load_json(os.path.join(path_to_data, folder, "shots.json"))[
+                    "data"
+                ]
+                shots.extend(shots_domain)
             test_domain = load_json(os.path.join(path_to_data, folder, "test.json"))[
                 "data"
             ]
-            shots.extend(shots_domain)
             test.extend(test_domain)
     return shots, test
 
