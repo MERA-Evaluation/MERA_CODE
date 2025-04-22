@@ -1,9 +1,9 @@
 metadata:
   version: 1.0
 
-dataset_path: mera_correctness_dataset # указать hf датасет
+dataset_path: CodeCorrectness # указать hf датасет
 dataset_name: default # поменять название в hf датасете
-task: compilation
+task: code_correctness
 output_type: generate_until
 
 test_split: test
