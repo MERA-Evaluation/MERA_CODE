@@ -40,14 +40,14 @@ def get_code_from_markdown(text: str, language: str = "python") -> list[str]:
 
 def process_results(doc: dict, results: list[str]) -> dict[str, float]:
 
-    if doc["language"] == "csharp":
+    if doc["inputs"]["language"] == "csharp":
         lang = "c_sharp"
-    if doc["language"] == "js":
+    if doc["inputs"]["language"] == "js":
         lang = "javascript"
     else:
-        lang = doc["language"]
+        lang = doc["inputs"]["language"]
 
-    target = doc["test_func"]
+    target = doc["outputs"]
     # results - двумерный список, распаковываем его
     gen_tests = results[0]
     processed_gen_tests = [get_code_from_markdown(x) for x in gen_tests]
