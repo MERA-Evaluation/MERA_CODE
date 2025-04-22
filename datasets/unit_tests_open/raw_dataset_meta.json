@@ -1,5 +1,5 @@
 {
-    "dataset_name": "UnitTests",
+    "dataset_name": "UnitTestsPublic",
     "license": "MERA_private",
     "dataset_size": "len(DATA)",
     "description": "Evaluation of unit-test generation for functions and methods in five programming languages (Java, Python, Go, JavaScript, and C#).",
@@ -22,7 +22,6 @@
             "language": "go",
             "focal_file_path": "php/is_numeric.go",
             "test_file_path": "php/is_numeric_test.go",
-            "focal_file": "package php\n\n// IsNumeric - Finds whether a variable is a number or a numeric string\nfunc IsNumeric(x interface{}) (result bool) {\n\n\t//Figure out result\n\tswitch x.(type) {\n\n\tcase int, uint:\n\t\tresult = true\n\tcase int8, uint8:\n\t\tresult = true\n\tcase int16, uint16:\n\t\tresult = true\n\tcase int32, uint32:\n\t\tresult = true\n\tcase int64, uint64:\n\t\tresult = true\n\n\tcase float32, float64:\n\t\tresult = true\n\n\tcase complex64, complex128:\n\t\tresult = true\n\n\tcase string:\n\t\tif xAsString, ok := x.(string); ok {\n\t\t\tresult = isStringNumeric(xAsString)\n\t\t} else {\n\t\t\tresult = false\n\t\t}\n\n\tdefault:\n\t\tresult = false\n\n\t}\n\n\treturn result\n}\n\nfunc isStringNumeric(x string) bool {\n\n\thasPeriod := false\n\tfor i, c := range x {\n\t\tprintln(i)\n\t\tswitch c {\n\n\t\tcase '-':\n\t\t\tif i != 0 {\n\t\t\t\treturn false\n\t\t\t}\n\n\t\tcase '.':\n\t\t\tif hasPeriod {\n\t\t\t\treturn false\n\t\t\t}\n\t\t\thasPeriod = true\n\n\t\tcase '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':\n\t\t\t//Nothing here.\n\n\t\tdefault:\n\t\t\treturn false\n\n\t\t}\n\t}\n\n\treturn true\n}\n",
             "test_framework": ""
         },
         "outputs": "func TestIsNumericUint8(t *testing.T) {\n\n\tvar x uint8\n\n\tx = 0\n\tif !IsNumeric(x) {\n\t\tt.Errorf(\"IsNumeric() should have returned true for uint8 [%v]\", x)\n\t}\n\n\tx = 5\n\tif !IsNumeric(x) {\n\t\tt.Errorf(\"IsNumeric() should have returned true for uint8 [%v]\", x)\n\t}\n\n\tx = 1\n\tif !IsNumeric(x) {\n\t\tt.Errorf(\"IsNumeric() should have returned true for uint8 [%v]\", x)\n\t}\n\n\tx = 123\n\tif !IsNumeric(x) {\n\t\tt.Errorf(\"IsNumeric() should have returned true for uint8 [%v]\", x)\n\t}\n\n\tx = 255\n\tif !IsNumeric(x) {\n\t\tt.Errorf(\"IsNumeric() should have returned true for uint8 [%v]\", x)\n\t}\n}",
@@ -62,13 +61,9 @@
                 "ru": "путь к файлу тестовой функции/метода в исходном репозитории",
                 "en": "the test function/method file path"
             },
-            "focal_file": {
-                "ru": "текст файла тестируемой функции/метода",
-                "en": "the focal function/method file text"
-            },
             "focal_func_context": {
-                "ru": "то же, что focal_file, но из текста вырезан сам тестируемый метод и заменен на текст `#focal function/method here`",
-                "en": "same as `focal_file` but the focal method is replaced with the text `#focal function/method here`"
+                "ru": "контекст фокальной функции: текст фокального файла, откуда вырезан сам тестируемый метод и заменен на текст `#focal function/method here`",
+                "en": "focal function context: the focal file text where the focal method is replaced with the text `#focal function/method here`"
             },
             "test_framework": {
                 "ru": "тестовый фреймворк, который необходимо использовать (только для JS)",
@@ -107,7 +102,7 @@
         "Разработайте тест для этой части программы на языке {language} из файла '{focal_file_path}'. Напиши только тестовый код.\n{focal_func}\nВам необходимо написать {test_func_type} на языке {language}. Тест будет помещен в файл '{test_file_path}'.\nИспользуй {test_framework} тестовый фреймворк для написания тестового кода.\nПользователь уже написал некоторый код в тестовом файле, учитывайте его при написании теста: \n{test_func_context}\nДля вас собран код из репозитория, который может помочь вам в написании теста:\n{focal_func_context}\nОтвет:"
     ],
     "metrics": {
-        "Code BLEU": {
+        "CodeBLEU": {
             "ru": "Code BLEU учитывает соответствие двух частей кода, аналогичное исходному BLEU, но может также учитывать грамматическую и логическую корректность, используя абстрактное синтаксическое дерево и структуру потока данных.",
             "en": "CodeBLEU considers the surface match similar with the original BLEU, but can also consider the grammatical correctness and the logic correctness, leveraging the abstract syntax tree and the data-flow structure.",
             "short": "code_bleu"
