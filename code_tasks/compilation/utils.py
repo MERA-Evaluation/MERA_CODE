@@ -1,40 +1,21 @@
 from typing import Dict, List
 
+
 def doc_to_text(doc: dict) -> str:
-    focal = doc['focal_code']
-    test = doc['test_code']
-    lang = doc['lang']
+    inputs = doc['inputs']
+    focal_code = inputs['focal_code']
+    test_code = inputs['test_code']
+    lang = inputs['lang']
 
-    prompt = f"""
-Ниже приведён код фокального файла и тестового файла. Определи, является ли тест корректным.
-
-Фокальный файл:
-
-```{lang}
-
-{focal}
-
-```
-
-
-Тестовый файл:
-
-```{lang}
-
-{test}
-
-```
-
-Ответь одним словом. Если тест не вызовет ошибок при запуске программы, то верни "succeed". Иначе верни "fail".
-    """
+    prompt = doc['instruction'].format(focal_code=focal_code, test_code=test_code, lang=lang)
 
     return prompt.strip()
 
 
 def process_results(doc: Dict, results: List[str]) -> Dict[str, float]:
-    has_outputs = doc['status'] is not None
+    has_outputs = doc['outputs'] is not None
     if has_outputs:
-        gold = doc['status']
+        gold = doc['outputs']
         pred = -1
         if 'failed' in results[0]:
             pred = 'failed'
