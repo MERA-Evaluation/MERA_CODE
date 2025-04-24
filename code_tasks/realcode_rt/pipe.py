@@ -1,7 +1,7 @@
 import json
 import os
 import tempfile
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Any, Dict, List
 
 from jsonl2html import convert_jsonl_to_html
@@ -10,10 +10,13 @@ from lm_eval.api.registry import register_filter
 from repotest import __version__ as repotest_version
 from repotest.constants import disable_stdout_logs, enable_stdout_logs
 from repotest.manager.realcode_python_task_manager import TaskManagerRealcode
+from datetime import datetime
 
-assert repotest_version >= "0.3.52"
+if not (repotest_version >= "0.3.52"):
+    raise ImportError(f"Current repotest version is {repotest_version} it should be 0.3.52")
 
-
+#ToDo: move this to repotest level
+# Disable frozen=True, make it inplace
 @dataclass(frozen=True)
 class Task:
     repo: str
@@ -28,10 +31,6 @@ class Task:
     PASS_TO_PASS: str
     FAIL_TO_PASS: str
     _more_params: str
-
-    def _to_dict(self) -> Dict[str, Any]:
-        """Converts Task dataclass into a dictionary, excluding private fields."""
-        return {k: getattr(self, k) for k in self.__dir__() if not k.startswith("_")}
 
 
 def doc_to_text_fg(doc: Dict[str, str]) -> str:
@@ -170,12 +169,13 @@ def _postprocess(generation: str, indent: int) -> str:
         new_gen.append(line)
     return "\n".join(new_gen).rstrip() + '\n\n'
 
+def get_run_id():
+    return datetime.now().strftime("%Y%m%dT%H%M%S")
 
 @register_filter("scoring")
 class ScoringFilter(Filter):
     def __init__(
         self,
-        dataset_root: str,
         working_dir: str,
         generations_output_filepath: str,
         metrics_output_filepath: str,
@@ -185,14 +185,18 @@ class ScoringFilter(Filter):
         gen_columns: List[str] = ['gt', 'return_pass', 'return_empty_str', "gen"],
         raise_exception: bool = True,
         n_jobs_build: int = 1,
-        enable_full_logs: bool = False
+        enable_full_logs: bool = False,
+        run_id = get_run_id()
     ) -> None:
         """
         Initializes the scoring filter with configuration for dataset, paths and logging.
         """
         super().__init__()
-        self.dataset_root = dataset_root
         self.working_dir = working_dir
+        self.run_id = run_id
+
+        # Verbose output folder
+        print("Run_id=%s output folder=%s"%(run_id, os.path.abspath(os.path.join(working_dir, run_id))))
         self.generations_output_filepath = generations_output_filepath
         self.metrics_output_filepath = metrics_output_filepath
         self.html_output_filepath = html_output_filepath
@@ -220,6 +224,7 @@ class ScoringFilter(Filter):
         """
         Process generations and run scoring.
 
+        resps -> generation -> task_list --[eval inplace]-> task_list
         Parameters
         ----------
         resps : list of list of str
@@ -231,9 +236,14 @@ class ScoringFilter(Filter):
         -------
         list of list of dict
             Evaluation results per task.
+
+        
         """
         generations = [[gen[0]] for gen in resps]
         self._save_to_file(self.generations_output_filepath, generations)
+        self._save_to_file(os.path.join(self.working_dir, self.run_id, "generations.json"), 
+                           generations
+                          )
 
         dataset = self._load_dataset(docs)[:len(generations)]
         processed_gens = [
@@ -244,7 +254,7 @@ class ScoringFilter(Filter):
         task_list = []
         for task, gen in zip(dataset, processed_gens):
             task_list.append({
-                **task._to_dict(),
+                **asdict(task),
                 "gen": gen[0],
                 "gt": task.gt,
                 "return_pass": self._generate_empty_string_code(task.gt),
@@ -252,8 +262,15 @@ class ScoringFilter(Filter):
             })
 
         self.manager.inplace_build_and_eval(task_list)
-        self._save_to_file(self.generations_output_filepath, task_list)
+
+        # Save artifacts after generations
+        self._save_to_file(os.path.join(self.working_dir, self.run_id, "task_list.json"), 
+                           task_list
+                           )
+
+        # Save html vizualization
         self.create_vizualization(task_list, self.html_output_filepath)
+        self.create_vizualization(task_list, os.path.join(self.working_dir, self.run_id, "task_list.html"))
 
         return [[i] for i in task_list]
 
@@ -327,8 +344,10 @@ def process_results(doc: Dict[str, Any], results: List[Dict[str, Any]]) -> Dict[
     dict
         Dictionary with key metrics.
     """
+    column_replace_dict = {"pass_gen": "pass_gen@1"}
+
     metrics = results[0]
-    res = {key: metrics.get(key, 0.0) for key in [
+    res = {column_replace_dict.get(key, key): metrics.get(key, 0.0) for key in [
         'pass_dry_run', 'pass_gt', 'pass_return_pass',
         'pass_return_empty_str', 'pass_gen', 'status'
     ]}

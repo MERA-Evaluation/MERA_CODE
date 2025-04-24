@@ -34,12 +34,11 @@ filter_list:
     filter:
       - function: extract_from_tag
       - function: scoring
-        dataset_root: ./workspace/realcode_v3/
         working_dir: working_dir
         generations_output_filepath: ./workspace/data/generations_rt.json
         metrics_output_filepath: ./workspace/data/metrics_rt.json
         html_output_filepath: ./workspace/data/metrics_rt.html
-        mode: docker
+        mode: local
         n_jobs: 5
         gen_columns: ["gt", "return_pass", "return_empty_str", "gen"]
         raise_exception: true,
@@ -47,7 +46,7 @@ filter_list:
         enable_full_logs:  false
       - function: "take_first"
 metric_list:
-  - metric: "pass_gen"
+  - metric: "pass_gen@1"
     aggregation: mean
     higher_is_better: true
   - metric: "pass_dry_run"
