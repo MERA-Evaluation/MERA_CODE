@@ -142,8 +142,11 @@ def get_indent(code: str) -> int:
     int
         Number of leading spaces.
     """
-    line = next(t for t in code.split('\n') if t.strip())
-    return len(line) - len(line.lstrip())
+    try:
+        line = next(t for t in code.split('\n') if t.strip())
+        return len(line) - len(line.lstrip())
+    except StopIteration:
+        return 0
 
 
 def _postprocess(generation: str, indent: int) -> str:
