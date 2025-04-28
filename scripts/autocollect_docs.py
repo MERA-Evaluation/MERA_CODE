@@ -272,7 +272,8 @@ def autocollect_cards_and_meta(dataset_dir):
         meta["data_field_descriptions"], term_dict["data_field_descriptions"])
     for metric in meta["metrics"].keys():
         for lang in ["en", "ru"]:
-            meta["metrics"][metric][lang] = term_dict["metrics"][metric][lang]
+            if metric in term_dict["metrics"]:
+                meta["metrics"][metric][lang] = term_dict["metrics"][metric][lang]
     with open(Path(dataset_dir) / "dataset_meta.json", "w") as wf:
         json.dump(meta, wf, ensure_ascii=False, indent=4)
 
