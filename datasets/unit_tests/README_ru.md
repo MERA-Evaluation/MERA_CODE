@@ -5,7 +5,7 @@
 
 Оценка генерации юнит-тестов для функций и методов на пяти языках программирования (Java, Python, Go, JavaScript и C#).
 
-Тестируемые навыки моделей: Unit-tests generation, Code generation
+Тестируемые навыки моделей: Unit-tests generation, Code generation, Instruction following
 
 Авторы: Алена Пестова, Валентин Малых
 
@@ -82,20 +82,20 @@
 {
     "instruction": "Напиши тест для этого кода на языке {language} из файла '{focal_file_path}'. Напиши только тест без пояснений и комментариев.\n{focal_func}\nТебе необходимо написать {test_func_type} на языке {language}. Тест будет помещен в файл '{test_file_path}'.\nОбязательно учитывай код, собранный из будущего тестового файла: \n{test_func_context}\nДля тебя собран код из репозитория, который может помочь тебе в написании теста: \n{focal_func_context}\nОтвет:",
     "inputs": {
-        "focal_func": "func IsNumeric(x interface{}) (result bool) {\n\n\t//Figure out result\n\tswitch x.(type) {\n\n\tcase int, uint:\n\t\tresult = true\n\tcase int8, uint8:\n\t\tresult = true\n\tcase int16, uint16:\n\t\tresult = true\n\tcase int32, uint32:\n\t\tresult = true\n\tcase int64, uint64:\n\t\tresult = true\n\n\tcase float32, float64:\n\t\tresult = true\n\n\tcase complex64, complex128:\n\t\tresult = true\n\n\tcase string:\n\t\tif xAsString, ok := x.(string); ok {\n\t\t\tresult = isStringNumeric(xAsString)\n\t\t} else {\n\t\t\tresult = false\n\t\t}\n\n\tdefault:\n\t\tresult = false\n\n\t}\n\n\treturn result\n}",
-        "focal_func_context": "package php\n\n// IsNumeric - Finds whether a variable is a number or a numeric string\n\n#focal function/method here\n\n\nfunc isStringNumeric(x string) bool {\n\n\thasPeriod := false\n\tfor i, c := range x {\n\t\tprintln(i)\n\t\tswitch c {\n\n\t\tcase '-':\n\t\t\tif i != 0 {\n\t\t\t\treturn false\n\t\t\t}\n\n\t\tcase '.':\n\t\t\tif hasPeriod {\n\t\t\t\treturn false\n\t\t\t}\n\t\t\thasPeriod = true\n\n\t\tcase '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':\n\t\t\t//Nothing here.\n\n\t\tdefault:\n\t\t\treturn false\n\n\t\t}\n\t}\n\n\treturn true\n}\n",
-        "test_func_type": "function",
-        "test_func_context": "package php\nimport (\n\t\"testing\"\n)",
-        "language": "go",
-        "focal_file_path": "php/is_numeric.go",
-        "test_file_path": "php/is_numeric_test.go",
+        "focal_func": "```go\nfunc (s *Session) Model(value interface{}) *Session {\n\t// nil or different model, update refTable\n\tif s.refTable == nil || reflect.TypeOf(value) != reflect.TypeOf(s.refTable.Model) {\n\t\ts.refTable = schema.Parse(value, s.dialect)\n\t}\n\treturn s\n}\n```",
+        "focal_func_context": "```go\n#gem-orm/day3-save-query/session/table.go\npackage session\n\nimport (\n\t\"fmt\"\n\t\"geeorm/log\"\n\t\"reflect\"\n\t\"strings\"\n\n\t\"geeorm/schema\"\n)\n\n// Model assigns refTable\n\n#focal function/method here\n\n\n// RefTable returns a Schema instance that contains all parsed fields\nfunc (s *Session) RefTable() *schema.Schema {\n\tif s.refTable == nil {\n\t\tlog.Error(\"Model is not set\")\n\t}\n\treturn s.refTable\n}\n\n// CreateTable create a table in database with a model\nfunc (s *Session) CreateTable() error {\n\ttable := s.RefTable()\n\tvar columns []string\n\tfor _, field := range table.Fields {\n\t\tcolumns = append(columns, fmt.Sprintf(\"%s %s %s\", field.Name, field.Type, field.Tag))\n\t}\n\tdesc := strings.Join(columns, \",\")\n\t_, err := s.Raw(fmt.Sprintf(\"CREATE TABLE %s (%s);\", table.Name, desc)).Exec()\n\treturn err\n}\n\n// DropTable drops a table with the name of model\nfunc (s *Session) DropTable() error {\n\t_, err := s.Raw(fmt.Sprintf(\"DROP TABLE IF EXISTS %s\", s.RefTable().Name)).Exec()\n\treturn err\n}\n\n// HasTable returns true of the table exists\nfunc (s *Session) HasTable() bool {\n\tsql, values := s.dialect.TableExistSQL(s.RefTable().Name)\n\trow := s.Raw(sql, values...).QueryRow()\n\tvar tmp string\n\t_ = row.Scan(&tmp)\n\treturn tmp == s.RefTable().Name\n}\n```",
+        "test_func_type": "тестовую функцию",
+        "test_func_context": "```\npackage session\nimport (\n\t\"testing\"\n)\ntype User struct {\n\tName string `geeorm:\"PRIMARY KEY\"`\n\tAge  int\n}\n```",
+        "language": "Go",
+        "focal_file_path": "gem-orm/day3-save-query/session/table.go",
+        "test_file_path": "gem-orm/day3-save-query/session/table_test.go",
         "test_framework": ""
     },
-    "outputs": "func TestIsNumericUint8(t *testing.T) {\n\n\tvar x uint8\n\n\tx = 0\n\tif !IsNumeric(x) {\n\t\tt.Errorf(\"IsNumeric() should have returned true for uint8 [%v]\", x)\n\t}\n\n\tx = 5\n\tif !IsNumeric(x) {\n\t\tt.Errorf(\"IsNumeric() should have returned true for uint8 [%v]\", x)\n\t}\n\n\tx = 1\n\tif !IsNumeric(x) {\n\t\tt.Errorf(\"IsNumeric() should have returned true for uint8 [%v]\", x)\n\t}\n\n\tx = 123\n\tif !IsNumeric(x) {\n\t\tt.Errorf(\"IsNumeric() should have returned true for uint8 [%v]\", x)\n\t}\n\n\tx = 255\n\tif !IsNumeric(x) {\n\t\tt.Errorf(\"IsNumeric() should have returned true for uint8 [%v]\", x)\n\t}\n}",
+    "outputs": "func TestSession_Model(t *testing.T) {\n\ts := NewSession().Model(&User{})\n\ttable := s.RefTable()\n\ts.Model(&Session{})\n\tif table.Name != \"User\" || s.RefTable().Name != \"Session\" {\n\t\tt.Fatal(\"Failed to change model\")\n\t}\n}",
     "meta": {
-        "id": 3,
-        "repo_id": "117618422",
-        "focal_func_type": "function"
+        "id": 9,
+        "repo_id": "312956606",
+        "focal_func_type": "method"
     }
 }
 ```
