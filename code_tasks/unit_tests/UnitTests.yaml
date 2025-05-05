@@ -1,5 +1,4 @@
-dataset_path: MERA-evaluation/MERA
-dataset_name: UnitTests
+dataset_path: MERA-evaluation/UnitTests
 task: my_UnitTests
 training_split: shots
 test_split: test
