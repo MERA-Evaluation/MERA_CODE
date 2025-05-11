@@ -1,9 +1,8 @@
-metadata:
-  version: 1.0
+task: code_correctness
 
 dataset_path: CodeCorrectness # указать hf датасет
 dataset_name: default # поменять название в hf датасете
-task: code_correctness
+
 output_type: generate_until
 
 test_split: test
@@ -18,3 +17,8 @@ metric_list:
   - metric: acc
     aggregation: mean
     higher_is_better: true
+
+num_fewshot: null
+
+metadata:
+  version: 1.0
