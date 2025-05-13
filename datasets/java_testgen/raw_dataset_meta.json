@@ -1,0 +1,111 @@
+{
+    "dataset_name": "JavaTestGen",
+    "description": "Evaluate model ability to generate Java unit tests based on real projects.",
+    "license": "MERA_private",
+    "dataset_size": "len(DATA)",
+    "modalities": ["code", "text"],
+    "skills": ["Code complition", "Unit tests generation", "Contextual reasoning"],
+    "domains": [],
+    "data_example": {
+        "instruction": "Вот Java-класс \"{class_name}\".\n```java\n{code}\n```\nНапишите JUnit5 тестовый класс \"{test_class_name}\". Включите позитивные сценарии, ошибки и граничные случаи.",
+        "inputs": {
+            "class_name": "ReverseCommand",
+            "test_class_name": "ReverseCommandTest",
+            "code": "package com.github.quiram.course..."
+        },
+        "outputs": ["..."],
+        "meta": {
+            "id": 1,
+            "instance_id": "java_testgetn_1",
+            "repo": "quiram/course-stream-collector",
+            "base_commit": "a8628593e8e96572a1c2a33",
+            "image_name": "maven",
+            "test_command": "mvn test",
+            "fn_test": "src/test/java/com/github/exampleTest.java",
+            "source_code": "package com.github.quiram; public class Example {}"
+        }
+    },
+    "data_field_descriptions": {
+        "instruction": {
+            "ru": "строка, содержащая формулировку задания по генерации теста",
+            "en": "string containing the task formulation for test generation"
+        },
+        "inputs": {
+            "class_name": {
+                "ru": "название Java-класса, для которого требуется сгенерировать тест",
+                "en": "name of the Java class to generate a test for"
+            },
+            "test_class_name": {
+                "ru": "название тестового класса, который необходимо сгенерировать",
+                "en": "name of the test class to be generated"
+            },
+            "code": {
+                "ru": "строка с исходным кодом Java-класса",
+                "en": "string containing the Java class source code"
+            }
+        },
+        "outputs": {
+            "ru": "одномерный массив строк размера n_samples, где n_samples — количество требуемых сэмплов для подсчета pass@k",
+            "en": "one-dimensional array of strings of size n_samples, where n_samples is the number required to compute pass@k"
+        },
+        "meta": {
+            "id": {
+                "ru": "уникальный идентификатор примера",
+                "en": "unique identifier of the example"
+            },
+            "instance_id": {
+                "ru": "уникальный идентификатор примера",
+                "en": "unique identifier of the example"
+            },
+            "repo": {
+                "ru": "строка, содержащая ссылку на репозиторий, из которого взят код",
+                "en": "string containing the repository from which the Java code was taken"
+            },
+            "base_commit": {
+                "ru": "строка с хэшем коммита, фиксирующего версию кода",
+                "en": "string with the commit hash fixing the version of the code"
+            },
+            "image_name": {
+                "ru": "строка с именем docker-образа, используемого для тестирования",
+                "en": "string with the name of the docker image used for testing"
+            },
+            "test_command": {
+                "ru": "строка с командой для запуска тестов внутри контейнера",
+                "en": "string containing the command to run tests inside the container"
+            },
+            "fn_test": {
+                "ru": "строка с путем к тестовому файлу в проекте",
+                "en": "string with the path to the test file inside the project"
+            },
+            "source_code": {
+                "ru": "строка с исходным кодом Java-класса",
+                "en": "string containing the Java class source code"
+            }
+        }
+    },
+    "prompts": [
+        "Вам дана реализация класса \"{class_name}\"\n```java\n{code}\n```\nВаша задача — написать тестовый класс \"{test_class_name}\" на JUnit5 для данного класса. Покройте все сценарии, даже если в коде нет соответствующих веток. Напишите тесты для обычных, пограничных и некорректных случаев. В каждом тесте только один assert. Имена методов должны быть осмысленными. Добавьте необходимые импорты и аннотации.",
+        
+        "Реализуйте JUnit5 тесты для класса \"{class_name}\". Тестовый класс должен называться \"{test_class_name}\". Убедитесь, что тесты охватывают все случаи и имеют по одному assert. Код:\n```java\n{code}\n```",
+        
+        "Вот Java-класс \"{class_name}\".\n```java\n{code}\n```\nНапишите JUnit5 тестовый класс \"{test_class_name}\". Включите позитивные сценарии, ошибки и граничные случаи.",
+        
+        "Напишите JUnit5 тестовый класс \"{test_class_name}\" для класса \"{class_name}\" ниже.\n```java\n{code}\n```\nПокройте основные, граничные и исключительные случаи. В каждом тесте один assert.",
+        
+        "Дан класс \"{class_name}\". Напишите полный JUnit5 тестовый класс \"{test_class_name}\".\n```java\n{code}\n```\nОбязательно проверьте все логические пути, даже скрытые.",
+        
+        "Ниже представлен класс \"{class_name}\".\n```java\n{code}\n```\nСоздайте тестовый класс \"{test_class_name}\" с использованием JUnit5. Учтите все случаи: нормальные, граничные и с ошибками.",
+        
+        "Создайте полный JUnit5 тест \"{test_class_name}\" для класса \"{class_name}\".\n```java\n{code}\n```\nТесты должны быть чистыми, охватывать все случаи и содержать по одному assert.",
+        
+        "Дан Java-класс \"{class_name}\".\n```java\n{code}\n```\nСоздайте для него JUnit5 тест \"{test_class_name}\". Используйте осмысленные названия методов, один assert и покрытие всех случаев.",
+        
+        "Напишите тестовый класс \"{test_class_name}\" для класса \"{class_name}\" на JUnit5.\n```java\n{code}\n```\nПокройте обычные случаи, ошибки и границы. Убедитесь в наличии аннотаций и импортов.",
+        
+        "Работайте с классом \"{class_name}\".\n```java\n{code}\n```\nНапишите соответствующий тестовый класс \"{test_class_name}\" с использованием JUnit5. Уделите внимание полному покрытию и читаемости."
+    ],
+    "metrics": {
+        "pass@1": {"en": "default", "ru": "default"},
+        "compilation_error_rate": {"en": "default", "ru": "default"}
+    }
+}
