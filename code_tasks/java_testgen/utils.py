@@ -17,7 +17,7 @@ logger = logging.getLogger("java_testgen_bench")
 
 
 def doc_to_text_java_testgen(doc: Dict[str, Any]) -> str:
-    return doc['prompt']
+    return doc["instruction"].format(**doc["inputs"])
 
 
 def process_results_java_testgen(doc: Dict, results: List[Dict]) -> Dict[str, float]:
@@ -131,14 +131,15 @@ class ScoringJavaTestgen(Filter):
         return [[{"evaluation": res}] for res in results]
 
     def _evaluate(self, doc, code):
+        meta = doc['meta']
         if code.strip():
             result = evaluate(
-                repo=doc['repo'],
-                base_commit=doc['base_commit'],
-                image_name=doc['image_name'],
-                fn_test=doc['fn_test'],
-                test_command=doc['test_command'],
-                source_code=doc['source_code'],
+                repo=meta['repo'],
+                base_commit=meta['base_commit'],
+                image_name=meta['image_name'],
+                fn_test=meta['fn_test'],
+                test_command=meta['test_command'],
+                source_code=meta['source_code'],
                 code=code
             )
         else:

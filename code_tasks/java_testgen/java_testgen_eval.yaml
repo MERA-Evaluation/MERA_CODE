@@ -1,10 +1,7 @@
 tag:
   - java_testgen_eval
 task: java_testgen
-dataset_path: json
-dataset_kwargs:
-  data_files:
-    test: ./data/java_testgen_bench_v1.jsonl
+dataset_path: MERA-evaluation/JavaTestGen
 output_type: generate_until
 test_split: test
 doc_to_text: !function utils.doc_to_text_java_testgen
@@ -16,7 +13,6 @@ generation_kwargs:
   until:
     - "<|endoftext|>"
     - "<|im_end|>"
-    - "\n\n\n"
 process_results: !function utils.process_results_java_testgen
 filter_list:
   - name: "evaluation"
