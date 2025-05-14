@@ -1,0 +1,39 @@
+{
+    "access": "public",
+    "data": [
+        {
+            "instruction": "Посмотри на картинку <image> и ответь на вопрос, выбрав вариант ответа из предложенных. Напиши только букву правильного ответа.\nВопрос: {question}.\nA. {option_a}\nB. {option_b}\nC. {option_c}\nD. {option_d)\nОтвет:",
+            "inputs": {
+                "question": "Сколько автомобилей изображено на фото?",
+                "image": "image0001.jpg",
+                "option_a": "три",
+                "option_b": "два",
+                "option_c": "ни одного",
+                "option_d": "пять"
+            },
+            "outputs": "C",
+            "meta": {
+                "id": 1,
+                "categories": {
+                    "task_type": "counterfactual"
+                },
+                "image": {
+                    "synt_source": ["model-name"],
+                    "source": [
+                        "photo"
+                    ],
+                    "type": [
+                        "visual"
+                    ],
+                    "content": [
+                        "view",
+                        "objects"
+                    ],
+                    "context": [
+                        "no_context"
+                    ]
+                }
+            }
+        }
+    ]
+}
