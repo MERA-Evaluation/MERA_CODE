@@ -23,7 +23,7 @@ def doc_to_text_java_testgen(doc: Dict[str, Any]) -> str:
 def process_results_java_testgen(doc: Dict, results: List[Dict]) -> Dict[str, float]:
     metrics = results[0]['evaluation']
     return {
-        "success_rate": float(metrics["parser"]["success"]),
+        "pass@1": float(metrics["parser"]["success"]),
         "compilation_rate": float(metrics["parser"]["compiled"]),
     }
 

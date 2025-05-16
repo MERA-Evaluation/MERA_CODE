@@ -24,7 +24,7 @@ filter_list:
         metrics_output_filepath: ./workspace/data/java_metrics.json
       - function: "take_first"
 metric_list:
-  - metric: "success_rate"
+  - metric: "pass@1"
     aggregation: mean
     higher_is_better: true
   - metric: "compilation_rate"

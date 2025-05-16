@@ -106,6 +106,6 @@
     ],
     "metrics": {
         "pass@1": {"en": "default", "ru": "default"},
-        "compilation_error_rate": {"en": "default", "ru": "default"}
+        "compilation_rate": {"en": "default", "ru": "default"}
     }
 }

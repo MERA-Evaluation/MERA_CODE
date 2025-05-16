@@ -96,5 +96,5 @@ The dataset consists of 227 tasks collected from public GitHub Java repositories
 
 Metrics for aggregated evaluation of responses:
 
-- `pass@1`: The probability that at least one generated test passes all checks.
-- `compilation_error_rate`: The fraction of generated tests that fail to compile.
+- `pass@1`: Pass@1 measures the proportion of problems where the model's first generated solution passes all test cases.
+- `compilation_rate`: Compilation rate is the proportion of generated code that successfully compiles without errors.
