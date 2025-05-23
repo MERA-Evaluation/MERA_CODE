@@ -22,7 +22,7 @@ doc_to_text: "{{instruction.format(**inputs).strip() if inputs is mapping else i
 
 generation_kwargs:
   do_sample: true
-  temperature: 1.0
+  temperature: 0.6
 
 process_results: !function utils.process_results
 filter_list:
