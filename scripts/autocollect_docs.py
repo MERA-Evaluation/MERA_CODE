@@ -1,3 +1,4 @@
+import re
 import os
 import json
 import argparse
@@ -51,7 +52,16 @@ def get_card_template(language):
 
 
 def format_prompts(prompts):
-    return prompts[0]
+    prompt = prompts[0]
+    
+    # Регулярное выражение для поиска блоков между тройными апострофами
+    pattern = r'(\n*```\n*)'  
+    def remove_extra_newlines(match):
+        # Убираем начальные и конечные пробелы/переносы строк
+        block = match.group(0).strip()  
+        return block
+    result = re.sub(pattern, remove_extra_newlines, prompt, flags=re.DOTALL)
+    return result
 
 
 def format_data_field_desc(data_field_descriptions, lang, term_dict, data_ex):
