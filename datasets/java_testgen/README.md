@@ -16,7 +16,8 @@ This dataset assesses models' ability to generate functionally valid tests for J
 - Understanding real-world Java code;
 - Generating executable test cases;
 - Handling Maven project structures and dependencies.
-Metrics: compilation error rate, pass@k (test pass rate).
+  
+Metrics: compilation_rate, pass@k (test pass rate).
 
 
 ## Data description
