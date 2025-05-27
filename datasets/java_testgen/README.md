@@ -7,7 +7,7 @@
 
 Evaluated skills: Code complition, Unit tests generation, Contextual reasoning
 
-Contributors: Dmitry Salikhov, Pavel Zadorozhny, Pavel Adamenko, Rodion Levichev, Aidar Valeev
+Contributors: Dmitry Salikhov, Pavel Zadorozhny, Pavel Adamenko, Rodion Levichev, Aidar Valeev, Dmitrii Babaev
 
 
 ## Motivation
@@ -16,8 +16,6 @@ This dataset assesses models' ability to generate functionally valid tests for J
 - Understanding real-world Java code;
 - Generating executable test cases;
 - Handling Maven project structures and dependencies.
-  
-Metrics: compilation_rate, pass@k (test pass rate).
 
 
 ## Data description
@@ -95,4 +93,4 @@ The dataset consists of 227 tasks collected from public GitHub Java repositories
 Metrics for aggregated evaluation of responses:
 
 - `pass@1`: Pass@1 measures the proportion of problems where the model's first generated solution passes all test cases.
-- `compilation_rate`: Compilation rate is the proportion of generated code that successfully compiles without errors.
+- `compile@1`: compile@1 is the proportion of generated code that successfully compiles without errors.

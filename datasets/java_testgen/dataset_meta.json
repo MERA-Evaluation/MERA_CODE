@@ -110,9 +110,9 @@
             "en": "Pass@1 measures the proportion of problems where the model's first generated solution passes all test cases.",
             "ru": "Метрика pass@1 измеряет долю задач, для которых первое сгенерированное моделью решение проходит все тесты."
         },
-        "compilation_rate": {
-            "en": "Compilation rate is the proportion of generated code that successfully compiles without errors.",
-            "ru": "Метрика Compilation rate показывает долю сгенерированного кода, который успешно компилируется без ошибок."
+        "compile@1": {
+            "en": "compile@1 is the proportion of generated code that successfully compiles without errors.",
+            "ru": "Метрика compile@1 показывает долю сгенерированного кода, который успешно компилируется без ошибок."
         }
     }
 }

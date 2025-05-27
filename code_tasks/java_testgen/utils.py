@@ -24,7 +24,7 @@ def process_results_java_testgen(doc: Dict, results: List[Dict]) -> Dict[str, fl
     metrics = results[0]['evaluation']
     return {
         "pass@1": float(metrics["parser"]["success"]),
-        "compilation_rate": float(metrics["parser"]["compiled"]),
+        "compile@1": float(metrics["parser"]["compiled"]),
     }
 
 

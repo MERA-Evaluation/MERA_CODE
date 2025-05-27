@@ -27,6 +27,8 @@ metric_list:
   - metric: "pass@1"
     aggregation: mean
     higher_is_better: true
-  - metric: "compilation_rate"
+  - metric: "compile@1"
     aggregation: mean
     higher_is_better: true
+metadata:
+  version: 1.0
