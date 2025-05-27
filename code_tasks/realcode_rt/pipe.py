@@ -340,13 +340,12 @@ def process_results(doc: Dict[str, Any], results: List[Dict[str, Any]]) -> Dict[
 
     metrics = results[0]
     res = {
-        column_replace_dict.get(key, key): metrics.get(key, 0.0)
-        for key in [
-            'pass_gen', 'pass_gt', 'pass_return_pass',
-            'pass_return_empty_str', 'pass_dry_run', 'status'
-        ]
+        column_replace_dict[key]: metrics[key]
+        for key in column_replace_dict
+        if key in metrics
     }
-    res['num_samples'] = 1
+
+    res["num_samples"] = 1
     return res
 
 
