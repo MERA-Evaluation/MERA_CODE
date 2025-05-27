@@ -55,6 +55,8 @@ This will download the data and evaluation code under the `workspace` directory 
 
 ### How to Evaluate
 
+The following model will first build docker images for 4 repositories (bullet3, llvm, openssl and redis) for 2-3 hours with llvm repo taking most building time. Next, lm_eval runs model inference for about an hour. Finally, running all tests takes 2-3 hours. Given time periods highly depend on hardware used.
+
 Run the following command to evaluate your model:
 
 ```bash
@@ -64,7 +66,6 @@ lm_eval \
   --tasks yabloco_oracle \
   --batch_size 8 \
   --trust_remote_code \
-  --gen_kwargs max_tokens=2048 \
   --log_samples \
   --output_path data/out \
   --include_path=./code_tasks
