@@ -19,21 +19,23 @@ if not (repotest_version >= "0.3.52"):
 # Disable frozen=True, make it inplace
 @dataclass(frozen=True)
 class Task:
+    id: int
     repo: str
     base_commit: str
-    test_command: str
-    build_command: str
     image_name: str
-    left_context: str
-    gt: str
-    right_context: str
+    build_command: str
+    test_command: str
     fn: str
     PASS_TO_PASS: str
     FAIL_TO_PASS: str
-    _more_params: str
+    gt: str
+    intent: str
+    intent_type: str
+    left_context: str
+    right_context: str
 
 
-def doc_to_text_fg(doc: Dict[str, str]) -> str:
+def doc_to_text_fg(doc: Dict[str, Any]) -> str:
     """
     Extracts foreground text from a document.
 
@@ -47,29 +49,9 @@ def doc_to_text_fg(doc: Dict[str, str]) -> str:
     str
         The extracted foreground text.
     """
-    return f"{doc['left_context']}\n"
+    return doc["instruction"].format(**doc["inputs"])
 
 
-def doc_to_text_sg(doc: Dict[str, str]) -> str:
-    """
-    Builds a prompt-style string from document contexts.
-
-    Parameters
-    ----------
-    doc : dict
-        Document with 'left_context' and 'right_context'.
-
-    Returns
-    -------
-    str
-        Combined string formatted for a model prompt.
-    """
-    return (
-        f"{doc['left_context']}"
-        "(Fill in the missing code below. Ensure proper indentation and continue logically from the left context.)\n"
-        f"{doc['right_context']}\n"
-        "Missing code:\n"
-    )
 
 
 @register_filter("extract_from_tag")
@@ -328,7 +310,7 @@ class ScoringFilter(Filter):
         -------
         list of Task
         """
-        return [Task(**doc) for doc in docs]
+        return [Task(**doc['meta']) for doc in docs]
 
 
 def process_results(doc: Dict[str, Any], results: List[Dict[str, Any]]) -> Dict[str, float]:
@@ -347,14 +329,24 @@ def process_results(doc: Dict[str, Any], results: List[Dict[str, Any]]) -> Dict[
     dict
         Dictionary with key metrics.
     """
-    column_replace_dict = {"pass_gen": "pass_gen@1"}
+    column_replace_dict = {
+        "pass_gen": "pass@1",
+        "pass_gt": "pass_oracle@1",
+        "pass_return_pass": "pass_stub_pass@1",
+        "pass_return_empty_str": "pass_stub_empty_str@1",
+        "pass_dry_run": "pass_dry_run@1",
+        "status": "execution_success"
+    }
 
     metrics = results[0]
-    res = {column_replace_dict.get(key, key): metrics.get(key, 0.0) for key in [
-        'pass_dry_run', 'pass_gt', 'pass_return_pass',
-        'pass_return_empty_str', 'pass_gen', 'status'
-    ]}
-    res['num_of_samples'] = 1
+    res = {
+        column_replace_dict.get(key, key): metrics.get(key, 0.0)
+        for key in [
+            'pass_gen', 'pass_gt', 'pass_return_pass',
+            'pass_return_empty_str', 'pass_dry_run', 'status'
+        ]
+    }
+    res['num_samples'] = 1
     return res
 
 

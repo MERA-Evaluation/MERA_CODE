@@ -1,0 +1,6 @@
+{
+    "Task description": "**RealCodeFG** is a benchmark for evaluating the ability of language models to generate function bodies in real-world Python repositories. The benchmark focuses on realistic completions using project-level context and validates correctness through test execution.",
+    "Motivation": "This dataset tests how well models can:\n- Generate function bodies based on surrounding code context;\n- Integrate into existing Python projects;\n- Pass real unit tests after insertion.\nThe main evaluation metric is `pass@k`, computed via execution of repository-specific tests inside Docker containers.",
+    "Dataset creation": "The benchmark is built from 154 public Python GitHub repositories created in 2024. For each sample, a function is extracted along with its surrounding code (`left_context`, `right_context`) and evaluated based on whether the generated body passes original unit tests. All examples come from real repositories and are reproducibly executable.",
+    "Contributors": "Pavel Zadorozhny, Rodion Levichev, Pavel Adamenko, Aidar Valeev, Dmitrii Babaev"
+  }

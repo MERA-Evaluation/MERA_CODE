@@ -1,17 +1,13 @@
 tag:
   - realcode_eval
 task: realcode_rt
-dataset_path: json
-dataset_name: null
-dataset_kwargs:
-  data_files: 
-    test: /Users/22530318/git/datasets/realcode/realcode_fg_240412.jsonl
+dataset_path: MERA-evaluation/RealCode
 output_type: generate_until
 training_split: null
 validation_split: null
 test_split: test
 doc_to_text: !function pipe.doc_to_text_fg
-doc_to_target: "{{gt}}"
+doc_to_target: ""
 generation_kwargs:
   do_sample: true
   temperature: 0.7
@@ -20,14 +16,6 @@ generation_kwargs:
   until:
     - "<|endoftext|>"
     - "<|im_end|>"
-    - "\n\n\n"
-    - "\\sclass\\s"
-    - "\\sdef\\s"
-    - "^def\\s"
-    - "^class\\s"
-    - "^if\\s"
-    - "@"
-    - "^#"
 process_results: !function pipe.process_results
 filter_list:
   - name: "evaluation"
@@ -38,34 +26,34 @@ filter_list:
         generations_output_filepath: ./workspace/data/generations_rt.json
         metrics_output_filepath: ./workspace/data/metrics_rt.json
         html_output_filepath: ./workspace/data/metrics_rt.html
-        mode: local
-        n_jobs: 5
+        mode: docker
+        n_jobs: 15
         gen_columns: ["gt", "return_pass", "return_empty_str", "gen"]
-        raise_exception: true,
-        n_jobs_build: 5   
+        raise_exception: true
+        n_jobs_build: 15
         enable_full_logs:  false
       - function: "take_first"
 metric_list:
-  - metric: "pass_gen@1"
+  - metric: "pass@1"
     aggregation: mean
     higher_is_better: true
-  - metric: "pass_dry_run"
+  - metric: "pass_dry_run@1"
     aggregation: mean
     higher_is_better: true
-  - metric: "pass_gt"
+  - metric: "pass_oracle@1"
     aggregation: mean
     higher_is_better: true
-  - metric: "pass_return_pass"
+  - metric: "pass_stub_pass@1"
     aggregation: mean
     higher_is_better: true
-  - metric: "pass_return_empty_str"
-    aggregation: mean
-    higher_is_better: true        
-  - metric: "status"
+  - metric: "pass_stub_empty_str@1"
     aggregation: mean
     higher_is_better: true
-  - metric: "num_of_samples"
+  - metric: "execution_success"
+    aggregation: mean
+    higher_is_better: true
+  - metric: "num_samples"
     aggregation: !function pipe.sum_metric
     higher_is_better: true
 metadata:
-  version: 1.0
+  version: 2.0
