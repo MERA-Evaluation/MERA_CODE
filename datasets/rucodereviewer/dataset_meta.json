@@ -1,8 +1,8 @@
 {
-    "dataset_name": "rucodereview",
+    "dataset_name": "ruCodeReviewer",
     "license": "MERA_private",
-    "dataset_size": 699,
-    "description": "We present RuCodeReviewer, the first open benchmark for automated code review comment generation in Russian. Prioritizing quality and reproducibility over sheer size, we constructed a dataset of 699 merge-request diffs across Java, Python, Scala, and Go, ensuring issues are verifiable and comments are traceable to code changes. Our rigorous two-stage filtering pipeline combined LLM screening with dual human verification.",
+    "dataset_size": 689,
+    "description": "We present RuCodeReviewer, the first open benchmark for automated code review comment generation in Russian. Prioritizing quality and reproducibility over sheer size, we constructed a dataset of 689 merge-request diffs across Java, Python, Scala, and Go, ensuring issues are verifiable and comments are traceable to code changes. Our rigorous two-stage filtering pipeline combined LLM screening with dual human verification.",
     "modalities": [
         "text"
     ],
