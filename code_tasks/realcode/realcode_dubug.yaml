@@ -1,5 +1,5 @@
-include: realcode_rt.yaml
-task: realcode_rt_debug
+include: realcode.yaml
+task: realcode_debug
 filter_list:
   - name: "evaluation"
     filter:
