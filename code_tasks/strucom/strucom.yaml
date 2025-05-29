@@ -1,4 +1,4 @@
-dataset_path: /home/modzyuba1/custom_tasks/strucom
+dataset_path: MERA-evaluation/StRuCom
 task: strucom
 training_split: train
 test_split: test
