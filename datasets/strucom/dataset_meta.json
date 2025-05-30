@@ -14,7 +14,7 @@
     "domains": [],
     "synt_source_models": [],
     "data_example": {
-        "instruction": "Please provide documentation comments (Docstring, GoDoc, JavaDoc, JSDoc, XML docs, etc., depending on language) to this function. The descriptions at the beginning of docstrings should be detailed and helpful. \n На русском языке, пожалуйста. \n  {function}",
+        "instruction": "Напиши русскоязычную документацию к этой функции, используя формат, соответствующий её языку программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
         "inputs": {
             "function": "private void button15_Click(object sender, EventArgs e)\n        {\n            label12.Text = \"\";\n\n            richTextBox1.Clear();\n            richTextBox2.Clear();\n            textBox1.Clear();\n            textBox2.Clear();\n            textBox4.Clear();\n        }"
         },
@@ -46,16 +46,16 @@
         }
     },
     "prompts": [
-        "Add documentation comments to this function in English using the appropriate format for its language (Docstring, GoDoc, JavaDoc, JSDoc, XML docs, etc.). \n{function}",
-        "Write a structured documentation comment for this function in English, it should adhere to documentation standards of its language (Docstring, GoDoc, JavaDoc, JSDoc, XML docs, etc.).\n{function}",
-        "Generate comprehensive English documentation for this function following language-specific conventions (XML docs for C#, GoDoc for Golang, etc.). Function:\n{function}",
-        "Create professional documentation in docstring format for this function in English, using the appropriate format for its language (Docstring, GoDoc, JavaDoc, JSDoc, XML docs, etc.).\n{function}",
-        "Your task is to write a complete English documentation comments (Docstring, GoDoc, JavaDoc, JSDoc, XML docs, etc., depending on language) to this function.\n{function}",
-        "Document this function in English according to its language standards (Docstring, GoDoc, JavaDoc, JSDoc, XML docs, etc., depending on language). \n{function}",
-        "Please provide a structured English documentation comment (Docstring, GoDoc, JavaDoc, JSDoc, XML docs, etc., depending on language). \n{function}",
-        "Generate a documentation block for this function, according to its language standards (Docstring, GoDoc, JavaDoc, JSDoc, XML docs, etc., depending on language)\n{function}",
-        "Write multi-line English documentation for this function, according to its language standards (Docstring, GoDoc, JavaDoc, JSDoc, XML docs, etc., depending on language)\n{function}",
-        "Produce complete English documentation adhering to the appropriate format for its language (Docstring, GoDoc, JavaDoc, JSDoc, XML docs, etc.).\n{function}"
+        "Напиши русскоязычную документацию к этой функции, используя формат, соответствующий её языку программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "Напиши структурированный комментарий в формате документации для этой функции на русском языке, он должен соответствовать стандартам документации её языка программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "Сгенерируй русскоязычную документацию для этой функции в соответствии с языковыми соглашениями (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "Создай документацию для этой функции на русском языке, используя формат, соответствующий её языку программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "Твоя задача - написать комментарий в виде документации на русском языке в зависимости от языка программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.) для этой функции. \n{function}",
+        "Задокументируй эту функцию на русском языке в соответствии со стандартами её языка программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "Предоставь структурированный комментарий в формате документации на русском языке в зависимости от языка программирования данной функции (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "Сгенерируй документацию для этой функции в соответствии со стандартами её языка программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.) \n{function}",
+        "Напиши документацию на русском языке для этой функции в соответствии со стандартами её языка программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "Создай документацию для этой функции на русском языке, соответствующую формату для её языка программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}"
     ],
     "metrics": {
         "chrf": {

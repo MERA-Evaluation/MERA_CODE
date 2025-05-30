@@ -55,7 +55,7 @@ Each dataset question includes data in the following fields:
 
 ```json
 {
-    "instruction": "Please provide documentation comments (Docstring, GoDoc, JavaDoc, JSDoc, XML docs, etc., depending on language) to this function. The descriptions at the beginning of docstrings should be detailed and helpful. \n На русском языке, пожалуйста. \n  {function}",
+    "instruction": "Напиши русскоязычную документацию к этой функции, используя формат, соответствующий её языку программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
     "inputs": {
         "function": "private void button15_Click(object sender, EventArgs e)\n        {\n            label12.Text = \"\";\n\n            richTextBox1.Clear();\n            richTextBox2.Clear();\n            textBox1.Clear();\n            textBox2.Clear();\n            textBox4.Clear();\n        }"
     },
@@ -74,7 +74,7 @@ For the task, 10 prompts were prepared and evenly distributed among the question
 Prompt example:
 
 ```
-Add documentation comments to this function in English using the appropriate format for its language (Docstring, GoDoc, JavaDoc, JSDoc, XML docs, etc.). 
+Напиши русскоязычную документацию к этой функции, используя формат, соответствующий её языку программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). 
 {function}
 ```
 
