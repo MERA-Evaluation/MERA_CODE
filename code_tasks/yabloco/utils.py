@@ -11,11 +11,11 @@ def doc_to_text(doc):
     lang = "C++"
     if doc["repo"] in ["openssl", "redis"]:
         lang = "C"
-    system = f"\nGenerate a function on {lang} programming language.\n"
-    func_name = doc["signature"].replace("\n", " ")
-    func_name = " ".join(func_name.split())
+    system = f"Generate a function on {lang} programming language.\n"
+    signature = doc["signature"].replace("\n", " ")
+    signature = " ".join(signature.split())
     function_description = doc["doc"]
-    prompt = f'Function name `{func_name}`.\nFunction description: "{function_description}".'
+    prompt = f'Function signature: "{signature}".\nFunction description: "{function_description}".'
     context = "\n\n".join(doc["context"])
     if context:
         prompt += f"\n\nUse this context:\n\n{context}"
@@ -111,4 +111,5 @@ def process_results(doc: Dict, results: List[Dict]) -> Dict[str, float]:
     return {
         "pass@1": metrics.get("pass@1", 0.0),
         "exact_match": metrics.get("exact_match", 0.0),
+        "edit_similarity": metrics.get("edit_similarity", 0.0),
     }

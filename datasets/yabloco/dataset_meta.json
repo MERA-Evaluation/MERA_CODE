@@ -1,0 +1,162 @@
+{
+    "dataset_name": "YABLoCo",
+    "license": "[CC BY 4.0](https://arxiv.org/abs/2505.04406)",
+    "dataset_size": 0,
+    "description": "Long context code generation on C/C++ at function level",
+    "modalities": [
+        "code"
+    ],
+    "skills": [
+        "C/C++",
+        "Long context",
+        "Code generation",
+        "Instruction following"
+    ],
+    "domains": [],
+    "synt_source_models": [],
+    "data_example": {
+        "instruction": "Напиши функцию на языке {language} с сигнатурой {signature} и следующим описанием: {docstring}. Используй следующий контекст:\n\n{context}",
+        "inputs": {
+            "language": "C",
+            "context": "// File name: openssl/crypto/ui/ui_lib.c\n// Comment: \nvoid *(*UI_method_get_data_duplicator(const UI_METHOD *method)) (UI *, void *)\n{\n    if (method != NULL)\n        return method->ui_duplicate_data;\n    return NULL;\n}",
+            "signature": "void *UI_add_user_data(UI *ui, void *user_data)",
+            "docstring": " The following function is used to store a pointer to user-specific data.\nAny previous such pointer will be returned and replaced.\nFor callback purposes, this function makes a lot more sense than using\nex_data, since the latter requires that different parts of OpenSSL or\napplications share the same ex_data index.\nNote that the UI_OpenSSL() method completely ignores the user data. Other\nmethods may not, however."
+        },
+        "outputs": "void *UI_add_user_data(UI *ui, void *user_data)\n{\n    void *old_data = ui->user_data;\n\n    if ((ui->flags & UI_FLAG_DUPL_DATA) != 0) {\n        ui->meth->ui_destroy_data(ui, old_data);\n        old_data = NULL;\n    }\n    ui->user_data = user_data;\n    ui->flags &= ~UI_FLAG_DUPL_DATA;\n    return old_data;\n}",
+        "meta": {
+            "id": 230,
+            "original_id": "1AA5FDA0028F60DA",
+            "repository": "openssl",
+            "fname": "UI_add_user_data",
+            "file": "openssl/crypto/ui/ui_lib.c",
+            "calls_num": 5,
+            "dep_num": 2,
+            "same_file": 1,
+            "same_package": 1,
+            "project": 0,
+            "stdlib": 0,
+            "external_binaries": 0,
+            "code_length": 11,
+            "pos": 371,
+            "last_commit": "31.05.2017",
+            "test_cov_hits": 401
+        }
+    },
+    "data_field_descriptions": {
+        "instruction": {
+            "ru": "Промпт-инструкция для модели, содержащая шаблон для вставки элементов вопроса.",
+            "en": "Instruction prompt template with question elements placeholders."
+        },
+        "inputs": {
+            "language": {
+                "en": "Programming language to write code in (C/C++).",
+                "ru": "Язык программирования для написания кода (C/C++)."
+            },
+            "signature": {
+                "en": "Function signature.",
+                "ru": "Сигнатура функции."
+            },
+            "docstring": {
+                "en": "Function docstring comment.",
+                "ru": "Докстринг комментарий к функции."
+            },
+            "context": {
+                "en": "Oracle context -- functions extracted from call graph that the original code calls.",
+                "ru": "Oracle контекст -- функции, извлечённые из графа вызовов, которые вызывает оригинальный код."
+            }
+        },
+        "outputs": {
+            "ru": "Правильный ответ на вопрос.",
+            "en": "The correct answer to the question."
+        },
+        "meta": {
+            "id": {
+                "ru": "Номер-идентификатор вопроса в датасете.",
+                "en": "Identification number of the question in the dataset."
+            },
+            "original_id": {
+                "en": "Function identifier in call-graph.",
+                "ru": "Идентификатор функции в графе вызовов."
+            },
+            "repository": {
+                "en": "Repository.",
+                "ru": "Репозиторий."
+            },
+            "fname": {
+                "en": "Function name.",
+                "ru": "Имя функции."
+            },
+            "file": {
+                "en": "Original file path.",
+                "ru": "Исходный путь к файлу."
+            },
+            "calls_num": {
+                "en": "Number of times target function is called.",
+                "ru": "Количество вызовов целевой функции."
+            },
+            "dep_num": {
+                "en": "Number of dependencies called in function body.",
+                "ru": "Число зависимостей, вызываемых в теле функции."
+            },
+            "same_file": {
+                "en": "Number of same-file dependencies called in function body.",
+                "ru": "Число зависимостей из того же файла, вызываемых в теле функции."
+            },
+            "same_package": {
+                "en": "Number of same-package dependencies called in function body.",
+                "ru": "Число зависимостей из того же пакета, вызываемых в теле функции."
+            },
+            "project": {
+                "en": "Number of project-level dependencies called in function body.",
+                "ru": "Число зависимостей на уровне проекта, вызываемых в теле функции."
+            },
+            "stdlib": {
+                "en": "Number of stdlib dependencies called in function body.",
+                "ru": "Число зависимостей из стандартной библиотеки, вызываемых в теле функции."
+            },
+            "external_binaries": {
+                "en": "Number of dependencies from external binaries called in function body.",
+                "ru": "Число зависимостей из внешних бинарных файлов, вызываемых в теле функции."
+            },
+            "code_length": {
+                "en": "Ground truth code length.",
+                "ru": "Длина эталонного кода."
+            },
+            "pos": {
+                "en": "Code position in the original file.",
+                "ru": "Позиция кода в исходном файле."
+            },
+            "last_commit": {
+                "en": "Date of last commit related to the function body.",
+                "ru": "Дата последнего коммита, связанного с телом функции."
+            },
+            "test_cov_hits": {
+                "en": "Number of test coverage hits.",
+                "ru": "Количество попаданий по покрытию тестами."
+            }
+        }
+    },
+    "prompts": [
+        "Сгенерируй функцию на языке программирования {language}. Сигнатура функции: {signature}. Описание функции: {docstring}. Используй следующий контекст:\n\n{context}",
+        "Напиши функцию на языке {language} с сигнатурой {signature} и следующим описанием: {docstring}. Используй следующий контекст:\n\n{context}",
+        "Создай функцию на языке программирования {language}. Её сигнатура: {signature}, описание: {docstring}. Используй следующий контекст:\n\n{context}",
+        "Сгенерируй код функции на {language}. Сигнатура: {signature}, назначение: {docstring}. Используй следующий контекст:\n\n{context}",
+        "Нужно реализовать функцию на языке {language}. Вот сигнатура: {signature}, а вот описание: {docstring}. Используй следующий контекст:\n\n{context}",
+        "Напиши реализацию функции на {language} по сигнатуре {signature} и описанию {docstring}. Используй следующий контекст:\n\n{context}",
+        "Сформируй функцию на языке программирования {language}, используя сигнатуру {signature} и следующее описание: {docstring}.",
+        "Создай код функции на {language}. Сигнатура функции: {signature}. Описание: {docstring}.",
+        "Реализуй функцию на языке {language}, соблюдая сигнатуру {signature} и описание {docstring}.",
+        "Сгенерируй функцию на {language} с заданными параметрами: сигнатура — {signature}, описание — {docstring}."
+    ],
+    "metrics": {
+        "Pass@1": {
+            "en": "Pass@1 is the average success rate across all processed cases, where a given case is considered successful (score 1) if the first generated solution passes all unit tests, and unsuccessful (score 0) otherwise.",
+            "ru": "Метрика Pass@1 вычисляет среднюю долю успешных случаев среди всех обработанных, где случай считается успешным (оценка 1), если первое сгенерированное решение проходит все модульные тесты, и неуспешным (оценка 0) в противном случае.",
+            "short": "pass@1"
+        },
+        "Exact match": {
+            "en": "Exact match is the average of scores for all processed cases, where a given case score is 1 if the predicted string is the exact same as its reference string, and is 0 otherwise.",
+            "ru": "Метрика Exact match вычисляет среднее по оценкам всех обработанных вопросов, где оценка имеет значение 1, если предсказанная строка точно совпадает с правильным ответом, и 0 в остальных случаях."
+        }
+    }
+}
