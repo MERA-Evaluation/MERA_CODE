@@ -15,7 +15,7 @@ bodies to generate.
 - **Real-World Repositories**: `bullet3` (C++), `llvm-project` (C++), `openssl` (C), `redis` (C).
 
 ### Dataset Details
-- **Tasks**: 218 functions to generate
+- **Tasks**: 208 functions to generate
 - **Context**:
   - `oracle`: the callees of the functions
 - **Ground Truth**: The correct implementation of the function or method (not accessible to the model), while it may deviate from the original code due to macros filtering.
