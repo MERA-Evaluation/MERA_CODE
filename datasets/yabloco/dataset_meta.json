@@ -1,7 +1,7 @@
 {
     "dataset_name": "YABLoCo",
     "license": "[CC BY 4.0](https://arxiv.org/abs/2505.04406)",
-    "dataset_size": 0,
+    "dataset_size": 208,
     "description": "Long context code generation on C/C++ at function level",
     "modalities": [
         "code"
@@ -138,11 +138,12 @@
     },
     "prompts": [
         "Сгенерируй функцию на языке программирования {language}. Сигнатура функции: {signature}. Описание функции: {docstring}. Используй следующий контекст:\n\n{context}",
-        "Напиши функцию на языке {language} с сигнатурой {signature} и следующим описанием: {docstring}. Используй следующий контекст:\n\n{context}",
-        "Создай функцию на языке программирования {language}. Её сигнатура: {signature}, описание: {docstring}. Используй следующий контекст:\n\n{context}",
-        "Сгенерируй код функции на {language}. Сигнатура: {signature}, назначение: {docstring}. Используй следующий контекст:\n\n{context}",
-        "Нужно реализовать функцию на языке {language}. Вот сигнатура: {signature}, а вот описание: {docstring}. Используй следующий контекст:\n\n{context}",
+        "Напиши функцию на языке {language} с сигнатурой {signature} и следующим описанием: {docstring}. При этом опирайся на следующий контекст\n\n{context}",
+        "Создай функцию на языке программирования {language}. Её сигнатура: {signature}, описание: {docstring}. Опирайся на следующий контекст:\n\n{context}",
+        "Сгенерируй код функции на {language}. Сигнатура: {signature}, назначение: {docstring}. При этом опирайся на следующий контекст:\n\n{context}",
+        "Нужно реализовать функцию на языке {language}. Вот сигнатура: {signature}, а вот описание: {docstring}. Опирайся на следующий контекст:\n\n{context}",
         "Напиши реализацию функции на {language} по сигнатуре {signature} и описанию {docstring}. Используй следующий контекст:\n\n{context}",
+        "Реализуй функцию на языке {language}, используя сигнатуру {signature} и описание {docstring}. При этом опирайся на следующий контекст:\n\n{context}",
         "Сформируй функцию на языке программирования {language}, используя сигнатуру {signature} и следующее описание: {docstring}.",
         "Создай код функции на {language}. Сигнатура функции: {signature}. Описание: {docstring}.",
         "Реализуй функцию на языке {language}, соблюдая сигнатуру {signature} и описание {docstring}.",
