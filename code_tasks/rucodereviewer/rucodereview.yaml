@@ -1,12 +1,12 @@
-task: rucodereview
-task_alias: rucodereview
+task: rucodereviewer
+task_alias: rucodereviewer
 
-dataset_path: /workdir/MERA_CODE/code_tasks/rucodereview
+dataset_path: MERA-evaluation/ruCodeReviewer
 
 output_type: generate_until
 
-training_split: train
-test_split: train
+training_split: null
+test_split: test
 
 doc_to_text: !function utils.doc_to_text
 
