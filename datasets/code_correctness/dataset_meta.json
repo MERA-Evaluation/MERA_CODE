@@ -45,8 +45,8 @@
             }
         },
         "outputs": {
-            "en": "Answer of the model, should be either \"succeed\" or \"fail\"",
-            "ru": "Ответ модели, должен быть succeed или fail"
+            "en": "Answer of the model, should be either \"success\" or \"failed\"",
+            "ru": "Ответ модели, должен быть success или failed"
         },
         "meta": {
             "id": {

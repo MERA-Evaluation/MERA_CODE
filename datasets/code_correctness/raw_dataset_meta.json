@@ -25,7 +25,7 @@
       "test_code": {"en": "Source code from the test file", "ru": "Исходный код тестового файла"},
       "lang": {"en": "Programming language of this sample", "ru": "Язык программирования данного примера"}
     },
-    "outputs": {"en": "Answer of the model, should be either \"succeed\" or \"fail\"", "ru": "Ответ модели, должен быть succeed или fail"},
+    "outputs": {"en": "Answer of the model, should be either \"success\" or \"failed\"", "ru": "Ответ модели, должен быть success или failed"},
     "meta": {
             "id": {"en": "default", "ru": "default"}
         }

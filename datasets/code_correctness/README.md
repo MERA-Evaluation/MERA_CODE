@@ -26,7 +26,7 @@ Each dataset question includes data in the following fields:
     - `focal_code` [str] — Source code from the focal file;
     - `test_code` [str] — Source code from the test file;
     - `lang` [str] — Programming language of this sample;
-- `outputs` [str] — Answer of the model, should be either "succeed" or "fail";
+- `outputs` [str] — Answer of the model, should be either "success" or "failed";
 - `meta` — Metadata related to the test example, not used in the question (hidden from the tested model).
     - `id` [int] — Identification number of the question in the dataset.
 
