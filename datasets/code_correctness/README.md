@@ -5,7 +5,7 @@
 
 Evaluation of the correctness of the written code for Python, Java and Go. Correctness means the absent of any errors including SyntaxError, Runtime Error etc. and the successful tests passing as well.
 
-Evaluated skills: code classification, Instruction following, Perception (Python, Java, Go), Code correctness classification
+Evaluated skills: Instruction following, Perception (Python, Java, Go), Code correctness classification
 
 Contributors: Elena Bruches, Ivan Bondarenko, Daniil Grebenkin, Oleg Sedukhin, Roman Derunets, Georgii Mkrtchyan, Vadim Alperovich
 
@@ -71,7 +71,7 @@ Prompt example:
 
 {test_code}
 
-Ответь одним словом. Если тест не вызовет ошибок при запуске программы, то верни "succeed". Иначе верни "fail".
+Ответь одним словом. Если тест не вызовет ошибок при запуске программы, то верни "success". Иначе верни "failed".
 ```
 
 

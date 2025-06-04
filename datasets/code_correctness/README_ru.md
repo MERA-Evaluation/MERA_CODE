@@ -5,7 +5,7 @@
 
 Оценка корректности написанного кода для языков Python, Java, Go. Под корректностью кода подразумевается отсутствие любых ошибок, включая SyntaxError, RuntimeError и др., а также успешное прохождение тестов.
 
-Тестируемые навыки моделей: code classification, Instruction following, Perception (Python, Java, Go), Code correctness classification
+Тестируемые навыки моделей: Instruction following, Perception (Python, Java, Go), Code correctness classification
 
 Авторы: Елена Бручес, Иван Бондаренко, Даниил Гребёнкин, Олег Седухин, Роман Дерунец, Георгий Мкртчян, Вадим Альперович
 
@@ -72,7 +72,7 @@
 
 {test_code}
 
-Ответь одним словом. Если тест не вызовет ошибок при запуске программы, то верни "succeed". Иначе верни "fail".
+Ответь одним словом. Если тест не вызовет ошибок при запуске программы, то верни "success". Иначе верни "failed".
 ```
 
 
