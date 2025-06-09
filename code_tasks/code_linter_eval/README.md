@@ -19,7 +19,7 @@ pip install flake8 flake8-json
         "code": "def first_repeated_char(str1):\n  for index,c in enumerate(str1):\n    if str1[:index+1].count(c) > 1:\n      return c",
         "feedback": "E111: indentation is not a multiple of 4 in 2 line\nE231: missing whitespace after ',' in 2 line\nE111: indentation is not a multiple of 4 in 4 line\nW292: no newline at end of file in 4 line\n"
     },
-    "instruction": "Перепиши код с учетом ошибок полученных от линтера. \nКод: {code} \nОшибки от линтера:{feedback}",
+    "instruction":  "Перепиши код с учетом ошибок полученных от линтера. \nКод:\n{code}\nОшибки от линтера:\n{feedback}\nВывод должен быть строго в таком формате:\n[PYTHON]\ndef имя_функции(аргументы):\n    тело_функции\n[/PYTHON]",
     "meta": {
         "canonical_code": "\ndef find_repeated_character(string):\n    seen = set()\n    for char in string:\n        if char in seen:\n            return char\n        seen.add(char)\n    return None\n",
         "id": 0
