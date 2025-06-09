@@ -1,0 +1,24 @@
+task: unit_tests
+dataset_path: MERA-evaluation/UnitTests
+
+training_split: shots
+test_split: test
+fewshot_split: shots
+
+output_type: generate_until
+doc_to_text: !function utils.doc_to_text
+doc_to_target: "outputs"
+
+process_results: !function utils.process_results
+metric_list:
+  - metric: code_bleu
+    aggregation: mean
+    higher_is_better: true
+
+generation_kwargs:
+  do_sample: false
+
+num_fewshot: null
+
+metadata:
+  version: 0.1
