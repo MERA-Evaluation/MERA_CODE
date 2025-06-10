@@ -3,7 +3,7 @@ import os
 import tempfile
 from dataclasses import dataclass, asdict
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from lm_eval.api.filter import Filter
 from lm_eval.api.registry import register_filter
@@ -110,6 +110,35 @@ class FromTagExtractorRCJava(Filter):
             return text
 
         return text[index_start + len(tag_start): index_end]
+    
+
+def cut_c_style_func_body(prediction: str, left_ctx: Optional[str] = None):
+    if left_ctx is None:
+        text = prediction
+        is_body = True
+        c = 1  # счетчик скобок
+        j = 0  # сколько доп. символов было добавлено
+    else:
+        left_ctx_last_line = left_ctx.splitlines()[-1]
+        text = left_ctx_last_line + prediction
+        is_body = False
+        c = 0
+        j = len(left_ctx_last_line)
+    
+    quotes_open = False
+    for i, char in enumerate(text):
+        if char == '"':
+            quotes_open = not quotes_open
+        if quotes_open:
+            continue
+        if char == '{':
+            is_body = True
+            c += 1
+        elif char == '}':
+            c -= 1
+            if c == 0 and is_body and i-j >= 5:
+                return prediction[:i-j+1]
+    return None
 
 
 def get_run_id():
@@ -184,11 +213,10 @@ class ScoringFilterRCJava(Filter):
                           )
 
         dataset = self._load_dataset(docs)[:len(generations)]
-        # processed_gens = [
-        #     [_postprocess(gen, get_indent(task.gt)) for gen in gens]
-        #     for task, gens in zip(dataset, generations)
-        # ]
-        processed_gens = generations
+        processed_gens = [
+            [cut_c_style_func_body(gen, task.left_context) for gen in gens]
+            for task, gens in zip(dataset, generations)
+        ]
 
         task_list = []
         for task, gens in zip(dataset, processed_gens):
