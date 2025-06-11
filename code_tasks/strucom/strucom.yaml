@@ -1,6 +1,6 @@
-dataset_path: /home/modzyuba1/custom_tasks/strucom
+dataset_path: MERA-evaluation/StRuCom
 task: strucom
-training_split: train
+training_split: shots
 test_split: test
 output_type: generate_until
 doc_to_text: !function utils.doc_to_target
@@ -10,6 +10,4 @@ fewshot_config:
 num_fewshot: 1
 metric_list:
   - metric: chrf
-    higher_is_better: true
-  - metric: bleu
     higher_is_better: true

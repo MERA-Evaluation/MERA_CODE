@@ -1,0 +1,67 @@
+{
+    "dataset_name": "StRuCom",
+    "license": "None, Apache License 2.0, Apache-2.0 license, BSD 2-Clause \"Simplified\" License, BSD 3-Clause \"New\" or \"Revised\" License, BSD 3-Clause Clear License, BSD Zero Clause License, BSD-2-Clause license, BSD-3-Clause license, CC0-1.0 license, Creative Commons Attribution 4.0 International, Creative Commons Zero v1.0 Universal, Do What The F*ck You Want To Public License, ISC, ISC License, MIT License, MIT No Attribution, MIT license, PostgreSQL License, The Unlicense, Universal Permissive License v1.0, Unlicense license, zlib License",
+    "dataset_size": 500,
+    "description": "First Russian-language benchmark combining real GitHub data and LLM-generated synthetic docstrings (Python/Java/C#/Go/JS) for evaluating structured code documentation models.",
+    "modalities": [
+        "code",
+        "text"
+    ],
+    "skills": [
+        "Code documentation generation",
+        "Instruction following"
+    ],
+    "domains": [],
+    "synt_source_models": [],
+    "data_example": {
+        "instruction": "Напиши русскоязычную документацию к этой функции, используя формат, соответствующий её языку программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "inputs": {
+            "function": "private void button15_Click(object sender, EventArgs e)\n        {\n            label12.Text = \"\";\n\n            richTextBox1.Clear();\n            richTextBox2.Clear();\n            textBox1.Clear();\n            textBox2.Clear();\n            textBox4.Clear();\n        }"
+        },
+        "outputs": "/// <summary>\n/// Обработчик события нажатия на кнопку button15.\n/// При вызове этой функции происходит очистка текста в различных элементах управления формы:\n/// - Удаляется текст из метки label12.\n/// - Очищается содержимое многострочного текстового поля richTextBox1.\n/// - Очищается содержимое многострочного текстового поля richTextBox2.\n/// - Очищается текстовое поле textBox1.\n/// - Очищается текстовое поле textBox2.\n/// - Очищается текстовое поле textBox4.\n/// </summary>\n/// <param name=\"sender\">Объект, который вызвал событие (в данном случае, кнопка button15).</param>\n/// <param name=\"e\">Параметры события, содержащие дополнительную информацию о событии.</param>",
+        "meta": {
+            "id": 1
+        }
+    },
+    "data_field_descriptions": {
+        "instruction": {
+            "ru": "Промпт-инструкция для модели, содержащая шаблон для вставки элементов вопроса.",
+            "en": "Instruction prompt template with question elements placeholders."
+        },
+        "inputs": {
+            "function": {
+                "ru": "Функция, к которой нужно сгенерировать структурированный комментарий",
+                "en": "The function to generate a structured comment for."
+            }
+        },
+        "outputs": {
+            "ru": "Правильный ответ на вопрос.",
+            "en": "The correct answer to the question."
+        },
+        "meta": {
+            "id": {
+                "ru": "Номер-идентификатор вопроса в датасете.",
+                "en": "Identification number of the question in the dataset."
+            }
+        }
+    },
+    "prompts": [
+        "Напиши русскоязычную документацию к этой функции, используя формат, соответствующий её языку программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "Напиши структурированный комментарий в формате документации для этой функции на русском языке, он должен соответствовать стандартам документации её языка программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "Сгенерируй русскоязычную документацию для этой функции в соответствии с языковыми соглашениями (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "Создай документацию для этой функции на русском языке, используя формат, соответствующий её языку программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "Твоя задача - написать комментарий в виде документации на русском языке в зависимости от языка программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.) для этой функции. \n{function}",
+        "Задокументируй эту функцию на русском языке в соответствии со стандартами её языка программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "Предоставь структурированный комментарий в формате документации на русском языке в зависимости от языка программирования данной функции (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "Сгенерируй документацию для этой функции в соответствии со стандартами её языка программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.) \n{function}",
+        "Напиши документацию на русском языке для этой функции в соответствии со стандартами её языка программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+        "Создай документацию для этой функции на русском языке, соответствующую формату для её языка программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}"
+    ],
+    "metrics": {
+        "chrf": {
+            "ru": "Метрика, оценивающая совпадение символьных n-грамм с эталонным текстом и подходящая для морфологии и орфографии русского языка",
+            "en": "Metric evaluating character n-gram matches with reference text, suitable for Russian morphology and spelling accuracy",
+            "short": "chrf"
+        }
+    }
+}
