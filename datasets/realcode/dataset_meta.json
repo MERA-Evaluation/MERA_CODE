@@ -1,0 +1,163 @@
+{
+    "dataset_name": "RealCode",
+    "license": "MERA_private",
+    "dataset_size": 802,
+    "description": "Function body generation benchmark built from real Python repositories with executable tests. Tasks focus on filling in the body of existing functions using surrounding context.",
+    "modalities": [
+        "code"
+    ],
+    "skills": [
+        "Code completion",
+        "Context-aware generation"
+    ],
+    "domains": [],
+    "synt_source_models": [],
+    "data_example": {
+        "instruction": "Контекст:\n```python\n{left_context}\n```\nТребуется: только тело функции. Строго соблюдай отступы Python. Не добавляй лишнего текста.",
+        "inputs": {
+            "left_context": "from slack_sdk import WebClient\n\nclass SlackProgressBar:\n    def __init__(self, token: str, total: int):"
+        },
+        "outputs": "        self._client = WebClient(token=token)\n        self._total = total",
+        "meta": {
+            "id": 1,
+            "repo": "mlizzi/slack-progress-bar",
+            "base_commit": "d2d6d955fb8a0423ab89c1bac6c4f70101e6b8af",
+            "gt": "        self._client = WebClient(token=token)\n        self._total = total",
+            "right_context": "    def update(self, value: int) -> None:\n        pass",
+            "left_context": "from slack_sdk import WebClient\n\nclass SlackProgressBar:\n    def __init__(self, token: str, total: int):",
+            "image_name": "python:3.11.11-slim-bookworm",
+            "build_command": "pip install .; pip install pytest; pip install pytest-json-report;",
+            "test_command": "pytest tests --json-report --json-report-file=report_pytest.json",
+            "fn": "slack_progress_bar/slack_progress_bar.py",
+            "PASS_TO_PASS": [
+                "tests/test_slack_progress_bar.py::test_slack_progress_bar"
+            ],
+            "FAIL_TO_PASS": [],
+            "intent": "__init__[function]",
+            "intent_type": "function"
+        }
+    },
+    "data_field_descriptions": {
+        "instruction": {
+            "ru": "строка, содержащая формулировку задания по генерации тела функции",
+            "en": "string containing the task formulation for function body generation"
+        },
+        "inputs": {
+            "left_context": {
+                "ru": "код перед функцией, включая импорты и классы",
+                "en": "code appearing before the target function"
+            }
+        },
+        "outputs": {
+            "ru": "одномерный массив строк размера n_samples, где n_samples — количество требуемых сэмплов для подсчета pass@k",
+            "en": "one-dimensional array of strings of size n_samples, where n_samples is the number required to compute pass@k"
+        },
+        "meta": {
+            "id": {
+                "ru": "уникальный идентификатор примера",
+                "en": "unique identifier of the example"
+            },
+            "repo": {
+                "ru": "имя GitHub-репозитория, из которого извлечена задача",
+                "en": "GitHub repository name the task is taken from"
+            },
+            "base_commit": {
+                "ru": "хэш коммита, зафиксировавшего состояние репозитория",
+                "en": "commit hash fixing the repo state"
+            },
+            "gt": {
+                "ru": "тело функции-истины без сигнатуры",
+                "en": "ground truth function body (no signature)"
+            },
+            "right_context": {
+                "ru": "код после функции, включая другие функции и классы",
+                "en": "code appearing after the target function"
+            },
+            "left_context": {
+                "ru": "код перед функцией, включая импорты и классы",
+                "en": "code appearing before the target function"
+            },
+            "image_name": {
+                "ru": "Docker-образ, в котором выполняется проект",
+                "en": "Docker image for running the project"
+            },
+            "build_command": {
+                "ru": "команда для сборки проекта перед тестами",
+                "en": "command to build the project before tests"
+            },
+            "test_command": {
+                "ru": "команда запуска тестов",
+                "en": "command to run the tests"
+            },
+            "fn": {
+                "ru": "путь до файла, в котором находится функция",
+                "en": "path to the file containing the function"
+            },
+            "PASS_TO_PASS": {
+                "ru": "список тестов, которые успешно проходят",
+                "en": "tests that pass with the generated function"
+            },
+            "FAIL_TO_PASS": {
+                "ru": "список тестов, которые перестали падать",
+                "en": "tests that used to fail and now pass"
+            },
+            "intent": {
+                "ru": "название функции или метода",
+                "en": "function or method name"
+            },
+            "intent_type": {
+                "ru": "тип элемента (function, class и т.д.)",
+                "en": "element type (function, class, etc.)"
+            }
+        }
+    },
+    "prompts": [
+        "Контекст:\n```python\n{left_context}\n```\nТребуется: только тело одной функции. Строго соблюдай отступы Python. Не добавляй лишнего текста.",
+        "Дан контекст перед функцией:\n```python\n{left_context}\n```\nСгенерируй **только тело** одного метода, без заголовка. Важно: соблюдай отступы, как в Python.",
+        "Вот начало файла:\n```python\n{left_context}\n```\nТвоя задача — дописать тело одной функции. Не пиши `def` и комментарии. Используй отступы для этой функции.",
+        "Используй следующий код:\n```python\n{left_context}\n```\nТеперь — только реализация тела одной функции. Отступы должны быть корректными, сигнатура не нужна.",
+        "На основе следующего:\n```python\n{left_context}\n```\nНапиши тело функции. Никакой сигнатуры. Отступы важны — не нарушай структуру кода.",
+        "Ты видишь код до `def`:\n```python\n{left_context}\n```\nТеперь продолжи тело одного метода. Только тело без сигнатуры. Обязательно придерживайся отступов.",
+        "Вот начало кода:\n```python\n{left_context}\n```\nПродолжи — с тела функции. Отступы Python должны быть точными. Сигнатура и лишнее не нужны.",
+        "Дано:\n```python\n{left_context}\n```\nСгенерируй содержимое функции (тело функции). Строго соблюдай отступы, `def` и комментарии исключены.",
+        "Исходный код:\n```python\n{left_context}\n```\nНапиши реализацию. Только тело функции. Соблюдай отступы, не включай название функции.",
+        "Продолжи функцию, строго начиная с тела. Соблюдай Python-отступы. Не включай сигнатуру.\n```python\n{left_context}\n```\nТело функции:"
+    ],
+    "metrics": {
+        "pass@1": {
+            "ru": "доля задач, в которых хотя бы одна генерация прошла все тесты",
+            "en": "fraction of tasks where at least one generation passes all tests",
+            "short": "pass@1"
+        },
+        "pass_oracle@1": {
+            "ru": "доля задач, в которых ground truth решение проходит все тесты (верхняя граница)",
+            "en": "fraction of tasks where the ground truth solution passes all tests (oracle upper bound)",
+            "short": "pass_oracle@1"
+        },
+        "pass_stub_pass@1": {
+            "ru": "доля задач, в которых заглушка `return pass` прошла хотя бы один тест",
+            "en": "fraction of tasks where a `return pass` stub passed at least one test",
+            "short": "pass_stub_pass@1"
+        },
+        "pass_stub_empty_str@1": {
+            "ru": "доля задач, в которых заглушка `return \"\"` прошла хотя бы один тест",
+            "en": "fraction of tasks where a `return \"\"` stub passed at least one test",
+            "short": "pass_stub_empty_str@1"
+        },
+        "pass_dry_run@1": {
+            "ru": "доля задач, где хотя бы одна генерация прошла тесты в режиме dry-run (без использования ground truth)",
+            "en": "fraction of tasks where at least one generation passes in dry-run mode (without using ground truth)",
+            "short": "pass_dry_run@1"
+        },
+        "execution_success": {
+            "ru": "доля задач, в которых проект успешно собрался и тесты запустились без сбоев",
+            "en": "fraction of tasks where the project built and tests executed without failure",
+            "short": "execution_success"
+        },
+        "num_samples": {
+            "ru": "общее количество задач в датасете",
+            "en": "total number of tasks in the dataset",
+            "short": "num_samples"
+        }
+    }
+}
