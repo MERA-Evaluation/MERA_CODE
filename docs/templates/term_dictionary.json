@@ -9,6 +9,16 @@
             "en": "Exact match is the average of scores for all processed cases, where a given case score is 1 if the predicted string is the exact same as its reference string, and is 0 otherwise.",
             "ru": "Метрика Exact match вычисляет среднее по оценкам всех обработанных вопросов, где оценка имеет значение 1, если предсказанная строка точно совпадает с правильным ответом, и 0 в остальных случаях.",
             "short": "EM"
+        },
+        "pass@1": {
+            "en": "Pass@1 measures the proportion of problems where the model's first generated solution passes all test cases.",
+            "ru": "Метрика pass@1 измеряет долю задач, для которых первое сгенерированное моделью решение проходит все тесты.",
+            "short": "pass@1"
+        },
+        "compile@1": {
+            "en": "compile@1 is the proportion of generated code that successfully compiles without errors.",
+            "ru": "Метрика compile@1 показывает долю сгенерированного кода, который успешно компилируется без ошибок.",
+            "short": "compile@1"
         }
     },
     "data_field_descriptions": {

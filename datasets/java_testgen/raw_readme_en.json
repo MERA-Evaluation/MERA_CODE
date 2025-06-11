@@ -1,0 +1,6 @@
+{
+    "Task description": "**Java TestGen** is a benchmark designed to evaluate code generation models' ability to generate Java unit tests. Tasks involve generating unit tests based on provided Java source code and repository context.",
+    "Motivation": "This dataset assesses models' ability to generate functionally valid tests for Java programs, emphasizing:\n- Understanding real-world Java code;\n- Generating executable test cases;\n- Handling Maven project structures and dependencies.",
+    "Dataset creation": "The dataset consists of 227 tasks collected from public GitHub Java repositories. Each task contains source code, testing command, Docker environment details, and a prompt guiding test generation. Testing is performed by executing the generated tests inside a Docker container with the project setup.",
+    "Contributors": "Dmitry Salikhov, Pavel Zadorozhny, Pavel Adamenko, Rodion Levichev, Aidar Valeev, Dmitrii Babaev"
+}
