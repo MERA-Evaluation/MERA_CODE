@@ -1,0 +1,48 @@
+tag:
+  - yabloco
+task: yabloco_oracle
+dataset_path: json
+dataset_name: null
+dataset_kwargs:
+  data_files: 
+    test: ./workspace/yabloco-benchmark/yabloco_oracle_v1.json
+output_type: generate_until
+training_split: null
+validation_split: null
+test_split: test
+doc_to_text: !function utils.doc_to_text
+doc_to_target: "{{code}}"
+generation_kwargs:
+  max_length: 32768
+  do_sample: false
+  until:
+    - "<|endoftext|>"
+    - "<|im_end|>"
+    - "\n\n\n"
+    - "\\sclass\\s"
+    - "\\sdef\\s"
+    - "^def\\s"
+    - "^class\\s"
+    - "^if\\s"
+    - "@"
+    - "^#"
+filter_list:
+  - name: "evaluation"
+    filter:
+      - function: extract_from_tag
+      - function: scoring
+        working_dir: ./workspace/yabloco-benchmark
+        bench_version: v0.8
+        generations_output_filepath: ./workspace/data/generations_yabloco_oracle.json
+        metrics_output_filepath: ./workspace/data/metrics_yabloco_oracle.json
+      - function: "take_first"
+process_results: !function utils.process_results
+metric_list:
+  - metric: "pass@1"
+    aggregation: mean
+    higher_is_better: true
+  - metric: "exact_match"
+    aggregation: mean
+    higher_is_better: true
+metadata:
+  version: 1.0
