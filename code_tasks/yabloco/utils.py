@@ -8,18 +8,7 @@ from lm_eval.api.registry import register_filter
 
 
 def doc_to_text(doc):
-    lang = "C++"
-    if doc["repo"] in ["openssl", "redis"]:
-        lang = "C"
-    system = f"Generate a function on {lang} programming language.\n"
-    signature = doc["signature"].replace("\n", " ")
-    signature = " ".join(signature.split())
-    function_description = doc["doc"]
-    prompt = f'Function signature: "{signature}".\nFunction description: "{function_description}".'
-    context = "\n\n".join(doc["context"])
-    if context:
-        prompt += f"\n\nUse this context:\n\n{context}"
-    return system + prompt
+    return doc["instruction"].format(**doc["inputs"]).strip()
 
 
 def parse_generation(text):
