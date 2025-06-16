@@ -3,6 +3,8 @@ import os
 import tempfile
 from dataclasses import dataclass, asdict
 from typing import Any, Dict, List
+import re
+import sys
 
 from jsonl2html import convert_jsonl_to_html
 from lm_eval.api.filter import Filter
@@ -95,6 +97,8 @@ class FromTagExtractor(Filter):
         str
             Extracted code or original text if tags not found.
         """
+        if text is None:
+            return ""
         tag_start = "```python"
         tag_end = "```"
         index_start = text.find(tag_start)
@@ -363,3 +367,68 @@ def sum_metric(values: List[float]) -> float:
         Total sum.
     """
     return sum(values)
+
+@register_filter("autofix")
+class LMEvalAutoFixerFilter(Filter):
+    def __init__(self, mode="simple"):
+        super().__init__()
+        self.mode = mode
+
+    def apply(self, resps: list[list[str]], docs: list[dict]) -> list[list[str]]:
+        fixed = []
+        for gens, doc in zip(resps, docs):
+            intent = doc["meta"]["intent"]
+            gt = doc["meta"]["gt"]
+            left_context = doc["meta"]["left_context"]
+            if self.mode == "simple":
+                fixed_gens = [fix_all(gen, intent, gt) for gen in gens]
+            elif self.mode == "suffix":
+                sig = extract_signature_by_intent(left_context, intent)
+                fixed_gens = [fix_all(remove_suffix(gen, sig), intent, gt) for gen in gens]
+            else:
+                fixed_gens = gens
+            fixed.append(fixed_gens)
+        return fixed 
+
+
+def cut_before_signature(code: str, intent: str) -> str:
+    """
+    Оставляет только код после первой сигнатуры def/class intent(...):
+    Всё, что выше (включая декораторы), удаляется.
+    Если сигнатура не найдена — возвращает исходный код.
+    """
+    pattern = re.compile(rf"^\s*(def|class)\s+{re.escape(intent)}\b.*$", re.MULTILINE)
+    match = pattern.search(code)
+    if match:
+        return code[match.end():].lstrip('\n')
+    return code
+
+def fix_indent(code: str, outputs: str) -> str:
+    target_indent = get_indent(outputs)
+    lines = code.splitlines()
+    non_empty = [line for line in lines if line.strip()]
+    if not non_empty:
+        return ""
+    current_indent = min(len(line) - len(line.lstrip()) for line in non_empty)
+    adjusted = []
+    for line in lines:
+        stripped = line[current_indent:] if len(line) >= current_indent else line.lstrip()
+        adjusted.append(" " * target_indent + stripped)
+    return "\n".join(adjusted)
+
+def fix_all(code: str, intent: str, outputs: str) -> str:
+    body = cut_before_signature(code, intent)
+    return fix_indent(body, outputs)
+
+def extract_signature_by_intent(left_context: str, intent_name: str) -> str | None:
+    import re
+    pattern = re.compile(rf"(def|class)\s+{re.escape(intent_name)}\b[\s\S]*")
+    matches = pattern.findall(left_context)
+    if matches:
+        return matches[-1]
+    return None
+
+def remove_suffix(code: str, sig: str|None) -> str:
+    if sig and code.startswith(sig):
+        return code[len(sig):].lstrip("\n")
+    return code

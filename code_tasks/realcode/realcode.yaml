@@ -21,6 +21,8 @@ filter_list:
   - name: "evaluation"
     filter:
       - function: extract_from_tag
+      - function: autofix
+        mode: simple
       - function: scoring
         working_dir: working_dir
         generations_output_filepath: ./workspace/data/generations_rt.json
