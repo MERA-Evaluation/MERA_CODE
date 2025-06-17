@@ -7,7 +7,7 @@ Evaluation of the correctness of the written code for Python, Java and Go. Corre
 
 Evaluated skills: Instruction following, Perception (Python, Java, Go), Code correctness classification
 
-Contributors: Elena Bruches, Ivan Bondarenko, Daniil Grebenkin, Oleg Sedukhin, Roman Derunets, Georgii Mkrtchyan, Vadim Alperovich
+Contributors: Elena Bruches, Ivan Bondarenko, Daniil Grebenkin, Oleg Sedukhin, Roman Derunets, Georgii Mkrtchyan, Vadim Alperovich, Nikolay Bushkov, Stanislav Moiseev
 
 
 ## Motivation
