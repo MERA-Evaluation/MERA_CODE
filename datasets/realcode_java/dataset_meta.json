@@ -1,0 +1,168 @@
+{
+    "dataset_name": "RealCodeJava",
+    "license": "MERA_private",
+    "dataset_size": 298,
+    "description": "Function body generation benchmark built from open-sourced Java repositories from GitHub containing executable tests. Tasks focus on filling in the body of existing functions using surrounding context. Model responses are verified by running tests from the source repository.",
+    "modalities": [
+        "code"
+    ],
+    "skills": [
+        "Code completion",
+        "Context-aware generation"
+    ],
+    "domains": [],
+    "synt_source_models": [],
+    "data_example": {
+        "instruction": "Контекст:\n```java\n{left_context}\n```\nТребуется: только тело функции. Строго соблюдай отступы. Не добавляй лишнего текста.",
+        "inputs": {
+            "left_context": "package org.algorithmtools.ca4j.utils;\n\nimport com.alibaba.fastjson.JSONArray;\nimport com.alibaba.fastjson.JSONObject;\nimport org.algorithmtools.ca4j.enumtype.IndicatorStatType;\nimport org.algorithmtools.ca4j.pojo.IndicatorDivisionSeries;\nimport org.algorithmtools.ca4j.pojo.IndicatorSeries;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.stream.Collectors;\n\npublic class IndicatorSeriesUtil {\n\n    public static List<IndicatorSeries> transferFromArray(double[] array){\n"
+        },
+        "outputs": "        List<IndicatorSeries> list = new ArrayList<IndicatorSeries>();\n        for (int i = 0; i < array.length; i++) {\n            list.add(i, new IndicatorSeries(i, array[i], String.valueOf(i)));\n        }\n        return list;\n    }",
+        "meta": {
+            "id": 26,
+            "repo": "algorithm-tools/CausalAnalysis",
+            "base_commit": "1b714e0f22ac2259154be581065a2d4ccdfdd4ba",
+            "gt": "        List<IndicatorSeries> list = new ArrayList<IndicatorSeries>();\n        for (int i = 0; i < array.length; i++) {\n            list.add(i, new IndicatorSeries(i, array[i], String.valueOf(i)));\n        }\n        return list;\n    }",
+            "stub": "        return List.of();\n    }",
+            "right_context": "\n\n    public static double[] transferToArray(List<IndicatorSeries> series){\n        double[] resultArray = new double[series.size()];\n        for (int i = 0; i < series.size(); i++) {\n            resultArray[i] = series.get(i).getValue();\n        }\n        return resultArray;\n    }\n\n    public static IndicatorDivisionSeries transferFromJson(String jsonString){\n        JSONObject jsonData = JSONObject.parseObject(jsonString);\n        JSONArray currentDenominatorList = jsonData.getJSONArray(\"currentDenominatorList\");\n        JSONArray currentNumeratorList = jsonData.getJSONArray(\"currentNumeratorList\");\n        JSONArray comparisonNumeratorList = jsonData.getJSONArray(\"comparisonNumeratorList\");\n        JSONArray comparisonDenominatorList = jsonData.getJSONArray(\"comparisonDenominatorList\");\n        String indicator = jsonData.getString(\"indicator\");\n        String indicatorName = jsonData.getString(\"indicatorName\");\n        String statType = jsonData.getString(\"statType\");\n\n        IndicatorDivisionSeries series = new IndicatorDivisionSeries(indicator, indicatorName, IndicatorStatType.valueOf(statType));\n        series.setCurrentNumeratorList(transferFromJsonArray(currentNumeratorList));\n        series.setCurrentDenominatorList(transferFromJsonArray(currentDenominatorList));\n        series.setComparisonNumeratorList(transferFromJsonArray(comparisonNumeratorList));\n        series.setComparisonDenominatorList(transferFromJsonArray(comparisonDenominatorList));\n\n        return series;\n    }\n\n    public static List<IndicatorSeries> transferFromJsonArray(JSONArray jsonArray){\n        return jsonArray.stream().map(v -> {\n            JSONObject data = (JSONObject) v;\n            return new IndicatorSeries(data.getLong(\"time\"), data.getDoubleValue(\"value\"), data.getString(\"logicalIndex\"));\n        }).collect(Collectors.toList());\n    }\n\n}",
+            "left_context": "package org.algorithmtools.ca4j.utils;\n\nimport com.alibaba.fastjson.JSONArray;\nimport com.alibaba.fastjson.JSONObject;\nimport org.algorithmtools.ca4j.enumtype.IndicatorStatType;\nimport org.algorithmtools.ca4j.pojo.IndicatorDivisionSeries;\nimport org.algorithmtools.ca4j.pojo.IndicatorSeries;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.stream.Collectors;\n\npublic class IndicatorSeriesUtil {\n\n    public static List<IndicatorSeries> transferFromArray(double[] array){\n",
+            "image_name": "maven:3.9.9-eclipse-temurin-23-alpine",
+            "build_command": "",
+            "test_command": "mvn test",
+            "file_path": "src/main/java/org/algorithmtools/ca4j/utils/IndicatorSeriesUtil.java",
+            "PASS_TO_PASS": [
+                "org.algorithmtools.ca4j.calculator.TestCalculator::testContributionMultiplyCalculator",
+                "org.algorithmtools.ca4j.calculator.TestCalculator::testContributionDivisionCalculator",
+                "org.algorithmtools.ca4j.calculator.TestCalculator::testContributionPlusCalculator",
+                "org.algorithmtools.ca4j.calculator.TestCalculator::testContributionDivisionCalculator_forZero",
+                "org.algorithmtools.ca4j.calculator.TestCalculator::testJSDivergence",
+                "org.algorithmtools.ca4j.calculator.TestCalculator::test"
+            ],
+            "FAIL_TO_PASS": [],
+            "intent": "transferFromArray[function]",
+            "intent_type": "function"
+        }
+    },
+    "data_field_descriptions": {
+        "instruction": {
+            "ru": "строка, содержащая формулировку задания по генерации тела функции",
+            "en": "string containing the task formulation for function body generation"
+        },
+        "inputs": {
+            "left_context": {
+                "ru": "код перед функцией, включая импорты и классы",
+                "en": "code appearing before the target function"
+            }
+        },
+        "outputs": {
+            "ru": "одномерный массив строк размера n_samples, где n_samples — количество требуемых сэмплов для подсчета pass@k",
+            "en": "one-dimensional array of strings of size n_samples, where n_samples is the number required to compute pass@k"
+        },
+        "meta": {
+            "id": {
+                "ru": "уникальный идентификатор примера",
+                "en": "unique identifier of the example"
+            },
+            "repo": {
+                "ru": "имя GitHub-репозитория, из которого извлечена задача",
+                "en": "GitHub repository name the task is taken from"
+            },
+            "base_commit": {
+                "ru": "хэш коммита, зафиксировавшего состояние репозитория",
+                "en": "commit hash fixing the repo state"
+            },
+            "gt": {
+                "ru": "тело функции-истины без сигнатуры",
+                "en": "ground truth function body (no signature)"
+            },
+            "stub": {
+                "ru": "тело функции-заглушки без сигнатуры",
+                "en": "stub function body (no signature)"
+            },
+            "right_context": {
+                "ru": "код после функции, включая другие функции и классы",
+                "en": "code appearing after the target function"
+            },
+            "left_context": {
+                "ru": "код перед функцией, включая импорты и классы",
+                "en": "code appearing before the target function"
+            },
+            "image_name": {
+                "ru": "Docker-образ, в котором выполняется проект",
+                "en": "Docker image for running the project"
+            },
+            "build_command": {
+                "ru": "команда для сборки проекта перед тестами",
+                "en": "command to build the project before tests"
+            },
+            "test_command": {
+                "ru": "команда запуска тестов",
+                "en": "command to run the tests"
+            },
+            "file_path": {
+                "ru": "путь до файла, в котором находится функция",
+                "en": "path to the file containing the function"
+            },
+            "PASS_TO_PASS": {
+                "ru": "список тестов, которые успешно проходят",
+                "en": "tests that pass with the generated function"
+            },
+            "FAIL_TO_PASS": {
+                "ru": "список тестов, которые перестали падать",
+                "en": "tests that used to fail and now pass"
+            },
+            "intent": {
+                "ru": "название функции или метода",
+                "en": "function or method name"
+            },
+            "intent_type": {
+                "ru": "тип элемента (function, class и т.д.)",
+                "en": "element type (function, class, etc.)"
+            }
+        }
+    },
+    "prompts": [
+        "Контекст:\n```java\n{left_context}\n```\nТребуется: только тело одной функции. Строго соблюдай отступы. Не добавляй лишнего текста.",
+        "Дан контекст перед функцией:\n```java\n{left_context}\n```\nСгенерируй **только тело** одного метода, без заголовка и аргументов. Заверши генерацию финальной скобкой }, чтобы получился корректный код. Придерживайся форматирования из контекста.",
+        "Есть начало файла:\n```java\n{left_context}\n```\nТвоя задача — дописать тело одной функции. Пиши код сразу после открывающей скобки \"{\". Не нужно писать сигнатуру, она уже есть в файле. Используй отступы для этой функции. Не забудь закрывающую скобку \"}\" в конце.",
+        "Используй следующий код:\n```java\n{left_context}\n```\nДопиши реализацию тела последней функции. Соблюдай отступы и форматирование, как в примере. Сигнатуру писать не нужно, она уже есть в примере.",
+        "На основе следующего:\n```java\n{left_context}\n```\nНапиши тело функции. Никакой сигнатуры, только чистый код внутри и закрывающая скобка }. Отступы важны — не нарушай структуру кода.",
+        "Ты видишь начало файла:\n```java\n{left_context}\n```\nПоследняя функция в этом примере осталась незавершенной, есть только ее сигнатура. Напиши тело этой функции. Продолжи после сигнатуры, не повторяй ее в ответе. Соблюдай в коде отступы и форматирование, как в примере. Заверши тело функции финальной скобкой \"}\".",
+        "Вот начало кода:\n```java\n{left_context}\n```\nПродолжи тело функции после фигурной скобки \"{\". Используй такие же отступы для форматирования кода. Не пиши ничего после финальной скобки \"}\".",
+        "Представь, что ты - джава-синьор. Вот тебе тестовое задание:\n```java\n{left_context}\n```\nПродолжи писать последний метод (функцию) до его логического завершения. Соблюдай отступы в коде, чтобы линтеры не ругались. Комментарии и объяснения можешь не писать, никто их не читает..",
+        "Исходный код:\n```java\n{left_context}\n```\nНапиши реализацию. Только тело функции. Не включай в ответ название функции с аргументами. Нужен только код после первой фигурной скобки {. И не забудь закрыть тело функции фигурной скобкой }",
+        "Продолжи функцию, строго начиная с тела. Соблюдай отступы. Не пиши сигнатуру.\n```java\n{left_context}\n```\nТело функции:"
+    ],
+    "metrics": {
+        "pass@1": {
+            "ru": "доля задач, в которых хотя бы одна генерация прошла все тесты",
+            "en": "fraction of tasks where at least one generation passes all tests",
+            "short": "pass@1"
+        },
+        "pass_oracle@1": {
+            "ru": "доля задач, в которых ground truth решение проходит все тесты (верхняя граница)",
+            "en": "fraction of tasks where the ground truth solution passes all tests (oracle upper bound)",
+            "short": "pass_oracle@1"
+        },
+        "pass_stub_pass@1": {
+            "ru": "доля задач, в которых заглушка (stub) прошла хотя бы один тест",
+            "en": "fraction of tasks where stub function body passed at least one test",
+            "short": "pass_stub_pass@1"
+        },
+        "pass_dry_run@1": {
+            "ru": "доля задач, где хотя бы одна генерация прошла тесты в режиме dry-run (без использования ground truth)",
+            "en": "fraction of tasks where at least one generation passes in dry-run mode (without using ground truth)",
+            "short": "pass_dry_run@1"
+        },
+        "execution_success": {
+            "ru": "доля задач, в которых проект успешно собрался и тесты запустились без сбоев",
+            "en": "fraction of tasks where the project built and tests executed without failure",
+            "short": "execution_success"
+        },
+        "num_samples": {
+            "ru": "общее количество задач в датасете",
+            "en": "total number of tasks in the dataset",
+            "short": "num_samples"
+        }
+    }
+}
