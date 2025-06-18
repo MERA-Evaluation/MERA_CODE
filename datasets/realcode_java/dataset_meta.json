@@ -1,7 +1,7 @@
 {
     "dataset_name": "RealCodeJava",
     "license": "MERA_private",
-    "dataset_size": 0,
+    "dataset_size": 298,
     "description": "Function body generation benchmark built from open-sourced Java repositories from GitHub containing executable tests. Tasks focus on filling in the body of existing functions using surrounding context. Model responses are verified by running tests from the source repository.",
     "modalities": [
         "code"
