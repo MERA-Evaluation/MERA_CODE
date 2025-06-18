@@ -1,4 +1,4 @@
-# RealCode Java
+# RealCodeJava
 
 
 ## Task description
@@ -7,7 +7,7 @@
 
 Evaluated skills: Code completion, Context-aware generation
 
-Contributors: Dmitry Vorobiev, Pavel Adamenko, Pavel Zadorozhny
+Contributors: Dmitry Vorobiev, Pavel Zadorozhny, Rodion Levichev, Pavel Adamenko, Aidar Valeev, Dmitry Salikhov, Dmitrii Babaev
 
 
 ## Motivation
@@ -91,10 +91,11 @@ For the task, 10 prompts were prepared and evenly distributed among the question
 Prompt example:
 
 ```
-Дан контекст перед функцией:
+Контекст:
 ```java
-{left_context}```
-Сгенерируй **только тело** одного метода, без заголовка и аргументов. Заверши генерацию финальной скобкой }, чтобы получился корректный код. Придерживайся форматирования из контекста.
+{left_context}
+```
+Требуется: только тело одной функции. Строго соблюдай отступы. Не добавляй лишнего текста.
 ```
 
 
