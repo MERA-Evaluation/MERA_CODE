@@ -113,6 +113,22 @@ class FromTagExtractorRCJava(Filter):
     
 
 def cut_c_style_func_body(prediction: str, left_ctx: Optional[str] = None):
+    """
+    Trims generation based on number of open|closed curly braces.
+
+    Parameters
+    ----------
+    prediction : str
+        Generated code.
+    left_ctx : Optional[str]
+        Code before generated part.
+
+    Returns
+    -------
+    str
+        Postprocessed code string.
+    """
+
     if left_ctx is None:
         text = prediction
         is_body = True
@@ -124,7 +140,9 @@ def cut_c_style_func_body(prediction: str, left_ctx: Optional[str] = None):
         is_body = False
         c = 0
         j = len(left_ctx_last_line)
-    
+
+    # TODO: Тут еще обработки комментариев и одиночных символов в коде
+    # не хватает. Где-то есть более полная версия.
     quotes_open = False
     for i, char in enumerate(text):
         if char == '"':
@@ -138,7 +156,8 @@ def cut_c_style_func_body(prediction: str, left_ctx: Optional[str] = None):
             c -= 1
             if c == 0 and is_body and i-j >= 5:
                 return prediction[:i-j+1]
-    return None
+    # Ну не получилось..
+    return prediction
 
 
 def get_run_id():
