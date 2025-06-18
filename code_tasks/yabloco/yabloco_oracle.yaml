@@ -13,7 +13,7 @@ test_split: test
 doc_to_text: !function utils.doc_to_text
 doc_to_target: "{{code}}"
 generation_kwargs:
-  max_length: 32768
+  max_gen_toks: 32768
   do_sample: false
   until:
     - "<|endoftext|>"

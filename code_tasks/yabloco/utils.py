@@ -8,7 +8,7 @@ from lm_eval.api.registry import register_filter
 
 
 def doc_to_text(doc):
-    return doc["instruction"].format(doc["inputs"]).strip()
+    return doc["instruction"].format(**doc["inputs"]).strip()
 
 
 def parse_generation(text):
