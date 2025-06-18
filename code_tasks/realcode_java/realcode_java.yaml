@@ -1,11 +1,7 @@
 tag:
   - realcode_java_eval
 task: realcode_java
-dataset_path: json
-dataset_name: null
-dataset_kwargs:
-  data_files: 
-    test: /home/dmitry/projects/devices/data/rc3_java_25Jun15_meracode_small.jsonl
+dataset_path: MERA-evaluation/RealCodeJava
 output_type: generate_until
 training_split: null
 validation_split: null
@@ -31,10 +27,10 @@ filter_list:
         metrics_output_filepath: ./workspace/data/metrics_rt.json
         html_output_filepath: ./workspace/data/metrics_rt.html
         mode: docker
-        n_jobs: 2
+        n_jobs: 5
         gen_columns: ["gen"]
         raise_exception: true
-        n_jobs_build: 2
+        n_jobs_build: 5
         enable_full_logs:  false
       - function: "take_first"
 metric_list:

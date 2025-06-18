@@ -53,7 +53,12 @@ def doc_to_text_realcode_java(doc: Dict[str, Any]) -> str:
     str
         The extracted foreground text.
     """
-    return doc["instruction"].format(**doc["inputs"])
+    # В промтах упоминаются фигурные скобки { },
+    # из-за чего приходится str.format падает
+    instruction = doc["instruction"]
+    for field, value in doc["inputs"].items():
+        instruction = instruction.replace('{'+field+'}', value)
+    return instruction
 
 
 @register_filter("extract_from_tag_realcode_java")
