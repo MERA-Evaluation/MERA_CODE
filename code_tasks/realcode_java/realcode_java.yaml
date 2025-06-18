@@ -5,7 +5,7 @@ dataset_path: json
 dataset_name: null
 dataset_kwargs:
   data_files: 
-    test: /home/dmitry/projects/devices/data/rc3_java_25Jun06_v3_meracode.jsonl
+    test: /home/dmitry/projects/devices/data/rc3_java_25Jun15_meracode_small.jsonl
 output_type: generate_until
 training_split: null
 validation_split: null

@@ -306,18 +306,16 @@ def process_results_realcode_java(doc: Dict[str, Any], results: List[Dict[str, A
         "pass_gen": "pass@1",
         "pass_gt": "pass_oracle@1",
         "pass_stub": "pass_stub_pass@1",
-        "pass_empty_str": "pass_stub_empty_str@1",
         "pass_dry_run": "pass_dry_run@1",
         "status": "execution_success"
     }
 
     metrics = results[0]
     res = {
-        column_replace_dict[key]: metrics[key]
+        column_replace_dict[key]: metrics.get(key, 0)
         for key in column_replace_dict
         if key in metrics
     }
-
     res["num_samples"] = 1
     return res
 
