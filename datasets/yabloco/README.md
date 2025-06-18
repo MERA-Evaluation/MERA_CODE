@@ -96,9 +96,16 @@ For the task, 11 prompts were prepared and evenly distributed among the question
 Prompt example:
 
 ```
-Сгенерируй функцию на языке программирования {language}. Сигнатура функции: {signature}. Описание функции: {docstring}. Используй следующий контекст:
+Сгенерируй функцию на языке {language}. Описание:
+{docstring}
 
+Контекст:
 {context}
+
+Сигнатура:
+{signature}
+
+Выведи только код функции, без объяснений и дополнительного текста.
 ```
 
 
