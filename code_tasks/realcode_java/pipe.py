@@ -8,8 +8,6 @@ from typing import Any, Dict, List, Optional
 from lm_eval.api.filter import Filter
 from lm_eval.api.registry import register_filter
 
-os.environ['REPOTEST_MAIN_FOLDER'] = '/media/dmitry/data/cache/repotest'
-os.environ['REPOTEST_CACHE_FOLDER'] = '/media/dmitry/data/cache/repotest/repos'
 from repotest import __version__ as repotest_version
 from repotest.constants import disable_stdout_logs, enable_stdout_logs
 from repotest.manager.realcode_java_evaluator import JavaEvaluatorRealcode
@@ -54,7 +52,7 @@ def doc_to_text_realcode_java(doc: Dict[str, Any]) -> str:
         The extracted foreground text.
     """
     # В промтах упоминаются фигурные скобки { },
-    # из-за чего приходится str.format падает
+    # из-за чего str.format падает
     instruction = doc["instruction"]
     for field, value in doc["inputs"].items():
         instruction = instruction.replace('{'+field+'}', value)
