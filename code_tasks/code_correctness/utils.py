@@ -17,7 +17,9 @@ def process_results(doc: Dict, results: List[str]) -> Dict[str, float]:
     if has_outputs:
         gold = doc['outputs']
         pred = -1
-        if 'failed' in results[0]:
+        if 'failed' in results[0] and 'success' in results[0]:
+            pred = -1
+        elif 'failed' in results[0]:
             pred = 'failed'
         elif 'success' in results[0]:
             pred = 'success'
