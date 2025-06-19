@@ -103,9 +103,8 @@ pass@k:
 Комментарий 9: <твой комментарий>
 Комментарий 10: <твой комментарий>
 
-Input data:
-Code changes: {diff_block}
-Answer:
+Изменения кода:
+{diff_block}
 ```
 
 
