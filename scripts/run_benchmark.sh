@@ -52,3 +52,10 @@ python scripts/log_to_submission.py --outputs_dir "${MERA_FOLDER}" --dst_dir "${
 
 # Remove datasets cache folder
 rm -r "${MERA_FOLDER}/ds_cache"
+
+# Remove other temporary folders
+rm -rf extracted_codes
+rm -rf reports
+rm -rf working_dir
+rm -rf workspace/data
+rm -rf workspace/java_testgen_workdir

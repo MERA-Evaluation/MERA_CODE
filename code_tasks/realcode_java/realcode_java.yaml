@@ -1,5 +1,5 @@
 tag:
-  - realcode_java_eval
+  - realcodejava
 task: realcode_java
 dataset_path: MERA-evaluation/RealCodeJava
 output_type: generate_until

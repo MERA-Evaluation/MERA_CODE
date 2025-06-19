@@ -193,6 +193,10 @@ class JavaTestGen(MultiOutputTask):
 class RealCode(MultiOutputTask):
     pass
 
+# @register_task
+# class RealCodeJava(MultiOutputTask):
+#     pass
+
 @register_task
 class YABLoCo(MultiOutputTask):
     pass
