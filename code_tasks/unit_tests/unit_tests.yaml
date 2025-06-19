@@ -1,4 +1,4 @@
-task: unit_tests
+task: unittests
 dataset_path: MERA-evaluation/UnitTests
 
 training_split: shots

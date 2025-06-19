@@ -1,4 +1,4 @@
-task: code_correctness
+task: codecorrectness
 
 dataset_path: MERA-evaluation/CodeCorrectness
 dataset_name: default # поменять название в hf датасете

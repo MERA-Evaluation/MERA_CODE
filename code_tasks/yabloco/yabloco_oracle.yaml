@@ -1,19 +1,16 @@
 tag:
   - yabloco
 task: yabloco_oracle
-dataset_path: json
+dataset_path: MERA-evaluation/YABLoCo
 dataset_name: null
-dataset_kwargs:
-  data_files: 
-    test: ./workspace/yabloco-benchmark/yabloco_oracle_v1.json
 output_type: generate_until
 training_split: null
 validation_split: null
 test_split: test
 doc_to_text: !function utils.doc_to_text
-doc_to_target: "{{code}}"
+doc_to_target: ""
 generation_kwargs:
-  max_gen_toks: 32768
+  max_gen_toks: 2048
   do_sample: false
   until:
     - "<|endoftext|>"

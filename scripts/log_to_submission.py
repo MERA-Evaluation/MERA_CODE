@@ -171,29 +171,11 @@ class MultiOutputTask(TextTask):
 
 @register_task
 class ruHumanEval(MultiOutputTask):
-    def load(self):
-        path = "MERA-evaluation/MERA"
-        dataset = datasets.load_dataset(path=path, name="ruhumaneval")[
-            "test"
-        ]
-        examples = {}
-        for example in dataset:
-            doct_id = self.doc_to_id(example)
-            examples[doct_id] = example
-        return examples
+    pass
 
 @register_task
 class ruCodeEval(MultiOutputTask):
-    def load(self):
-        path = "MERA-evaluation/MERA"
-        dataset = datasets.load_dataset(path=path, name="rucodeeval")[
-            "test"
-        ]
-        examples = {}
-        for example in dataset:
-            doct_id = self.doc_to_id(example)
-            examples[doct_id] = example
-        return examples
+    pass
 
 @register_task
 class CodeLinterEval(MultiOutputTask):

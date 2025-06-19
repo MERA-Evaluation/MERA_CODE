@@ -12,11 +12,8 @@ FEWSHOTS=(
 )
 
 TASKS=(
-"rucodeeval code_linter_eval rucodereviewer ruhumaneval strucom unit_tests code_correctness realcode java_testgen yabloco"
+"rucodeeval codelintereval rucodereviewer ruhumaneval strucom unittests codecorrectness realcode javatestgen yabloco"
 )
-# TASKS=(
-# "rucodeeval ruhumaneval"
-# )
 
 for fewshot_idx in "${!FEWSHOTS[@]}"
 do

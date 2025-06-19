@@ -1,6 +1,6 @@
 tag:
   - java_testgen_eval
-task: java_testgen
+task: javatestgen
 dataset_path: MERA-evaluation/JavaTestGen
 output_type: generate_until
 test_split: test

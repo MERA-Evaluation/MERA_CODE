@@ -1,6 +1,5 @@
 task: ruhumaneval
-dataset_name: ruhumaneval
-dataset_path: MERA-evaluation/MERA
+dataset_path: MERA-evaluation/ruHumanEval
 output_type: generate_until
 
 training_split: null
