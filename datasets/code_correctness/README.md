@@ -51,27 +51,20 @@ Each dataset question includes data in the following fields:
 
 ### Prompts
 
-For the task, 10 prompts were prepared and evenly distributed among the questions on the principle of "one prompt per question". The templates in curly braces in each prompt are filled in from the fields inside the `inputs` field in each question.
+For the task, 11 prompts were prepared and evenly distributed among the questions on the principle of "one prompt per question". The templates in curly braces in each prompt are filled in from the fields inside the `inputs` field in each question.
 
 Prompt example:
 
 ```
-Ниже приведён код фокального файла и тестового файла. Определи, является ли тест корректным.
-
-Фокальный файл:
-
-{lang}
+Вот код из фокального файла на языке {lang}:
 
 {focal_code}
 
-
-Тестовый файл:
-
-{lang}
+Проверь, корректен ли тест для этого кода:
 
 {test_code}
 
-Ответь одним словом. Если тест не вызовет ошибок при запуске программы, то верни "success". Иначе верни "failed".
+Дай короткий ответ: если тест пройдет без ошибок, скажи "success", иначе — "failed".
 ```
 
 
