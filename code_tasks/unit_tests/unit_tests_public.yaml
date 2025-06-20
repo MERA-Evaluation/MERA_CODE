@@ -22,4 +22,4 @@ num_fewshot: null
 metadata:
   version: 0.1
 
-gen_prefix: "Готовый юнит-тест:\n```"
+gen_prefix: "Готовый юнит-тест:\n"
