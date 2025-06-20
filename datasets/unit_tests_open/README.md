@@ -110,7 +110,7 @@ Each dataset question includes data in the following fields:
 
 ### Prompts
 
-For the task, 20 prompts were prepared and evenly distributed among the questions on the principle of "one prompt per question". The templates in curly braces in each prompt are filled in from the fields inside the `inputs` field in each question.
+For the task, 19 prompts were prepared and evenly distributed among the questions on the principle of "one prompt per question". The templates in curly braces in each prompt are filled in from the fields inside the `inputs` field in each question.
 
 Prompt example:
 
@@ -123,7 +123,9 @@ Prompt example:
 {test_func_context}
 Для тебя собран код из репозитория, который может помочь тебе в написании теста: 
 {focal_func_context}
-Напиши только тест без пояснений и комментариев. Не забывай соблюдать синтаксис языка {language}.
+Напиши только {test_func_type} без пояснений и комментариев. Не забывай соблюдать синтаксис языка {language}.
+Оформи свой ответ с соблюдением markdown разметки для кода: ```<language>
+<your code>```.
 
 ```
 
