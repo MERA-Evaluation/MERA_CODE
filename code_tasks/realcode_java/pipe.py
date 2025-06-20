@@ -10,10 +10,13 @@ from lm_eval.api.registry import register_filter
 
 from repotest import __version__ as repotest_version
 from repotest.constants import disable_stdout_logs, enable_stdout_logs
-from repotest.manager.realcode_java_evaluator import JavaEvaluatorRealcode
+from repotest.manager.realcode_java_task_manager import JavaEvaluatorRealcode
 
-if not (repotest_version >= "0.3.93"):
-    raise ImportError(f"Current repotest version is {repotest_version} it should be 0.3.89")
+min_repotest_version = "0.4.1"
+if not (repotest_version >= min_repotest_version):
+    raise ImportError("Current repotest version is {} it should be {}".format(
+        repotest_version, min_repotest_version
+    ))
 
 
 #ToDo: move this to repotest level

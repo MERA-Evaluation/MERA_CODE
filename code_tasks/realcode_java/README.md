@@ -1,5 +1,10 @@
 # RealCodeJava
 
+## Требования (python)
+```
+repotest >= 0.4.1
+```
+
 ## Настройка окружения
 ```bash
 conda create -p ~/conda_env/repotest python=3.12 pip
