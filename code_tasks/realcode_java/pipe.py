@@ -12,7 +12,7 @@ from repotest import __version__ as repotest_version
 from repotest.constants import disable_stdout_logs, enable_stdout_logs
 from repotest.manager.realcode_java_task_manager import JavaEvaluatorRealcode
 
-min_repotest_version = "0.4.1"
+min_repotest_version = "0.4.2"
 if not (repotest_version >= min_repotest_version):
     raise ImportError("Current repotest version is {} it should be {}".format(
         repotest_version, min_repotest_version

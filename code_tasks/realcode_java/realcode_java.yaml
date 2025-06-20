@@ -31,7 +31,7 @@ filter_list:
         gen_columns: ["gen"]
         raise_exception: true
         n_jobs_build: 5
-        enable_full_logs:  true
+        enable_full_logs:  false
       - function: "take_first"
 metric_list:
   - metric: "pass@1"
