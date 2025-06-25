@@ -110,7 +110,7 @@ Each dataset question includes data in the following fields:
 
 ### Prompts
 
-For the task, 19 prompts were prepared and evenly distributed among the questions on the principle of "one prompt per question". The templates in curly braces in each prompt are filled in from the fields inside the `inputs` field in each question.
+For the task, 20 prompts were prepared and evenly distributed among the questions on the principle of "one prompt per question". The templates in curly braces in each prompt are filled in from the fields inside the `inputs` field in each question.
 
 Prompt example:
 
