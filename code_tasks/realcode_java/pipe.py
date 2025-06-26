@@ -10,10 +10,13 @@ from lm_eval.api.registry import register_filter
 
 from repotest import __version__ as repotest_version
 from repotest.constants import disable_stdout_logs, enable_stdout_logs
-from repotest.manager.realcode_java_evaluator import JavaEvaluatorRealcode
+from repotest.manager.realcode_java_task_manager import JavaEvaluatorRealcode
 
-if not (repotest_version >= "0.3.89"):
-    raise ImportError(f"Current repotest version is {repotest_version} it should be 0.3.89")
+min_repotest_version = "0.4.3"
+if not (repotest_version >= min_repotest_version):
+    raise ImportError("Current repotest version is {} it should be {}".format(
+        repotest_version, min_repotest_version
+    ))
 
 
 #ToDo: move this to repotest level
@@ -305,21 +308,15 @@ def process_results_realcode_java(doc: Dict[str, Any], results: List[Dict[str, A
     dict
         Dictionary with key metrics.
     """
-    column_replace_dict = {
-        "pass_gen": "pass@1",
-        "pass_gt": "pass_oracle@1",
-        "pass_stub": "pass_stub_pass@1",
-        "pass_dry_run": "pass_dry_run@1",
-        "status": "execution_success"
-    }
-
     metrics = results[0]
     res = {
-        column_replace_dict[key]: metrics.get(key, 0)
-        for key in column_replace_dict
-        if key in metrics
+        "pass@1": metrics.get("pass_gen", 0),
+        "pass_oracle@1": metrics.get("pass_gt", 0),
+        "pass_stub_pass@1": metrics.get("pass_stub", 0),
+        "pass_dry_run@1": metrics.get("pass_dry_run", 0),
+        "execution_success": metrics.get("status", 0),
+        "num_samples": 1,
     }
-    res["num_samples"] = 1
     return res
 
 
