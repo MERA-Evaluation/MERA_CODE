@@ -79,7 +79,7 @@ Each dataset question includes data in the following fields:
 		"code": "import re\n\ndef find_literals(text, pattern):\n  match = re.search(pattern, text)\n  s = match.start()\n  e = match.end()\n  return (match.re.pattern, s, e)",
 		"feedback": "E302: expected 2 blank lines, found 1 in 3 line\nE111: indentation is not a multiple of 4 in 4 line\nE111: indentation is not a multiple of 4 in 5 line\nE111: indentation is not a multiple of 4 in 6 line\nE111: indentation is not a multiple of 4 in 7 line\nW292: no newline at end of file in 7 line\n"
 	},
-	"instruction":  "Перепиши код с учетом ошибок полученных от линтера. \nКод:\n{code}\nОшибки от линтера:\n{feedback}\nВывод должен быть строго в таком формате:\n[PYTHON]\ndef имя_функции(аргументы):\n    тело_функции\n[/PYTHON]",
+	"instruction":  "Перепиши код с учетом ошибок полученных от линтера. Ошибки указывают на критические слабые места: потенциальные баги, уязвимости безопасности и нарушения принципов чистого кода. Исправь ВСЕ указанные ошибки без исключений, сохрани исходную логику программы, строго соблюдай PEP-8 для Python, не добавляй комментарии и объяснения. \nЗамечания линтера:\n{feedback}\n\nКод:\n{code}\nПриведите ответ в формате, соответствующем шаблону для ответа:\n```python\n<code> ```",
 	"meta": {
 		"canonical_code": "\nimport re\n\n\ndef search_regex(pattern, string):\n    match = re.search(pattern, string)\n    if match:\n        return match.group(), match.start(), match.end()\n    else:\n        return None\n",
 		"id": 5
@@ -108,7 +108,7 @@ For the task, 10 prompts were prepared and evenly distributed among the question
 Prompt example:
 
 ```
-Перепиши код с учетом ошибок полученных от линтера. \nКод:\n{code}\nОшибки от линтера:\n{feedback}\nВывод должен быть строго в таком формате:\n[PYTHON]\ndef имя_функции(аргументы):\n    тело_функции\n[/PYTHON]
+Перепиши код с учетом ошибок полученных от линтера. Ошибки указывают на критические слабые места: потенциальные баги, уязвимости безопасности и нарушения принципов чистого кода. Исправь ВСЕ указанные ошибки без исключений, сохрани исходную логику программы, строго соблюдай PEP-8 для Python, не добавляй комментарии и объяснения. \nЗамечания линтера:\n{feedback}\n\nКод:\n{code}\nПриведите ответ в формате, соответствующем шаблону для ответа:\n```python\n<code> ```
 ```
 
 
