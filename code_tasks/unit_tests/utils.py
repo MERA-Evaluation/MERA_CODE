@@ -32,6 +32,9 @@ def get_code_from_markdown(text: str, language: str = "python") -> list[str]:
             (match.group("block_language"), match.group("code"))
             for match in regex.finditer(text)
         ]
+    if len(blocks) == 0:
+        # if no code was found, return the original text
+        return text
 
     return "\n".join(
         [block for block_language, block in blocks if block_language == language]

@@ -8,7 +8,6 @@ fewshot_split: shots
 output_type: generate_until
 doc_to_text: !function utils.doc_to_text
 doc_to_target: "outputs"
-
 process_results: !function utils.process_results
 metric_list:
   - metric: code_bleu

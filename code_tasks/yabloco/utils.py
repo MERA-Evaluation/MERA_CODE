@@ -100,5 +100,4 @@ def process_results(doc: Dict, results: List[Dict]) -> Dict[str, float]:
     return {
         "pass@1": metrics.get("pass@1", 0.0),
         "exact_match": metrics.get("exact_match", 0.0),
-        "edit_similarity": metrics.get("edit_similarity", 0.0),
     }
