@@ -26,12 +26,12 @@ generation_kwargs:
 filter_list:
   - name: "evaluation"
     filter:
-      - function: extract_from_tag
-      - function: scoring
-        working_dir: ./workspace/yabloco-benchmark
-        bench_version: v0.8
-        generations_output_filepath: ./workspace/data/generations_yabloco_oracle.json
-        metrics_output_filepath: ./workspace/data/metrics_yabloco_oracle.json
+      # - function: extract_from_tag
+      # - function: scoring
+      #   working_dir: ./workspace/yabloco-benchmark
+      #   bench_version: v0.8
+      #   generations_output_filepath: ./workspace/data/generations_yabloco_oracle.json
+      #   metrics_output_filepath: ./workspace/data/metrics_yabloco_oracle.json
       - function: "take_first"
 process_results: !function utils.process_results
 metric_list:

@@ -17,11 +17,6 @@ process_results: !function utils.process_results_java_testgen
 filter_list:
   - name: "evaluation"
     filter:
-      - function: extract_from_tag_java
-      - function: scoring_java_testgen
-        working_dir: ./workspace/java_testgen_workdir
-        generations_output_filepath: ./workspace/data/java_generations.json
-        metrics_output_filepath: ./workspace/data/java_metrics.json
       - function: "take_first"
 metric_list:
   - metric: "pass@1"

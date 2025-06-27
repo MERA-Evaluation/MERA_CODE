@@ -25,10 +25,10 @@ generation_kwargs:
   temperature: 0.6
 
 process_results: !function utils.process_results
-filter_list:
-  - name: "scoring"
-    filter:
-      - function: rucodelinterevalscoring
+# filter_list:
+#   - name: "scoring"
+#     filter:
+#       - function: "take_first"
 
 metric_list:
   - metric: pass@1

@@ -11,3 +11,6 @@ num_fewshot: 1
 metric_list:
   - metric: chrf
     higher_is_better: true
+
+metadata:
+  version: 1

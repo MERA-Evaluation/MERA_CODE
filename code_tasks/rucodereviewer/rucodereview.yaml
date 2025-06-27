@@ -22,7 +22,8 @@ process_results: !function utils.process_results
 filter_list:
   - name: "scoring"
     filter:
-      - function: llmasajudgescoring
+      - function: "take_first"
+
 metric_list:
   - metric: bleu
     aggregation: mean
