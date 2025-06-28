@@ -183,23 +183,53 @@ class CodeLinterEval(MultiOutputTask):
 
 @register_task
 class ruCodeReviewer(MultiOutputTask):
-    pass
+    def outputs_to_submission(self, outputs):
+        res = []
+        for doc in outputs:
+            doc_id = int(self.doc_to_id(doc["doc"]))
+            resp = doc["resps"]
+            res.extend([self.doc_outputs_to_submission(doc_id, resp)])
+        return {"data": {"test": res}}
 
 @register_task
 class JavaTestGen(MultiOutputTask):
-    pass
+    def outputs_to_submission(self, outputs):
+        res = []
+        for doc in outputs:
+            doc_id = int(self.doc_to_id(doc["doc"]))
+            resp = doc["resps"]
+            res.extend([self.doc_outputs_to_submission(doc_id, resp)])
+        return {"data": {"test": res}}
 
 @register_task
 class RealCode(MultiOutputTask):
-    pass
+    def outputs_to_submission(self, outputs):
+        res = []
+        for doc in outputs:
+            doc_id = int(self.doc_to_id(doc["doc"]))
+            resp = doc["resps"]
+            res.extend([self.doc_outputs_to_submission(doc_id, resp)])
+        return {"data": {"test": res}}
 
-# @register_task
-# class RealCodeJava(MultiOutputTask):
-#     pass
+@register_task
+class RealCodeJava(MultiOutputTask):
+    def outputs_to_submission(self, outputs):
+        res = []
+        for doc in outputs:
+            doc_id = int(self.doc_to_id(doc["doc"]))
+            resp = doc["resps"]
+            res.extend([self.doc_outputs_to_submission(doc_id, resp)])
+        return {"data": {"test": res}}
 
 @register_task
 class YABLoCo(MultiOutputTask):
-    pass
+    def outputs_to_submission(self, outputs):
+        res = []
+        for doc in outputs:
+            doc_id = int(self.doc_to_id(doc["doc"]))
+            resp = doc["resps"]
+            res.extend([self.doc_outputs_to_submission(doc_id, resp)])
+        return {"data": {"test": res}}
     
 @register_task
 class stRuCom(TextTask):
