@@ -26,6 +26,12 @@ SAMPLES_SUFFIX = "samples_"
 RESULTS_SUFFIX = "results_"
 INDEX_TO_GET = 0
 
+TASKS_WITH_RAW_RESPS = [
+    "realcode", "realcodejava", "realcodedebug", 
+    "javatestgen", "rucodereviewer", "yabloco", 
+    "codelintereval"
+]
+
 
 def get_files_from_dir(dir_path):
     f = []
@@ -79,6 +85,24 @@ class BaseTask:
     @property
     def dst_name(self):
         return self.__class__.__name__
+    
+    @property
+    def key(self):
+        if self._key is None:
+            if self.src_name in TASKS_WITH_RAW_RESPS:
+                self._key = "resps"
+            else:
+                self._key = "filtered_resps"
+        return self._key
+    
+    @property
+    def take_first(self):
+        if self._take_first is None:
+            if self.src_name in TASKS_WITH_RAW_RESPS:
+                self._take_first = True
+            else:
+                self._take_first = False
+        return self._take_first
 
     @property
     def outputs_path(self):
@@ -124,6 +148,8 @@ class BaseTask:
         self.dst_dir = dst_dir
         self.dataset_path = dataset_path
         self.dataset = self.load()
+        self._key = None
+        self._take_first = None
 
 
 class TextTask(BaseTask):
@@ -143,7 +169,7 @@ class TextTask(BaseTask):
         res = []
         for doc in outputs:
             doc_id = int(self.doc_to_id(doc["doc"]))
-            resp = doc["filtered_resps"]
+            resp = doc[self.key]
             res.extend([self.doc_outputs_to_submission(doc_id, resp)])
         return {"data": {"test": res}}
 
@@ -153,7 +179,7 @@ class TextTask(BaseTask):
     
     def doc_outputs_to_submission(self, doc_id, outputs):
         res = {
-            "outputs": outputs[0],
+            "outputs": outputs[0][0] if self.take_first else outputs[0],
             "meta": {"id": doc_id},
         }
         return res
@@ -182,54 +208,24 @@ class CodeLinterEval(MultiOutputTask):
     pass
 
 @register_task
-class ruCodeReviewer(MultiOutputTask):
-    def outputs_to_submission(self, outputs):
-        res = []
-        for doc in outputs:
-            doc_id = int(self.doc_to_id(doc["doc"]))
-            resp = doc["resps"]
-            res.extend([self.doc_outputs_to_submission(doc_id, resp)])
-        return {"data": {"test": res}}
+class ruCodeReviewer(TextTask):
+    pass
 
 @register_task
-class JavaTestGen(MultiOutputTask):
-    def outputs_to_submission(self, outputs):
-        res = []
-        for doc in outputs:
-            doc_id = int(self.doc_to_id(doc["doc"]))
-            resp = doc["resps"]
-            res.extend([self.doc_outputs_to_submission(doc_id, resp)])
-        return {"data": {"test": res}}
+class JavaTestGen(TextTask):
+    pass
 
 @register_task
-class RealCode(MultiOutputTask):
-    def outputs_to_submission(self, outputs):
-        res = []
-        for doc in outputs:
-            doc_id = int(self.doc_to_id(doc["doc"]))
-            resp = doc["resps"]
-            res.extend([self.doc_outputs_to_submission(doc_id, resp)])
-        return {"data": {"test": res}}
+class RealCode(TextTask):
+    pass
 
 @register_task
-class RealCodeJava(MultiOutputTask):
-    def outputs_to_submission(self, outputs):
-        res = []
-        for doc in outputs:
-            doc_id = int(self.doc_to_id(doc["doc"]))
-            resp = doc["resps"]
-            res.extend([self.doc_outputs_to_submission(doc_id, resp)])
-        return {"data": {"test": res}}
+class RealCodeJava(TextTask):
+    pass
 
 @register_task
-class YABLoCo(MultiOutputTask):
-    def outputs_to_submission(self, outputs):
-        res = []
-        for doc in outputs:
-            doc_id = int(self.doc_to_id(doc["doc"]))
-            resp = doc["resps"]
-            res.extend([self.doc_outputs_to_submission(doc_id, resp)])
-        return {"data": {"test": res}}
+class YABLoCo(TextTask):
+    pass
     
 @register_task
 class stRuCom(TextTask):
