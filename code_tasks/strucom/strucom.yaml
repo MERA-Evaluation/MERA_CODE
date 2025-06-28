@@ -7,7 +7,7 @@ doc_to_text: !function utils.doc_to_target
 doc_to_target: "outputs"
 fewshot_config:
   sampler: default
-num_fewshot: 1
+num_fewshot: null
 metric_list:
   - metric: chrf
     higher_is_better: true
