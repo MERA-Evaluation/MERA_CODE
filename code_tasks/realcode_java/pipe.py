@@ -4,7 +4,7 @@ import re
 import tempfile
 from dataclasses import dataclass, asdict
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from lm_eval.api.filter import Filter
 from lm_eval.api.registry import register_filter
@@ -358,8 +358,8 @@ class JavaLMEvalAngel(Filter):
         return fixed
     
 
-def count_open_curly_braces(snippet: str) -> int:
-    c = 0
+def find_code_block_braces(snippet: str) -> List[Tuple[str, int]]:
+    code_braces = []
     is_char = False
     inside_string = False
     inside_short_comment = False
@@ -388,6 +388,14 @@ def count_open_curly_braces(snippet: str) -> int:
             inside_short_comment or 
             inside_multi_line_comment):
             continue
+        if char in '{}':
+            code_braces.append((char, i))
+    return code_braces
+    
+
+def count_open_curly_braces(snippet: str) -> int:
+    c = 0
+    for char, pos in find_code_block_braces(snippet):
         if char == '{':
             c += 1
         elif char == '}':
@@ -456,43 +464,13 @@ def remove_signature(code: str, left_context: str, intent: str) -> str:
     return code.split(signature)[-1]
 
 
-def cut_c_style_func_body_v2(snippet: str, c: Optional[int] = 1):
-    """
-    Обрезаем код, как только все открытые скобки закроются
-    """
-    is_char = False
-    inside_string = False
-    inside_short_comment = False
-    inside_multi_line_comment = False
-    for i, char in enumerate(snippet):            
-        if char == '"':
-            inside_string = not inside_string
-        if (char == "'" and
-            not inside_string and
-            not inside_short_comment and
-            not inside_multi_line_comment):
-            is_char = not is_char
-
-        two_chars = snippet[max(0,i-1):i+1]
-        if two_chars == '//':
-            inside_short_comment = True
-        elif two_chars == '/*':
-            inside_multi_line_comment = True
-        elif two_chars == '*/':
-            inside_multi_line_comment = False
-        if char == '\n':
-            inside_short_comment = False
-        
-        if (is_char or
-            inside_string or
-            inside_short_comment or 
-            inside_multi_line_comment):
-            continue
+def cut_c_style_func_body_v2(snippet: str, c: Optional[int] = 0):
+    for char, pos in find_code_block_braces(snippet):
         if char == '{':
             c += 1
-        elif char == '}':
+        if char == '}':
             c -= 1
-            if c == 0 and i >= 5:
-                return snippet[:i+1]
+            if c == 0 and pos >= 5:
+                return snippet[:pos+1]
     # Ну не получилось..
     return snippet
