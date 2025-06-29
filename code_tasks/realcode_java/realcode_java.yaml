@@ -21,6 +21,7 @@ filter_list:
   - name: "evaluation"
     filter:
       - function: extract_from_tag_realcode_java
+      - function: javafix
       - function: scoring_realcode_java
         working_dir: working_dir
         generations_output_filepath: ./workspace/data/generations_rt.json
