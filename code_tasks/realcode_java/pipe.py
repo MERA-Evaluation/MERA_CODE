@@ -364,16 +364,17 @@ def find_code_block_braces(snippet: str) -> List[Tuple[str, int]]:
     inside_string = False
     inside_short_comment = False
     inside_multi_line_comment = False
-    for i, char in enumerate(snippet):            
-        if char == '"':
+    for i, char in enumerate(snippet):
+        two_chars = snippet[max(0,i-1):i+1]
+        if char == '"' and two_chars != r'\"':
             inside_string = not inside_string
         if (char == "'" and
+            two_chars != r"\'" and
             not inside_string and
             not inside_short_comment and
             not inside_multi_line_comment):
             is_char = not is_char
 
-        two_chars = snippet[max(0,i-1):i+1]
         if two_chars == '//':
             inside_short_comment = True
         elif two_chars == '/*':
@@ -387,6 +388,9 @@ def find_code_block_braces(snippet: str) -> List[Tuple[str, int]]:
             inside_string or
             inside_short_comment or 
             inside_multi_line_comment):
+            # На такие случаи лучше убедиться, что is_char выключится точно
+            # ", email='" + email + '\'' +
+            # is_char = False
             continue
         if char in '{}':
             code_braces.append((char, i))
