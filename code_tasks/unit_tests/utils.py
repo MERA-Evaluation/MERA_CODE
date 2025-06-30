@@ -84,7 +84,10 @@ def get_code_from_markdown(text: str, language: str = "python") -> list[str]:
 
     # if there is no language in the output
     if len(blocks) == 0:
-        r"```\n(?P<code>.*?)```",
+        regex = re.compile(
+            r"```\n(?P<code>.*?)```",
+            re.DOTALL | re.MULTILINE,
+        )
         blocks = [(language, match.group("code")) for match in regex.finditer(text)]
 
     blocks = [block for block_language, block in blocks if block_language == language]
