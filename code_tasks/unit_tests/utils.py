@@ -43,17 +43,20 @@ def get_code_from_markdown(text: str, language: str = "python") -> list[str]:
 
 def process_results(doc: dict, results: list[str]) -> dict[str, float]:
 
+    # results - двумерный список, распаковываем его
+    gen_tests = results[0]
+    processed_gen_tests = [
+        get_code_from_markdown(x, doc["inputs"]["language"]) for x in gen_tests
+    ]
+
     if doc["inputs"]["language"] == "csharp":
         lang = "c_sharp"
-    if doc["inputs"]["language"] == "js":
+    elif doc["inputs"]["language"] == "js":
         lang = "javascript"
     else:
         lang = doc["inputs"]["language"]
 
     target = doc["outputs"]
-    # results - двумерный список, распаковываем его
-    gen_tests = results[0]
-    processed_gen_tests = [get_code_from_markdown(x) for x in gen_tests]
     hyps, refs = processed_gen_tests, [[target] for _ in processed_gen_tests]
     try:
         scores = calc_code_bleu(
