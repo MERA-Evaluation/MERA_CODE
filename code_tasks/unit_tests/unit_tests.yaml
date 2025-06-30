@@ -16,6 +16,7 @@ metric_list:
 
 generation_kwargs:
   do_sample: false
+  max_gen_toks: 1024
 
 num_fewshot: null
 
