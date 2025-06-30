@@ -344,9 +344,8 @@ def process_results(doc: Dict[str, Any], results: List[Dict[str, Any]]) -> Dict[
 
     metrics = results[0]
     res = {
-        column_replace_dict[key]: metrics[key]
+        column_replace_dict[key]: metrics.get(key, 0.0)
         for key in column_replace_dict
-        if key in metrics
     }
 
     res["num_samples"] = 1
