@@ -93,7 +93,7 @@ Each dataset question includes data in the following fields:
         "focal_func_context": "```go\n#lists/mergesorted.go\n// Copyright (c) 2015, Peter Mrekaj. All rights reserved.\n// Use of this source code is governed by a MIT-style\n// license that can be found in the LICENSE.txt file.\n\npackage lists\n\n// MergeSorted merges int nodes from l and f sorted lists into the ordered list m.\n// Note: when l or f contains different type from int then false is returned and\n// merged list will contains some value(s) merged from l or f up to the different\n// type.\n\n#focal function/method here\n```",
         "test_func_type": "тестовую функцию",
         "test_func_context": "```\n// Copyright (c) 2015, Peter Mrekaj. All rights reserved.\n// Use of this source code is governed by a MIT-style\n// license that can be found in the LICENSE.txt file.\npackage lists\nimport (\n\t\"math/rand\"\n\t\"reflect\"\n\t\"sort\"\n\t\"testing\"\n)\n```",
-        "language": "Go",
+        "language": "go",
         "focal_file_path": "lists/mergesorted.go",
         "test_file_path": "lists/mergesorted_test.go",
         "test_framework": ""
