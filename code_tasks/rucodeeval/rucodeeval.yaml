@@ -22,7 +22,9 @@ doc_to_target: "{{meta['canonical_solution']}}"
 doc_to_text: "{{instruction.format(**inputs).strip() if inputs is mapping else instruction.format(inputs=inputs).strip()}}"
 
 generation_kwargs:
-  do_sample: false
+  do_sample: true
+  temperature: 0.6
+  max_gen_toks: 1024
   until:
     - "\nclass"
     - "\ndef"

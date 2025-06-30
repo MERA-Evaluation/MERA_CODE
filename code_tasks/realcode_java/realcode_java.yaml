@@ -10,6 +10,7 @@ doc_to_text: !function pipe.doc_to_text_realcode_java
 doc_to_target: ""
 generation_kwargs:
   do_sample: true
+  max_gen_toks: 4096
   temperature: 0.7
   repetition_penalty: 1.05
   top_p: 0.8

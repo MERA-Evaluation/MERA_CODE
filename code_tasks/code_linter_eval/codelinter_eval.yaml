@@ -23,6 +23,7 @@ doc_to_text: "{{instruction.format(**inputs).strip() if inputs is mapping else i
 generation_kwargs:
   do_sample: true
   temperature: 0.6
+  max_gen_toks: 1024
 
 process_results: !function utils.process_results
 # filter_list:

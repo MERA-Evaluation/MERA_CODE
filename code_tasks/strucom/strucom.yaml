@@ -8,6 +8,11 @@ doc_to_target: "outputs"
 fewshot_config:
   sampler: default
 num_fewshot: null
+
+generation_kwargs:
+  do_sample: false
+  max_gen_toks: 512
+
 metric_list:
   - metric: chrf
     higher_is_better: true
