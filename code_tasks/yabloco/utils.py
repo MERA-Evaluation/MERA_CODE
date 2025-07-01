@@ -77,7 +77,7 @@ class ScoringFilter(Filter):
         self._save_to_file(self.generations_output_filepath, generations)
 
         generations = {
-            doc["id"]: gen
+            doc["meta"]["original_id"]: gen["resps"][0][0]
             for doc, gen in zip(docs, generations)
         }
 
