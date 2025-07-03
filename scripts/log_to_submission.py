@@ -107,7 +107,7 @@ class BaseTask:
     @property
     def outputs_path(self):
         filelist = glob.glob(
-            os.path.join(self.outputs_dir, f"samples_{self.src_name}*.json*")
+            os.path.join(self.outputs_dir, f"samples_{self.src_name}_*.json*")
         )
         if not filelist:
             # raise error if filelist is empty
