@@ -49,19 +49,21 @@ Each dataset question includes data in the following fields:
 - `outputs` [str] — The correct answer to the question.
 - `meta` — Metadata related to the test example, not used in the question (hidden from the tested model).
     - `id` [int] — Identification number of the question in the dataset.
+    - `language` [str] — The programming language in which the function is written.
 
 
 ### Data formatting example
 
 ```json
 {
-    "instruction": "Напиши русскоязычную документацию к этой функции, используя формат, соответствующий её языку программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). \n{function}",
+    "instruction": "Напиши русскоязычную документацию к функции.\n\nФункция:\n{function}",
     "inputs": {
         "function": "private void button15_Click(object sender, EventArgs e)\n        {\n            label12.Text = \"\";\n\n            richTextBox1.Clear();\n            richTextBox2.Clear();\n            textBox1.Clear();\n            textBox2.Clear();\n            textBox4.Clear();\n        }"
     },
     "outputs": "/// <summary>\n/// Обработчик события нажатия на кнопку button15.\n/// При вызове этой функции происходит очистка текста в различных элементах управления формы:\n/// - Удаляется текст из метки label12.\n/// - Очищается содержимое многострочного текстового поля richTextBox1.\n/// - Очищается содержимое многострочного текстового поля richTextBox2.\n/// - Очищается текстовое поле textBox1.\n/// - Очищается текстовое поле textBox2.\n/// - Очищается текстовое поле textBox4.\n/// </summary>\n/// <param name=\"sender\">Объект, который вызвал событие (в данном случае, кнопка button15).</param>\n/// <param name=\"e\">Параметры события, содержащие дополнительную информацию о событии.</param>",
     "meta": {
-        "id": 1
+        "id": 1,
+        "language": "csharp"
     }
 }
 ```
@@ -74,7 +76,9 @@ For the task, 10 prompts were prepared and evenly distributed among the question
 Prompt example:
 
 ```
-Напиши русскоязычную документацию к этой функции, используя формат, соответствующий её языку программирования (Python - GoogleDoc Docstring, Go - GoDoc, Java - JavaDoc, JavaScript - JSDoc, C# - XML и т.д.). 
+Напиши русскоязычную документацию к функции.
+
+Функция:
 {function}
 ```
 
