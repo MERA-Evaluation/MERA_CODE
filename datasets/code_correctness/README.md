@@ -3,9 +3,9 @@
 
 ## Task description
 
-Evaluation of the correctness of the written code for Python, Java and Go. Correctness means the absent of any errors including SyntaxError, Runtime Error etc. and the successful tests passing as well.
+Evaluation of the correctness of the written code for Python, Java and Go. Correctness means the absent of any errors including SyntaxError, Runtime Error etc. and the successful tests passing as well. The dataset contains `1361` tasks.
 
-Evaluated skills: Instruction following, Perception (Python, Java, Go), Code correctness classification
+Evaluated skills: Instruction Following, Code Perception, Simulation, Error Classification
 
 Contributors: Elena Bruches, Ivan Bondarenko, Daniil Grebenkin, Oleg Sedukhin, Roman Derunets, Georgii Mkrtchyan, Vadim Alperovich, Nikolay Bushkov, Stanislav Moiseev
 
@@ -87,4 +87,4 @@ The dataset creation includes the following stages:
 
 Metrics for aggregated evaluation of responses:
 
-- `Accuracy`: Accuracy is the proportion of correct model predictions among the total number of cases processed.
+- `Exact Match`: Measures the proportion of model predictions which exactly match with the reference among the total number of cases processed.

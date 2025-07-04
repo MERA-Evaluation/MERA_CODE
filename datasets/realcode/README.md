@@ -3,7 +3,7 @@
 
 ## Task description
 
-**RealCode** is a benchmark for evaluating the ability of language models to generate function bodies in real-world Python repositories. The benchmark focuses on realistic completions using project-level context and validates correctness through test execution.
+**RealCode** is a benchmark for evaluating the ability of language models to generate function bodies in real-world Python repositories. The benchmark contains `802` tasks and focuses on realistic completions using project-level context and validates correctness through test execution.
 
 Evaluated skills: Code completion, Context-aware generation
 
