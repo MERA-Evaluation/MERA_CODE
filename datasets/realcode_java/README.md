@@ -3,9 +3,9 @@
 
 ## Task description
 
-**RealCodeJava** is a benchmark for evaluating the ability of language models to generate function bodies in real-world Java repositories. The benchmark focuses on realistic completions using project-level context and validates correctness through test execution.
+**RealCodeJava** is a benchmark for evaluating the ability of language models to generate function bodies in real-world Java repositories. The benchmark focuses on realistic completions using project-level context and validates correctness through test execution. Dataset contains `298` tasks.
 
-Evaluated skills: Code completion, Context-aware generation
+Evaluated skills: Instruction Following, Code Perception, Completion
 
 Contributors: Dmitry Vorobiev, Pavel Zadorozhny, Rodion Levichev, Pavel Adamenko, Aidar Valeev, Dmitry Salikhov, Dmitrii Babaev
 
@@ -96,9 +96,7 @@ Prompt example:
 
 Напишите содержимое последней функции после заголовка с аргументами. В ответе ожидается только тело одной функции. Не добавляйте в ответ новые функции и классы, старайтесь использовать те, что уже есть в контексте, или импортированы в самом начале. Соблюдайте отступы в коде и форматирование как в примере. Ответ оформите так: 
 ```java
-поместите сюда содержимое вашего ответа
-```
-
+поместите сюда содержимое вашего ответа```
 ```
 
 
@@ -115,8 +113,4 @@ The benchmark is built from 27 public Java GitHub repositories created in 2024-2
 Metrics for aggregated evaluation of responses:
 
 - `pass@1`: fraction of tasks where at least one generation passes all tests
-- `pass_oracle@1`: fraction of tasks where the ground truth solution passes all tests (oracle upper bound)
-- `pass_stub_pass@1`: fraction of tasks where stub function body passed at least one test
-- `pass_dry_run@1`: fraction of tasks where at least one generation passes in dry-run mode (without using ground truth)
 - `execution_success`: fraction of tasks where the project built and tests executed without failure
-- `num_samples`: total number of tasks in the dataset

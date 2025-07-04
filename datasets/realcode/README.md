@@ -3,9 +3,9 @@
 
 ## Task description
 
-**RealCode** is a benchmark for evaluating the ability of language models to generate function bodies in real-world Python repositories. The benchmark contains `802` tasks and focuses on realistic completions using project-level context and validates correctness through test execution.
+**RealCode** is a benchmark for evaluating the ability of language models to generate function bodies in real-world Python repositories. The benchmark focuses on realistic completions using project-level context and validates correctness through test execution. Dataset contains `802` tasks.
 
-Evaluated skills: Code completion, Context-aware generation
+Evaluated skills: Instruction Following, Code Perception, Completion
 
 Contributors: Pavel Zadorozhny, Rodion Levichev, Pavel Adamenko, Aidar Valeev, Dmitrii Babaev, Denis Kokosinskiy
 
@@ -104,9 +104,4 @@ The benchmark is built from 95 public Python GitHub repositories created in 2024
 Metrics for aggregated evaluation of responses:
 
 - `pass@1`: fraction of tasks where at least one generation passes all tests
-- `pass_oracle@1`: fraction of tasks where the ground truth solution passes all tests (oracle upper bound)
-- `pass_stub_pass@1`: fraction of tasks where a `return pass` stub passed at least one test
-- `pass_stub_empty_str@1`: fraction of tasks where a `return ""` stub passed at least one test
-- `pass_dry_run@1`: fraction of tasks where at least one generation passes in dry-run mode (without using ground truth)
 - `execution_success`: fraction of tasks where the project built and tests executed without failure
-- `num_samples`: total number of tasks in the dataset
