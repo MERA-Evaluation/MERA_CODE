@@ -77,7 +77,7 @@ class ScoringFilter(Filter):
         self._save_to_file(self.generations_output_filepath, generations)
 
         generations = {
-            doc["meta"]["id"]: gen
+            doc["meta"]["original_id"]: gen[0]
             for doc, gen in zip(docs, generations)
         }
 
@@ -100,5 +100,4 @@ def process_results(doc: Dict, results: List[Dict]) -> Dict[str, float]:
     return {
         "pass@1": metrics.get("pass@1", 0.0),
         "exact_match": metrics.get("exact_match", 0.0),
-        "edit_similarity": metrics.get("edit_similarity", 0.0),
     }
