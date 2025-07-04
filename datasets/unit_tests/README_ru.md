@@ -3,9 +3,9 @@
 
 ## Описание задачи
 
-Оценка генерации юнит-тестов для функций и методов на пяти языках программирования (Java, Python, Go, JavaScript и C#).
+Оценка генерации юнит-тестов для функций и методов на пяти языках программирования (Java, Python, Go, JavaScript и C#). Датасет содержит `2500` задач.
 
-Тестируемые навыки моделей: Unit-tests generation, Code generation, Instruction following
+Тестируемые навыки моделей: Instruction Following, Long Context Comprehension, Synthesis, Testing
 
 Авторы: Алена Пестова, Валентин Малых
 

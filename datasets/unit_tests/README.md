@@ -3,9 +3,9 @@
 
 ## Task description
 
-Evaluation of unit-test generation for functions and methods in five programming languages (Java, Python, Go, JavaScript, and C#).
+Evaluation of unit-test generation for functions and methods in five programming languages (Java, Python, Go, JavaScript, and C#). Dataset contains `2500` tasks.
 
-Evaluated skills: Unit-tests generation, Code generation, Instruction following
+Evaluated skills: Instruction Following, Long Context Comprehension, Synthesis, Testing
 
 Contributors: Alena Pestova, Valentin Malykh
 
