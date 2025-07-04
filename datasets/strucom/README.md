@@ -3,7 +3,7 @@
 
 ## Task description
 
-The dataset contains structured Russian-language docstrings for functions in 5 programming languages (Python, Java, C#, Go, JavaScript).
+The dataset contains structured Russian-language docstrings for functions in 5 programming languages (Python, Java, C#, Go, JavaScript). Dataset contains `500` tasks.
 
 Key features:
 - First specialized corpus for Russian-language documentation
@@ -11,7 +11,7 @@ Key features:
 - Strict filtering for completeness and compliance with documentation standards
 - All comments conform to specified formats (Python - GoogleDoc, JavaScript - JSDoc, Java - JavaDoc, C# - XML, Go - GoDoc)
 
-Evaluated skills: Code documentation generation, Instruction following
+Evaluated skills: Instruction Following, Code Perception, Simulation, Documentation
 
 Contributors: Maria Dziuba, Valentin Malykh
 
@@ -34,7 +34,7 @@ Results allow to:
 - Assess models' ability to generate technically accurate comments compliant with documentation standards
 
 ### Metrics:
-- CHRF evaluates similarity between generated and reference texts using character n-grams, considering morphology, spelling and grammatical endings - particularly crucial for Russian due to its morphological complexity
+- chrF evaluates similarity between generated and reference texts using character n-grams, considering morphology, spelling and grammatical endings - particularly crucial for Russian due to its morphological complexity
 
 
 ## Data description
@@ -105,4 +105,4 @@ Prompt example:
 
 Metrics for aggregated evaluation of responses:
 
-- `chrf`: Metric evaluating character n-gram matches with reference text, suitable for Russian morphology and spelling accuracy
+- `chrF`: Metric evaluating character n-gram matches with reference text, suitable for Russian morphology and spelling accuracy

@@ -3,9 +3,9 @@
 
 ## Task description
 
-**Java TestGen** is a benchmark designed to evaluate code generation models' ability to generate Java unit tests. Tasks involve generating unit tests based on provided Java source code and repository context.
+**Java TestGen** is a benchmark designed to evaluate code generation models' ability to generate Java unit tests. Tasks involve generating unit tests based on provided Java source code and repository context. Dataset contains `227` tasks.
 
-Evaluated skills: Code complition, Unit tests generation, Contextual reasoning
+Evaluated skills: Instruction Following, Code Perception, Completion, Testing
 
 Contributors: Dmitry Salikhov, Pavel Zadorozhny, Pavel Adamenko, Rodion Levichev, Aidar Valeev, Dmitrii Babaev
 

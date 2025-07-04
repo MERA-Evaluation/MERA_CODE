@@ -3,9 +3,9 @@
 
 ## Task description
 
-Long context code generation on C/C++ at function level
+Long context code generation on C/C++ at function level. Dataset contains `208` tasks.
 
-Evaluated skills: C/C++, Long context, Code generation, Instruction following
+Evaluated skills: Instruction Following, Long Context Comprehension, Code Perception, Completion
 
 Contributors: Aidar Valeev, Roman Garaev, Vadim Lomshakov, Irina Piontkovskaya, Vladimir Ivanov, Israel Adewuyi
 

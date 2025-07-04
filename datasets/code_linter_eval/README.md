@@ -3,9 +3,10 @@
 
 ## Task description
 
-The aim of benchmark is identifying the capabilities of models for generating and correcting code based on linter errors.
+The aim of benchmark is identifying the capabilities of models for generating and correcting code based on linter errors. Dataset contains `110` tasks.
 
-Tested skills: Instruction following, Perception(Python), Code changing
+Tested skills: Instruction Following, Code Perception, Style Guides, Review,
+Editing
 
 Authors: Vikulov Vladimir, Bykov Anton, Piktovnikov Kirill
 
