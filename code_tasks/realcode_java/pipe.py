@@ -1,9 +1,10 @@
 import json
 import os
+import re
 import tempfile
 from dataclasses import dataclass, asdict
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from lm_eval.api.filter import Filter
 from lm_eval.api.registry import register_filter
@@ -12,7 +13,7 @@ from repotest import __version__ as repotest_version
 from repotest.constants import disable_stdout_logs, enable_stdout_logs
 from repotest.manager.realcode_java_task_manager import JavaEvaluatorRealcode
 
-min_repotest_version = "0.4.3"
+min_repotest_version = "0.4.4"
 if not (repotest_version >= min_repotest_version):
     raise ImportError("Current repotest version is {} it should be {}".format(
         repotest_version, min_repotest_version
@@ -103,6 +104,8 @@ class FromTagExtractorRCJava(Filter):
         str
             Extracted code or original text if tags not found.
         """
+        if text is None:
+            return ""
         tag_start = "```java"
         tag_end = "```"
         index_start = text.find(tag_start)
@@ -112,10 +115,11 @@ class FromTagExtractorRCJava(Filter):
         else:
             index_end = text.find(tag_end, index_start + len(tag_start))
 
-        if index_start == -1 or index_end == -1:
-            return text
-
-        return text[index_start + len(tag_start): index_end]
+        if index_end != -1:
+            text = text[:index_end]
+        if index_start != -1:
+            text = text[index_start + len(tag_start):]
+        return text
     
 
 def cut_c_style_func_body(prediction: str, left_ctx: Optional[str] = None):
@@ -238,13 +242,13 @@ class ScoringFilterRCJava(Filter):
                           )
 
         dataset = self._load_dataset(docs)[:len(generations)]
-        processed_gens = [
-            [cut_c_style_func_body(gen, task.left_context) for gen in gens]
-            for task, gens in zip(dataset, generations)
-        ]
+        # processed_gens = [
+        #     [cut_c_style_func_body(gen, task.left_context) for gen in gens]
+        #     for task, gens in zip(dataset, generations)
+        # ]
 
         task_list = []
-        for task, gens in zip(dataset, processed_gens):
+        for task, gens in zip(dataset, generations):
             task_list.append({
                 **asdict(task),
                 "gen": gens[0],
@@ -334,3 +338,143 @@ def sum_metric(values: List[float]) -> float:
         Total sum.
     """
     return sum(values)
+
+
+@register_filter("javafix")
+class JavaLMEvalAngel(Filter):
+    def apply(self, resps: list[list[str]], docs: list[dict]) -> list[list[str]]:
+        fixed = []
+        for gens, doc in zip(resps, docs):
+            intent = doc["meta"]["intent"]
+            gt = doc["meta"]["gt"]
+            left_context = doc["meta"]["left_context"]
+            fixed_gens = []
+            for gen in gens:
+                gen = remove_signature(gen, left_context, intent)
+                gen = fix_missing_closing_brace(gen, gt)
+                gen = cut_c_style_func_body_v2(gen, c=1)
+                fixed_gens.append(gen)
+            fixed.append(fixed_gens)
+        return fixed
+    
+
+def find_code_block_braces(snippet: str) -> List[Tuple[str, int]]:
+    code_braces = []
+    is_char = False
+    inside_string = False
+    inside_short_comment = False
+    inside_multi_line_comment = False
+    for i, char in enumerate(snippet):
+        two_chars = snippet[max(0,i-1):i+1]
+        if char == '"' and two_chars != r'\"':
+            inside_string = not inside_string
+        if (char == "'" and
+            two_chars != r"\'" and
+            not inside_string and
+            not inside_short_comment and
+            not inside_multi_line_comment):
+            is_char = not is_char
+
+        if two_chars == '//':
+            inside_short_comment = True
+        elif two_chars == '/*':
+            inside_multi_line_comment = True
+        elif two_chars == '*/':
+            inside_multi_line_comment = False
+        if char == '\n':
+            inside_short_comment = False
+        
+        if (is_char or
+            inside_string or
+            inside_short_comment or 
+            inside_multi_line_comment):
+            # На такие случаи лучше убедиться, что is_char выключится точно
+            # ", email='" + email + '\'' +
+            # is_char = False
+            continue
+        if char in '{}':
+            code_braces.append((char, i))
+    return code_braces
+    
+
+def count_open_curly_braces(snippet: str) -> int:
+    c = 0
+    for char, pos in find_code_block_braces(snippet):
+        if char == '{':
+            c += 1
+        elif char == '}':
+            c -= 1
+    return c
+
+
+def fix_missing_closing_brace(generation: str, gt: str):
+    """
+    Дорисует скобку }, если функция не закрыта
+    """
+    if generation.rstrip().endswith('}'):
+        c = count_open_curly_braces(generation)
+        # Левый контекст содержит сигнатуру с открытой скобкой
+        # поэтому должно быть -1 и меньше
+        if c < 0:
+            return generation
+
+    # ищем в конце пустую строчку с }
+    endings = re.findall(r'(?<=\n)[\t ]*}[\n\t ]*?$', gt)
+    if len(endings) > 0:
+        if not generation.endswith('\n'):
+            generation = generation + '\n'
+        return generation + endings[0]
+    return generation
+
+
+def find_signature(code: str, intent: str) -> str:
+    """
+    Найдет первую сигнатуру
+    """
+    open_brace = re.escape('{')
+    signature_pattern = re.compile(rf"\s+{re.escape(intent)}\b.*{open_brace}[\n\t ]*?$", re.MULTILINE)
+    match = signature_pattern.search(code)
+    if match:
+        return match.group(0)
+    return None
+
+
+def find_signature_last(code: str, intent: str) -> str:
+    """
+    Найдет последнюю сигнатуру.
+    В Java может быть несколько функций с одним названием.
+    
+    """
+    open_brace = re.escape('{')
+    signature_pattern = re.compile(rf"\s+{re.escape(intent)}\b.*{open_brace}[\n\t ]*?$", re.MULTILINE)
+    matches = signature_pattern.findall(code)
+    if len(matches) > 0:
+        return matches[-1]
+    return None
+
+
+def remove_signature(code: str, left_context: str, intent: str) -> str:
+    """
+    Если код начинается с сигнатуры, как в левом контексте,
+    удалим ее.
+    """
+    intent = intent.split('[')[0]
+    # Берем последние строчки левого контекста
+    lc_end = '\n'.join( left_context.splitlines()[-20:] )
+    # И ищем там сигнатуру ближе к самому концу
+    signature = find_signature_last(lc_end, intent)
+    if signature is None:
+        return code
+    return code.split(signature)[-1]
+
+
+def cut_c_style_func_body_v2(snippet: str, c: Optional[int] = 0):
+    for char, pos in find_code_block_braces(snippet):
+        if char == '{':
+            c += 1
+        if char == '}':
+            c -= 1
+            if c == 0 and pos >= 5:
+                return snippet[:pos+1]
+    # Ну не получилось..
+    return snippet

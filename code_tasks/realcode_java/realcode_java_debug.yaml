@@ -1,7 +1,11 @@
 tag:
-  - realcodejava
-task: realcode_java
-dataset_path: MERA-evaluation/RealCodeJava
+  - realcode_java_eval
+task: realcode_java_debug
+dataset_path: json
+dataset_name: null
+dataset_kwargs:
+  data_files: 
+    test: ./workspace/datasets/rc3_java_25Jun28_meracode.jsonl
 output_type: generate_until
 training_split: null
 validation_split: null
