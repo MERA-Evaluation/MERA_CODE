@@ -87,13 +87,13 @@ Each dataset question includes data in the following fields:
 
 ```json
 {
-    "instruction": "Напиши тест для этого кода на языке {language} из файла '{focal_file_path}'. Напиши только тест без пояснений и комментариев.\n{focal_func}\nТебе необходимо написать {test_func_type} на языке {language}. Тест будет помещен в файл '{test_file_path}'.\nОбязательно учитывай код, собранный из будущего тестового файла: \n{test_func_context}\nДля тебя собран код из репозитория, который может помочь тебе в написании теста: \n{focal_func_context}\nОтвет:",
+    "instruction": "Напиши тест для этого кода на языке {language} из файла '{focal_file_path}'. Напиши только тест без пояснений и комментариев.\n{focal_func}\nТебе необходимо написать {test_func_type} на языке {language}. Тест будет помещен в файл '{test_file_path}'.\nОбязательно учитывай код, собранный из будущего тестового файла: \n{test_func_context}\nДля тебя собран код из репозитория, который может помочь тебе в написании теста: \n{focal_func_context}",
     "inputs": {
         "focal_func": "```go\nfunc MergeSorted(l, f *List) (m *List, ok bool) {\n\tm = new(List)\n\tfor l.Len() > 0 || f.Len() > 0 {\n\t\tvl, nl, okl := PopInt(l)\n\t\tvf, nf, okf := PopInt(f)\n\t\tif !okl || !okf {\n\t\t\treturn m, false\n\t\t}\n\n\t\tll, n := l, nl // The assumption is: vl <= vf.\n\t\tswitch {\n\t\tcase l.Len() == 0:\n\t\t\tll, n = f, nf\n\t\tcase f.Len() == 0:\n\t\t\tll, n = l, nl\n\t\tcase vl > vf:\n\t\t\tll, n = f, nf\n\t\t}\n\n\t\tm.Insert(ll.Remove(n))\n\t}\n\treturn m, true\n}\n```",
         "focal_func_context": "```go\n#lists/mergesorted.go\n// Copyright (c) 2015, Peter Mrekaj. All rights reserved.\n// Use of this source code is governed by a MIT-style\n// license that can be found in the LICENSE.txt file.\n\npackage lists\n\n// MergeSorted merges int nodes from l and f sorted lists into the ordered list m.\n// Note: when l or f contains different type from int then false is returned and\n// merged list will contains some value(s) merged from l or f up to the different\n// type.\n\n#focal function/method here\n```",
         "test_func_type": "тестовую функцию",
         "test_func_context": "```\n// Copyright (c) 2015, Peter Mrekaj. All rights reserved.\n// Use of this source code is governed by a MIT-style\n// license that can be found in the LICENSE.txt file.\npackage lists\nimport (\n\t\"math/rand\"\n\t\"reflect\"\n\t\"sort\"\n\t\"testing\"\n)\n```",
-        "language": "Go",
+        "language": "go",
         "focal_file_path": "lists/mergesorted.go",
         "test_file_path": "lists/mergesorted_test.go",
         "test_framework": ""
@@ -110,20 +110,22 @@ Each dataset question includes data in the following fields:
 
 ### Prompts
 
-For the task, 10 prompts were prepared and evenly distributed among the questions on the principle of "one prompt per question". The templates in curly braces in each prompt are filled in from the fields inside the `inputs` field in each question.
+For the task, 20 prompts were prepared and evenly distributed among the questions on the principle of "one prompt per question". The templates in curly braces in each prompt are filled in from the fields inside the `inputs` field in each question.
 
 Prompt example:
 
 ```
 Напиши тест для этого кода на языке {language} из файла '{focal_file_path}'. 
+Вот код, который надо протестировать:
 {focal_func}
 Тебе необходимо написать {test_func_type} на языке {language}. Тест будет помещен в файл '{test_file_path}'.
 Обязательно учитывай код, собранный из будущего тестового файла: 
 {test_func_context}
 Для тебя собран код из репозитория, который может помочь тебе в написании теста: 
 {focal_func_context}
-Напиши только тест без пояснений и комментариев.
-
+Напиши только {test_func_type} без пояснений и комментариев. Не забывай соблюдать синтаксис языка {language}.
+Оформи свой ответ с соблюдением markdown разметки для кода:```{language}
+<your code>```
 ```
 
 

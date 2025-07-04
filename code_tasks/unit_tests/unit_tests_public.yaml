@@ -9,7 +9,6 @@ output_type: generate_until
 doc_to_text: !function utils.doc_to_text
 doc_to_target: "outputs"
 process_results: !function utils.process_results
-
 metric_list:
   - metric: code_bleu
     aggregation: mean
@@ -17,8 +16,11 @@ metric_list:
 
 generation_kwargs:
   do_sample: false
+  max_gen_toks: 1024
 
 num_fewshot: null
 
 metadata:
   version: 0.1
+
+gen_prefix: "Готовый юнит-тест:\n"
