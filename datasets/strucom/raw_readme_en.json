@@ -1,0 +1,9 @@
+{
+    "Task description": "The dataset contains structured Russian-language docstrings for functions in 5 programming languages (Python, Java, C#, Go, JavaScript).\n\nKey features:\n- First specialized corpus for Russian-language documentation\n- Combination of real GitHub data (for testing) and synthetic data from Qwen2.5-Coder-32B-Instruct (for training)\n- Strict filtering for completeness and compliance with documentation standards\n- All comments conform to specified formats (Python - GoogleDoc, JavaScript - JSDoc, Java - JavaDoc, C# - XML, Go - GoDoc)",
+    
+    "Motivation": "### Target Models and Limitations\nDesigned for evaluating models supporting structured documentation generation (DeepSeek-Coder, Qwen2.5-Coder)\n\nNot suitable for:\n- Unstructured comment generation\n- Code summarization\n- Code explanation\n\n### Users and Result Interpretation\nPrimary users:\n- NLP developers and researchers working on automated documentation tools\n\nResults allow to:\n- Assess models' ability to generate technically accurate comments compliant with documentation standards\n\n### Metrics:\n- CHRF evaluates similarity between generated and reference texts using character n-grams, considering morphology, spelling and grammatical endings - particularly crucial for Russian due to its morphological complexity",
+    
+    "Dataset creation": "### Stage 1: Data Collection\n- Crawling Russian-language GitHub repositories with permissive/no licenses, language identification via Lingua\n- Function extraction using function_parser and Code-Text\n\n### Stage 2: Synthetic Data\n- Qwen2.5-Coder-32B-Instruct model used for synthetic data generation\n\n### Stage 3: Cleaning and Standardization\n- Strict structural filtering (requiring complete coverage of all documented code elements)\n- Style standardization of all comments\n- Length filtering (250-1000 characters)",
+    
+    "Contributors": "Maria Dziuba, Valentin Malykh"
+}

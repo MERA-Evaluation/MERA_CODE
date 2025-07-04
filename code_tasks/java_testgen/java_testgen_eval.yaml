@@ -1,0 +1,34 @@
+tag:
+  - java_testgen_eval
+task: javatestgen
+dataset_path: MERA-evaluation/JavaTestGen
+output_type: generate_until
+test_split: test
+doc_to_text: !function utils.doc_to_text_java_testgen
+doc_to_target: ""
+generation_kwargs:
+  do_sample: true
+  temperature: 0.2
+  top_p: 0.9
+  until:
+    - "<|endoftext|>"
+    - "<|im_end|>"
+process_results: !function utils.process_results_java_testgen
+filter_list:
+  - name: "evaluation"
+    filter:
+      - function: extract_from_tag_java
+      - function: scoring_java_testgen
+        working_dir: ./workspace/java_testgen_workdir
+        generations_output_filepath: ./workspace/data/java_generations.json
+        metrics_output_filepath: ./workspace/data/java_metrics.json
+      - function: "take_first"
+metric_list:
+  - metric: "pass@1"
+    aggregation: mean
+    higher_is_better: true
+  - metric: "compile@1"
+    aggregation: mean
+    higher_is_better: true
+metadata:
+  version: 1.0

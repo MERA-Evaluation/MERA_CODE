@@ -1,6 +1,5 @@
 task: rucodeeval
-dataset_name: rucodeeval
-dataset_path: MERA-evaluation/MERA
+dataset_path: MERA-evaluation/ruCodeEval
 output_type: generate_until
 
 training_split: null
@@ -10,6 +9,7 @@ target_delimiter: " "
 should_decontaminate: false
 doc_to_choice: null
 num_fewshot: null
+gen_prefix: "Готовая функция:\n```python\n{{inputs['function']}}\n"
 
 repeats: 10
 fewshot_config:

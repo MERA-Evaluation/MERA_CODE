@@ -19,6 +19,7 @@ import uuid
 import os
 import subprocess
 import json
+import re
 
 
 def process_results(doc: Dict, results: List[str]) -> Dict[str, float]:
@@ -62,15 +63,32 @@ class ruCodeLinterEvalScoring(Filter):
             code_results.extend([sample_metrics])
         return code_results
 		
+  
+def preprocess_generation(completion: str, language: str = "python") -> list[str]:
+    """Outputs extracted code blocks from a list of strings of markdown text"""
+    regex = re.compile(
+        r"(?P<start>^```(?P<block_language>(\w|-)+)\n)(?P<code>.*?\n)(?P<end>```)",
+        re.DOTALL | re.MULTILINE,
+    )
+    blocks = [
+        (match.group("block_language"), match.group("code"))
+        for match in regex.finditer(text)
+    ]
+    if len(blocks) == 0:
+        # maybe an output was cutted
+        regex = re.compile(
+            r"(?P<start>^```(?P<block_language>(\w|-)+)\n)(?P<code>.*)",
+            re.DOTALL | re.MULTILINE,
+        )
+        blocks = [
+            (match.group("block_language"), match.group("code"))
+            for match in regex.finditer(text)
+        ]
 
-# TODO: реализовать пост-обработку - ? как сделать универсально
-def preprocess_generation(completion):
-    if '[PYTHON]' in completion and '[/PYTHON]' in completion:
-        start = completion.find('[PYTHON]')+len('[PYTHON]')+1
-        finish = completion.find('[/PYTHON]')
-    else:
-        return 'error parsing'
-    return completion[start:finish]
+    return "\n".join(
+        [block for block_language, block in blocks if block_language == language]
+    )
+    
 	
 
 def execute_function(processed_completion):

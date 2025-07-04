@@ -1,0 +1,61 @@
+tag:
+  - realcode_java_eval
+task: realcode_java_debug
+dataset_path: json
+dataset_name: null
+dataset_kwargs:
+  data_files: 
+    test: ./workspace/datasets/rc3_java_25Jun28_meracode.jsonl
+output_type: generate_until
+training_split: null
+validation_split: null
+test_split: test
+doc_to_text: !function pipe.doc_to_text_realcode_java
+doc_to_target: ""
+generation_kwargs:
+  do_sample: true
+  temperature: 0.7
+  repetition_penalty: 1.05
+  top_p: 0.8
+  until:
+    - "<|endoftext|>"
+    - "<|im_end|>"
+process_results: !function pipe.process_results_realcode_java
+filter_list:
+  - name: "evaluation"
+    filter:
+      - function: extract_from_tag_realcode_java
+      - function: javafix
+      - function: scoring_realcode_java
+        working_dir: working_dir
+        generations_output_filepath: ./workspace/data/generations_rt.json
+        metrics_output_filepath: ./workspace/data/metrics_rt.json
+        html_output_filepath: ./workspace/data/metrics_rt.html
+        mode: docker
+        n_jobs: 6
+        gen_columns: ["gen"]
+        raise_exception: true
+        n_jobs_build: 1
+        enable_full_logs:  false
+      - function: "take_first"
+metric_list:
+  - metric: "pass@1"
+    aggregation: mean
+    higher_is_better: true
+  - metric: "pass_dry_run@1"
+    aggregation: mean
+    higher_is_better: true
+  - metric: "pass_oracle@1"
+    aggregation: mean
+    higher_is_better: true
+  - metric: "pass_stub_pass@1"
+    aggregation: mean
+    higher_is_better: true
+  - metric: "execution_success"
+    aggregation: mean
+    higher_is_better: true
+  - metric: "num_samples"
+    aggregation: !function pipe.sum_metric
+    higher_is_better: true
+metadata:
+  version: 2.0

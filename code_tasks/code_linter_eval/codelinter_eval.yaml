@@ -1,18 +1,17 @@
-task: code_linter_eval
-dataset_name: code_linter_eval
-dataset_path: MERA-evaluation/MERA
-output_type: generate_until
+task: codelintereval
+dataset_path: MERA-evaluation/CodeLinterEval
 
-
-training_split: null
+training_split: shots
+fewshot_split: shots
 test_split: test
+
+output_type: generate_until
 fewshot_delimiter: "\n\n"
 target_delimiter: " "
-should_decontaminate: false
-doc_to_choice: null
-num_fewshot: null
 
+num_fewshot: null
 repeats: 10
+
 fewshot_config:
   sampler: !function ../custom_samplers.FewshotSampler  # processes no instruction doc and changes doc_to_text
   doc_to_text_without_instruction: "Код:\n{{inputs.code.rstrip()}} Ошибки от линтера: {{inputs.feedback.rstrip()}}"
@@ -23,13 +22,14 @@ doc_to_text: "{{instruction.format(**inputs).strip() if inputs is mapping else i
 
 generation_kwargs:
   do_sample: true
-  temperature: 1.0
+  temperature: 0.6
 
 process_results: !function utils.process_results
 filter_list:
   - name: "scoring"
     filter:
       - function: rucodelinterevalscoring
+
 metric_list:
   - metric: pass@1
     aggregation: mean
@@ -40,5 +40,6 @@ metric_list:
   - metric: pass@10
     aggregation: mean
     higher_is_better: true
+
 metadata:
   version: 1.0

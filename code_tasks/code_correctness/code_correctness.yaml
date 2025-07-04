@@ -1,0 +1,26 @@
+task: codecorrectness
+
+dataset_path: MERA-evaluation/CodeCorrectness
+dataset_name: default # поменять название в hf датасете
+
+output_type: generate_until
+
+test_split: test
+fewshot_split: shots
+
+doc_to_text: !function utils.doc_to_text
+doc_to_target: "status"
+target_delimiter: " "
+fewshot_delimiter: "\n\n"
+
+process_results: !function utils.process_results
+
+metric_list:
+  - metric: acc
+    aggregation: mean
+    higher_is_better: true
+
+num_fewshot: null
+
+metadata:
+  version: 1.0
