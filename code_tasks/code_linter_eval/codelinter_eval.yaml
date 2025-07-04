@@ -26,10 +26,6 @@ generation_kwargs:
   max_gen_toks: 1024
 
 process_results: !function utils.process_results
-# filter_list:
-#   - name: "scoring"
-#     filter:
-#       - function: "take_first"
 
 metric_list:
   - metric: pass@1

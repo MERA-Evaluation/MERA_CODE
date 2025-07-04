@@ -15,7 +15,7 @@ fewshot_config:
   sampler: !function ../custom_samplers.FewshotSampler  # processes no instruction doc and changes doc_to_text
   doc_to_text_without_instruction: "Функция:\n{{inputs.function.rstrip()}}"
   query: "{{instruction.format(**inputs).strip()}}"
-# ruHumanEval does not use targets in shots
+# ruCodeEval does not use targets in shots
 # LM is required to generate func continuation
 doc_to_target: "{{meta['canonical_solution']}}"
 doc_to_text: "{{instruction.format(**inputs).strip() if inputs is mapping else instruction.format(inputs=inputs).strip()}}"
