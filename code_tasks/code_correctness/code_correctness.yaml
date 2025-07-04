@@ -1,7 +1,6 @@
 task: codecorrectness
 
 dataset_path: MERA-evaluation/CodeCorrectness
-dataset_name: default # поменять название в hf датасете
 
 output_type: generate_until
 

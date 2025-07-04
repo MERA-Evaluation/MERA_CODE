@@ -8,6 +8,7 @@ doc_to_text: !function utils.doc_to_text_java_testgen
 doc_to_target: ""
 generation_kwargs:
   do_sample: true
+  max_gen_toks: 4096
   temperature: 0.2
   top_p: 0.9
   until:
