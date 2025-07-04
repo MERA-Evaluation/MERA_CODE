@@ -104,4 +104,3 @@ The benchmark is built from 95 public Python GitHub repositories created in 2024
 Metrics for aggregated evaluation of responses:
 
 - `pass@1`: fraction of tasks where at least one generation passes all tests
-- `execution_success`: fraction of tasks where the project built and tests executed without failure

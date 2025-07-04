@@ -113,4 +113,3 @@ The benchmark is built from 27 public Java GitHub repositories created in 2024-2
 Metrics for aggregated evaluation of responses:
 
 - `pass@1`: fraction of tasks where at least one generation passes all tests
-- `execution_success`: fraction of tasks where the project built and tests executed without failure
