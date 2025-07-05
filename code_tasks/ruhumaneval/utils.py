@@ -88,7 +88,7 @@ def preprocess_generation(text: str, language: str = "python"):
         # if no code was found, return the original text
         return text
 
-    return "\n".join(
+    return "\n" + "\n".join(
         [block for block_language, block in blocks if block_language == language]
     )
 
