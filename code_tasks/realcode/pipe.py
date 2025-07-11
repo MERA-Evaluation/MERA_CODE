@@ -4,7 +4,6 @@ import tempfile
 from dataclasses import dataclass, asdict
 from typing import Any, Dict, List
 import re
-import sys
 
 from lm_eval.api.filter import Filter
 from lm_eval.api.registry import register_filter
@@ -181,38 +180,34 @@ class ScoringFilter(Filter):
 
     def __init__(
         self,
-        working_dir: str,
-        generations_output_filepath: str,
-        metrics_output_filepath: str,
-        html_output_filepath: str,
-        mode: str = 'docker',
-        n_jobs: int = 1,
-        gen_columns: List[str] = ['gt', 'return_pass', 'return_empty_str', "gen"],
-        raise_exception: bool = True,
-        n_jobs_build: int = 1,
-        enable_full_logs: bool = False,
-        run_id = get_run_id()
     ) -> None:
         """
         Initializes the scoring filter with configuration for dataset, paths and logging.
         """
         super().__init__()
-        self.working_dir = working_dir
-        self.run_id = run_id
+    
+    def load_config(self):
+        import yaml
 
-        self.enable_full_logs = enable_full_logs
-        self.mode = mode
-        self.n_jobs = n_jobs
-        self.gen_columns = gen_columns
-        self.raise_exception = raise_exception
-        self.n_jobs_build = n_jobs_build
+        with open("code_tasks/realcode/realcode_config.yaml") as f:
+            config = yaml.safe_load(f)
+    
+        self.working_dir = os.getenv("REALCODE_WORKING_DIR", config["working_dir"])
+        self.run_id = get_run_id()
+
+        self.enable_full_logs = os.getenv("REALCODE_ENABLE_FULL_LOGS", config["enable_full_logs"])
+        self.mode = os.getenv("REALCODE_SCORING_MODE", config["scoring_mode"])
+        self.n_jobs = os.getenv("REALCODE_N_JOBS", config["n_jobs"])
+        self.gen_columns = os.getenv("REALCODE_GET_COMUNS", config["gen_columns"])
+        self.raise_exception = os.getenv("REALCODE_RAISE_EXCEPTION", config["raise_exception"])
+        self.n_jobs_build = os.getenv("REALCODE_N_JOBS_BUILD", config["n_jobs_build"])
 
         # Verbose output folder
-        print("Run_id=%s output folder=%s"%(run_id, os.path.abspath(os.path.join(working_dir, run_id))))
-        self.generations_output_filepath = generations_output_filepath
-        self.metrics_output_filepath = metrics_output_filepath
-        self.html_output_filepath = html_output_filepath
-    
+        print("Run_id=%s output folder=%s"%(self.run_id, os.path.abspath(os.path.join(self.working_dir, self.run_id))))
+        self.generations_output_filepath = os.getenv("REALCODE_GENERATION_OUTPUT_FILEPATH", config["generations_output_filepath"])
+        self.metrics_output_filepath = os.getenv("REALCODE_METRICS_OUTPUT_FILEPATH", config["metrics_output_filepath"])
+        self.html_output_filepath = os.getenv("REALCODE_HTML_OUTPUT_FILEPATH", config["html_output_filepath"])
+
     def load(self):
         if self.enable_full_logs:
             enable_stdout_logs()
@@ -254,6 +249,7 @@ class ScoringFilter(Filter):
         """
         if predict_only:
             return resps
+        self.load_config()
         self.load()
         generations = [[gen[0]] for gen in resps]
         self._save_to_file(self.generations_output_filepath, generations)
@@ -398,13 +394,21 @@ def sum_metric(values: List[float]) -> float:
 class LMEvalAutoFixerFilter(Filter):
     DISABLE_ON_PREDICT_ONLY = True
 
-    def __init__(self, mode="simple"):
+    def __init__(self,):
         super().__init__()
-        self.mode = mode
+    
+    def load_config(self):
+        import yaml
+
+        with open("code_tasks/realcode/realcode_config.yaml") as f:
+            config = yaml.safe_load(f)
+    
+        self.mode = os.getenv("REALCODE_AUTOFIX_MODE", config["autofix_mode"])
 
     def apply(self, resps: list[list[str]], docs: list[dict], predict_only: bool = False) -> list[list[str]]:
         if predict_only:
             return resps
+        self.load_config()
         fixed = []
         for gens, doc in zip(resps, docs):
             intent = doc["meta"]["intent"]

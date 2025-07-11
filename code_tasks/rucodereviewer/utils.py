@@ -5,7 +5,11 @@ from lm_eval.api.registry import register_filter
 
 import sacrebleu
 
-import json, re, os, time, logging
+import json
+import re
+import os
+import time
+import logging
 from concurrent.futures import ThreadPoolExecutor
 
 
@@ -55,16 +59,23 @@ comment 2: {comment2}
 answer:"""
 
 class llmAsAJudge():
-    def __init__(self, few_shot_path: str = os.getenv('JUDGE_FEW_SHOT_PATH', "/workdir/few_shot.json")) -> None:
-        self.max_retries = int(os.getenv('JUDGE_MAX_RETRIES', 10))
-        self.retry_delay = int(os.getenv('JUDGE_RETRY_DELAY', 5))
-        self.model_name = os.getenv('JUDGE_MODEL_NAME', "qwen-coder-32b")
-        self.temperature = float(os.getenv('JUDGE_TEMPERATURE', 0.))
-        self.max_tokens = int(os.getenv('JUDGE_MAX_TOKENS', 100))
-        self.provider = os.getenv('JUDGE_CUSTOM_LLM_PROVIDER', "openai")
-        self.api_key = os.getenv('JUDGE_API_KEY', 'None')
-        self.url = os.getenv('JUDGE_URL', "")
-        self.few_shot_path = few_shot_path
+    
+    def load_config(self):
+        import yaml
+
+        with open("code_tasks/rucodereviewer/rucodereview_config.yaml") as f:
+            config = yaml.safe_load(f)
+    
+        self.max_retries = int(os.getenv('JUDGE_MAX_RETRIES', config["max_retries"]))
+        self.retry_delay = int(os.getenv('JUDGE_RETRY_DELAY', config["retry_delay"]))
+        self.model_name = os.getenv('JUDGE_MODEL_NAME', config["model_name"])
+        self.temperature = float(os.getenv('JUDGE_TEMPERATURE', config["temperature"]))
+        self.max_tokens = int(os.getenv('JUDGE_MAX_TOKENS', config["max_tokens"]))
+        self.provider = os.getenv('JUDGE_CUSTOM_LLM_PROVIDER', config["provider"])
+        self.api_key = os.getenv('JUDGE_API_KEY', config["api_key"])
+        self.url = os.getenv('JUDGE_URL', config["url"])
+        self.few_shot_path = os.getenv('JUDGE_FEW_SHOT_PATH', config["few_shot_path"])
+
     
     def load_data(self):
         if not os.path.exists(self.few_shot_path):
@@ -151,6 +162,7 @@ class llmASaJudgeScoring(Filter):
     def apply(self, resps: list[list[str]], docs: list[Dict[str, Any]], predict_only: bool = False) -> list[Dict[str, float]]:
         if predict_only:
             return resps
+        self.judge.load_config()
         self.judge.load_data()
         with ThreadPoolExecutor(os.getenv('JUDGE_MAX_WORKERS', 50)) as executor:
             tasks = [(idx, sample[0], doc) for idx, (sample, doc) in enumerate(zip(resps, docs))]

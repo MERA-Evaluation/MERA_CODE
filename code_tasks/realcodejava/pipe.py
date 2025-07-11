@@ -1,7 +1,6 @@
 import json
 import os
 import re
-import tempfile
 from dataclasses import dataclass, asdict
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
@@ -188,37 +187,34 @@ class ScoringFilterRCJava(Filter):
 
     def __init__(
         self,
-        working_dir: str,
-        generations_output_filepath: str,
-        metrics_output_filepath: str,
-        html_output_filepath: str,
-        mode: str = 'docker',
-        n_jobs: int = 1,
-        gen_columns: List[str] = ['gt', 'stub'],
-        raise_exception: bool = True,
-        n_jobs_build: int = 1,
-        enable_full_logs: bool = False,
-        run_id: str = get_run_id()
     ) -> None:
         """
         Initializes the scoring filter with configuration for dataset, paths and logging.
         """
         super().__init__()
-        self.working_dir = working_dir
-        self.run_id = run_id
+    
+    def load_config(self):
+        import yaml
 
-        self.enable_full_logs = enable_full_logs
-        self.mode = mode
-        self.n_jobs = n_jobs
-        self.gen_columns = gen_columns
-        self.raise_exception = raise_exception
-        self.n_jobs_build = n_jobs_build
+        with open("code_tasks/realcodejava/realcodejava_config.yaml") as f:
+            config = yaml.safe_load(f)
+    
+        self.working_dir = os.getenv("REALCODEJAVA_WORKING_DIR", config["working_dir"])
+        self.run_id = get_run_id()
+
+        self.enable_full_logs = os.getenv("REALCODEJAVA_ENABLE_FULL_LOGS", config["enable_full_logs"])
+        self.mode = os.getenv("REALCODEJAVA_SCORING_MODE", config["scoring_mode"])
+        self.n_jobs = os.getenv("REALCODEJAVA_N_JOBS", config["n_jobs"])
+        self.gen_columns = os.getenv("REALCODEJAVA_GET_COMUNS", config["gen_columns"])
+        self.raise_exception = os.getenv("REALCODEJAVA_RAISE_EXCEPTION", config["raise_exception"])
+        self.n_jobs_build = os.getenv("REALCODEJAVA_N_JOBS_BUILD", config["n_jobs_build"])
 
         # Verbose output folder
-        print("Run_id=%s output folder=%s"%(run_id, os.path.abspath(os.path.join(working_dir, run_id))))
-        self.generations_output_filepath = generations_output_filepath
-        self.metrics_output_filepath = metrics_output_filepath
-        self.html_output_filepath = html_output_filepath
+        print("Run_id=%s output folder=%s"%(self.run_id, os.path.abspath(os.path.join(self.working_dir, self.run_id))))
+        self.generations_output_filepath = os.getenv("REALCODEJAVA_GENERATION_OUTPUT_FILEPATH", config["generations_output_filepath"])
+        self.metrics_output_filepath = os.getenv("REALCODEJAVA_METRICS_OUTPUT_FILEPATH", config["metrics_output_filepath"])
+        self.html_output_filepath = os.getenv("REALCODEJAVA_HTML_OUTPUT_FILEPATH", config["html_output_filepath"])
+
     
     def load(self):
         if self.enable_full_logs:
@@ -255,6 +251,7 @@ class ScoringFilterRCJava(Filter):
         """
         if predict_only:
             return resps
+        self.load_config()
         self.load()
         generations = [[gen[0]] for gen in resps]
         self._save_to_file(self.generations_output_filepath, generations)

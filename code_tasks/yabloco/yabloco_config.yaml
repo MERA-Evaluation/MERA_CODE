@@ -1,0 +1,4 @@
+working_dir: ./workspace/yabloco-benchmark
+bench_version: v0.8
+generations_output_filepath: ./workspace/data/generations_yabloco_oracle.json
+metrics_output_filepath: ./workspace/data/metrics_yabloco_oracle.json

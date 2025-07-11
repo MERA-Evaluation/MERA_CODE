@@ -1,6 +1,6 @@
 tag:
-  - realcode_java_eval
-task: realcode_java_debug
+  - realcodejava_eval
+task: realcode_ava_debug
 dataset_path: json
 dataset_name: null
 dataset_kwargs:

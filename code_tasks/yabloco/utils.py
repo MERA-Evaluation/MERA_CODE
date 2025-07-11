@@ -71,16 +71,24 @@ class FromTagExtractor(Filter):
 class ScoringFilter(Filter):
     DISABLE_ON_PREDICT_ONLY = True
 
-    def __init__(self, working_dir, bench_version, generations_output_filepath, metrics_output_filepath) -> None:
+    def __init__(self,) -> None:
         super().__init__()
-        self.working_dir = working_dir
-        self.bench_version = bench_version
-        self.generations_output_filepath = generations_output_filepath
-        self.metrics_output_filepath = metrics_output_filepath
+    
+    def load_config(self):
+        import yaml
+
+        with open("code_tasks/yabloco/yabloco_config.yaml") as f:
+            config = yaml.safe_load(f)
+    
+        self.working_dir = os.getenv("YABLOCO_WORKING_DIR", config["working_dir"])
+        self.bench_version = os.getenv("YABLOCO_BENCH_VERSION", config["bench_version"])
+        self.generations_output_filepath = os.getenv("YABLOCO_GENERATION_OUTPUT_FILEPATH", config["generations_output_filepath"])
+        self.metrics_output_filepath = os.getenv("YABLOCO_METRICS_OUTPUT_FILEPATH", config["metrics_output_filepath"])
 
     def apply(self, resps, docs, predict_only = False):
         if predict_only:
             return resps
+        self.load_config()
         generations = [[gen[0]] for gen in resps]  # Extract first generation per response
         self._save_to_file(self.generations_output_filepath, generations)
 
@@ -90,7 +98,7 @@ class ScoringFilter(Filter):
         }
 
         sys.path.append(self.working_dir)
-        
+
         try:
             from compute import run_tests
         except ImportError:

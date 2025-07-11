@@ -7,7 +7,7 @@ import json
 from lm_eval.api.filter import Filter
 from lm_eval.api.registry import register_filter
 
-sys.path.append("code_tasks/java_testgen/")
+sys.path.append("code_tasks/javatestgen/")
 from logger import setup_logger
 
 
@@ -120,19 +120,24 @@ class ScoringJavaTestgen(Filter):
 
     def __init__(
         self,
-        working_dir,
-        generations_output_filepath,
-        metrics_output_filepath,
     ) -> None:
         super().__init__()
-        self.working_dir = working_dir
-        self.generations_output_filepath = generations_output_filepath
-        self.metrics_output_filepath = metrics_output_filepath
+    
+    def load_config(self):
+        import yaml
+
+        with open("code_tasks/javatestgen/javatestgen_config.yaml") as f:
+            config = yaml.safe_load(f)
+
+        self.working_dir = os.getenv("JAVATESTGEN_WORKING_DIR", config["working_dir"])
+        self.generations_output_filepath = os.getenv("JAVATESTGEN_GENERATION_OUTPUT_FILEPATH", config["generations_output_filepath"])
+        self.metrics_output_filepath = os.getenv("JAVATESTGEN_METRICS_OUTPUT_FILEPATH", config["metrics_output_filepath"])
         os.makedirs(self.working_dir, exist_ok=True)
 
     def apply(self, resps, docs, predict_only=False):
         if predict_only:
             return resps
+        self.load_config()
         generations = [[gen[0]] for gen in resps]
         self._save_to_file(self.generations_output_filepath, generations)
 

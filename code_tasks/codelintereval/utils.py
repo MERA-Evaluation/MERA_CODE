@@ -1,22 +1,12 @@
-import ast
-import contextlib
-import faulthandler
-import io
 import os
-import platform
-import signal
-import tempfile
-from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List
 
-import multiprocess as mp
 import numpy as np
 
 from lm_eval.api.filter import Filter
 from lm_eval.api.registry import register_filter
 
 import uuid
-import os
 import subprocess
 import json
 import re

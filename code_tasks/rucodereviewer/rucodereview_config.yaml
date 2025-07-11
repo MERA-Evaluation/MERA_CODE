@@ -1,0 +1,9 @@
+max_retries: 10
+retry_delay: 5
+model_name: "qwen-coder-32b"
+temperature: 0.
+max_tokens: 100
+provider: "openai"
+api_key: "None"
+url: ""
+few_shot_path: "/workdir/few_shot.json"

@@ -1,5 +1,5 @@
 tag:
-  - realcode_java_eval
+  - realcodejava_eval
 task: realcodejava
 dataset_path: MERA-evaluation/RealCodeJava
 output_type: generate_until
@@ -24,16 +24,6 @@ filter_list:
       - function: extract_from_tag_realcode_java
       - function: javafix
       - function: scoring_realcode_java
-        working_dir: working_dir
-        generations_output_filepath: ./workspace/data/generations_rt.json
-        metrics_output_filepath: ./workspace/data/metrics_rt.json
-        html_output_filepath: ./workspace/data/metrics_rt.html
-        mode: docker
-        n_jobs: 6
-        gen_columns: ["gen"]
-        raise_exception: true
-        n_jobs_build: 1
-        enable_full_logs:  false
       - function: "take_first"
 metric_list:
   - metric: "pass@1"

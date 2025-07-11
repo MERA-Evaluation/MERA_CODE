@@ -1,0 +1,3 @@
+working_dir: ./workspace/java_testgen_workdir
+generations_output_filepath: ./workspace/data/java_generations.json
+metrics_output_filepath: ./workspace/data/java_metrics.json

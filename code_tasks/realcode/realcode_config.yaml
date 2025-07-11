@@ -1,0 +1,11 @@
+autofix_mode: simple
+working_dir: working_dir
+generations_output_filepath: ./workspace/data/generations_rt.json
+metrics_output_filepath: ./workspace/data/metrics_rt.json
+html_output_filepath: ./workspace/data/metrics_rt.html
+scoring_mode: docker
+n_jobs: 15
+gen_columns: ["gen"]
+raise_exception: true
+n_jobs_build: 15
+enable_full_logs:  false
