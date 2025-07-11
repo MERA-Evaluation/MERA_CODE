@@ -9,15 +9,19 @@ from typing import Any, Dict, List, Optional, Tuple
 from lm_eval.api.filter import Filter
 from lm_eval.api.registry import register_filter
 
-from repotest import __version__ as repotest_version
-from repotest.constants import disable_stdout_logs, enable_stdout_logs
-from repotest.manager.realcode_java_task_manager import JavaEvaluatorRealcode
 
-min_repotest_version = "0.4.4"
-if not (repotest_version >= min_repotest_version):
-    raise ImportError("Current repotest version is {} it should be {}".format(
-        repotest_version, min_repotest_version
-    ))
+try:
+    from repotest import __version__ as repotest_version
+    from repotest.constants import disable_stdout_logs, enable_stdout_logs
+    from repotest.manager.realcode_java_task_manager import JavaEvaluatorRealcode
+    min_repotest_version = "0.4.4"
+    if not (repotest_version >= min_repotest_version):
+        raise ImportError("Current repotest version is {} it should be {}".format(
+            repotest_version, min_repotest_version
+        ))
+except ImportError:
+    print("WARNING! You are running task `realcode` but do not have library `repotest` installed or its version is less than 0.4.4.\nIf you are running the evaluation with `--predict_only` flag, ignore this warning. Otherwise consider installing the required library.")
+
 
 
 #ToDo: move this to repotest level
@@ -65,10 +69,12 @@ def doc_to_text_realcode_java(doc: Dict[str, Any]) -> str:
 
 @register_filter("extract_from_tag_realcode_java")
 class FromTagExtractorRCJava(Filter):
+    DISABLE_ON_PREDICT_ONLY = True
+
     def __init__(self) -> None:
         super().__init__()
 
-    def apply(self, resps: List[List[str]], docs: List[Dict[str, Any]]) -> List[List[str]]:
+    def apply(self, resps: List[List[str]], docs: List[Dict[str, Any]], predict_only: bool = False) -> List[List[str]]:
         """
         Extract code blocks from responses.
 
@@ -84,6 +90,8 @@ class FromTagExtractorRCJava(Filter):
         list of list of str
             Code blocks extracted from between markdown tags.
         """
+        if predict_only:
+            return resps
         code_results = []
         for sample in resps:
             sample_metrics = list(map(self._extract_from_tag, sample))
@@ -176,6 +184,8 @@ def get_run_id():
 
 @register_filter("scoring_realcode_java")
 class ScoringFilterRCJava(Filter):
+    DISABLE_ON_PREDICT_ONLY = True
+
     def __init__(
         self,
         working_dir: str,
@@ -197,26 +207,34 @@ class ScoringFilterRCJava(Filter):
         self.working_dir = working_dir
         self.run_id = run_id
 
+        self.enable_full_logs = enable_full_logs
+        self.mode = mode
+        self.n_jobs = n_jobs
+        self.gen_columns = gen_columns
+        self.raise_exception = raise_exception
+        self.n_jobs_build = n_jobs_build
+
         # Verbose output folder
         print("Run_id=%s output folder=%s"%(run_id, os.path.abspath(os.path.join(working_dir, run_id))))
         self.generations_output_filepath = generations_output_filepath
         self.metrics_output_filepath = metrics_output_filepath
         self.html_output_filepath = html_output_filepath
-
-        if enable_full_logs:
+    
+    def load(self):
+        if self.enable_full_logs:
             enable_stdout_logs()
         else:
             disable_stdout_logs()
 
         self.pipeline = JavaEvaluatorRealcode(
-            mode=mode,
-            n_jobs=n_jobs,
-            gen_columns=gen_columns,
-            raise_exception=raise_exception,
-            n_jobs_build=n_jobs_build
+            mode=self.mode,
+            n_jobs=self.n_jobs,
+            gen_columns=self.gen_columns,
+            raise_exception=self.raise_exception,
+            n_jobs_build=self.n_jobs_build
         )
 
-    def apply(self, resps: List[List[str]], docs: List[Dict[str, Any]]) -> List[List[Dict[str, Any]]]:
+    def apply(self, resps: List[List[str]], docs: List[Dict[str, Any]], predict_only: bool = False) -> List[List[Dict[str, Any]]]:
         """
         Process generations and run scoring.
 
@@ -235,6 +253,9 @@ class ScoringFilterRCJava(Filter):
 
         
         """
+        if predict_only:
+            return resps
+        self.load()
         generations = [[gen[0]] for gen in resps]
         self._save_to_file(self.generations_output_filepath, generations)
         self._save_to_file(os.path.join(self.working_dir, self.run_id, "generations.json"), 
@@ -342,7 +363,11 @@ def sum_metric(values: List[float]) -> float:
 
 @register_filter("javafix")
 class JavaLMEvalAngel(Filter):
-    def apply(self, resps: list[list[str]], docs: list[dict]) -> list[list[str]]:
+    DISABLE_ON_PREDICT_ONLY = True
+
+    def apply(self, resps: list[list[str]], docs: list[dict], predict_only: bool = False) -> list[list[str]]:
+        if predict_only:
+            return resps
         fixed = []
         for gens, doc in zip(resps, docs):
             intent = doc["meta"]["intent"]

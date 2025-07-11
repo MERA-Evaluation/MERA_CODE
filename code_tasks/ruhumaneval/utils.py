@@ -8,6 +8,7 @@ import signal
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List
+import re
 
 import multiprocess as mp
 import numpy as np
@@ -42,16 +43,20 @@ def process_results(doc: Dict, results: List[str]) -> Dict[str, float]:
 
 @register_filter("ruhumanevalscoring")
 class ruHumanEvalScoring(Filter):
+    DISABLE_ON_PREDICT_ONLY = True
+
     def __init__(self) -> None:
         """
         Can define custom behavior here, if an individual instantiation of a Filter class should have state.
         """
 
-    def apply(self, resps, docs):
+    def apply(self, resps, docs, predict_only = False):
         """
         Assuming each entry of `resps` is a list of model responses, we discard all but the first response.
         """
         # resps: List[List[str]] - list of lists of generations
+        if predict_only:
+            return resps
         code_results = []
         for idx, sample in enumerate(resps):
             sample_metrics = []
@@ -63,21 +68,33 @@ class ruHumanEvalScoring(Filter):
         return code_results
 
 
-def preprocess_generation(generation):
-    """Function that is intended to truncate markdown cover of the generation"""
-    # check for empty string
-    if len(generation):
-        # we cannot know for sure which symbols may be used
-        first = generation[0]
-        if first in [" ", "\n", "\t"]:
-            return generation
-        # like for " ```python *generation* ``` "
-        # leave only "*generation*"
-        begin_pattern = first * 3 + "python"
-        end_pattern = first * 3
-        if generation.startswith(begin_pattern) and generation.endswith(end_pattern):
-            return generation[len(begin_pattern):-len(end_pattern)]
-    return generation
+def preprocess_generation(text: str, language: str = "python"):
+    """Outputs extracted code blocks from a list of strings of markdown text"""
+    regex = re.compile(
+        r"(?P<start>^```(?P<block_language>(\w|-)+)\n)(?P<code>.*?\n)(?P<end>```)",
+        re.DOTALL | re.MULTILINE,
+    )
+    blocks = [
+        (match.group("block_language"), match.group("code"))
+        for match in regex.finditer(text)
+    ]
+    if len(blocks) == 0:
+        # maybe an output was cutted
+        regex = re.compile(
+            r"(?P<start>^```(?P<block_language>(\w|-)+)\n)(?P<code>.*)",
+            re.DOTALL | re.MULTILINE,
+        )
+        blocks = [
+            (match.group("block_language"), match.group("code"))
+            for match in regex.finditer(text)
+        ]
+    if len(blocks) == 0:
+        # if no code was found, return the original text
+        return text
+
+    return "\n" + "\n".join(
+        [block for block_language, block in blocks if block_language == language]
+    )
 
 
 def execute_function(resp_func, doc, timeout=3.0, num_workers=2):

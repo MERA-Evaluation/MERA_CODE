@@ -1,6 +1,9 @@
 import re
 
-from code_bleu import calc_code_bleu
+try:
+    from code_bleu import calc_code_bleu
+except ImportError:
+    print("WARNING! You are running task `unittests` or `unittestspublic` but do not have library `code_bleu` installed.\nIf you are running the evaluation with `--predict_only` flag, ignore this warning. Otherwise consider installing the required library from the repository:\nhttps://github.com/Pstva/code_bleu")
 
 
 def doc_to_text(doc: dict) -> str:

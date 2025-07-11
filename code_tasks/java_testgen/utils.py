@@ -3,8 +3,7 @@ import sys
 import logging
 import os
 import json
-from repotest.core.docker.java import JavaDockerRepo
-from repotest.utils.git.git_diff_wrapper import GitDiffWrapper
+
 from lm_eval.api.filter import Filter
 from lm_eval.api.registry import register_filter
 
@@ -14,6 +13,14 @@ from logger import setup_logger
 
 setup_logger()
 logger = logging.getLogger("java_testgen_bench")
+
+
+try:
+    from repotest.core.docker.java import JavaDockerRepo
+    from repotest.utils.git.git_diff_wrapper import GitDiffWrapper
+except ImportError:
+    print("WARNING! You are running task `javatestgen` but do not have library `repotest` installed.\nIf you are running the evaluation with `--predict_only` flag, ignore this warning. Otherwise consider installing the required library.")
+
 
 
 def doc_to_text_java_testgen(doc: Dict[str, Any]) -> str:
@@ -91,7 +98,11 @@ def evaluate(repo: str,
 
 @register_filter("extract_from_tag_java")
 class ExtractFromTagJava(Filter):
-    def apply(self, resps, docs):
+    DISABLE_ON_PREDICT_ONLY = True
+
+    def apply(self, resps, docs, predict_only=False):
+        if predict_only:
+            return resps
         return [[self._extract_java(gen) for gen in generations] for generations in resps]
 
     @staticmethod
@@ -105,6 +116,8 @@ class ExtractFromTagJava(Filter):
 
 @register_filter("scoring_java_testgen")
 class ScoringJavaTestgen(Filter):
+    DISABLE_ON_PREDICT_ONLY = True
+
     def __init__(
         self,
         working_dir,
@@ -117,7 +130,9 @@ class ScoringJavaTestgen(Filter):
         self.metrics_output_filepath = metrics_output_filepath
         os.makedirs(self.working_dir, exist_ok=True)
 
-    def apply(self, resps, docs):
+    def apply(self, resps, docs, predict_only=False):
+        if predict_only:
+            return resps
         generations = [[gen[0]] for gen in resps]
         self._save_to_file(self.generations_output_filepath, generations)
 

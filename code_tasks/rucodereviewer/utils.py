@@ -12,19 +12,19 @@ from concurrent.futures import ThreadPoolExecutor
 try:
     import litellm
     import httpx
-except ImportError:
-    raise ImportError("Some libraries are not installed. Please install them by running: pip install litellm httpx")
 
+    litellm._logging._disable_debugging()
+    httpx_logger = logging.getLogger("httpx")
+    httpx_logger.setLevel(logging.WARNING)
+
+    litellm.client_session = httpx.Client(verify=False)
+    litellm.aclient_session = httpx.AsyncClient(verify=False)
+
+except ImportError:
+    print("WARNING! You are running task `rucodereviewer` but do not have libraries `litellm`, `httpx` installed.\nIf you are running the evaluation with `--predict_only` flag, ignore this warning. Otherwise consider installing the required library:\npip install litellm httpx")
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-litellm._logging._disable_debugging()
-httpx_logger = logging.getLogger("httpx")
-httpx_logger.setLevel(logging.WARNING)
-
-litellm.client_session = httpx.Client(verify=False)
-litellm.aclient_session = httpx.AsyncClient(verify=False)
 
 n = 10
 
@@ -64,13 +64,15 @@ class llmAsAJudge():
         self.provider = os.getenv('JUDGE_CUSTOM_LLM_PROVIDER', "openai")
         self.api_key = os.getenv('JUDGE_API_KEY', 'None')
         self.url = os.getenv('JUDGE_URL', "")
-
-        if not os.path.exists(few_shot_path):
-            err = f"File '{few_shot_path}' not found."
+        self.few_shot_path = few_shot_path
+    
+    def load_data(self):
+        if not os.path.exists(self.few_shot_path):
+            err = f"File '{self.few_shot_path}' not found."
             logger.error(err)
             raise FileNotFoundError(err)
 
-        with open(few_shot_path, 'r') as file:
+        with open(self.few_shot_path, 'r') as file:
             few_shots = json.load(file)
 
         self.prompt_first = JUDGE_PROMPT_FIRST
@@ -79,6 +81,7 @@ class llmAsAJudge():
             self.prompt_first += f"Example {idx + 1}:\ncode block difference: {sample['diff_block']}\ncomment 1: {sample['comment1']}\ncomment 2: {sample['comment2']}\nanswer: {sample['answer']}\n\n"
 
         self.prompt_second = JUDGE_PROMPT_SECOND
+
 
     def post_query(self, message):
         messages = [{"role": "user", "content": message}]
@@ -131,6 +134,8 @@ class llmAsAJudge():
 
 @register_filter("llmasajudgescoring")
 class llmASaJudgeScoring(Filter):
+    DISABLE_ON_PREDICT_ONLY = True
+
     def __init__(self) -> None:
         self.judge = llmAsAJudge()
 
@@ -143,7 +148,10 @@ class llmASaJudgeScoring(Filter):
 
         return sample_metrics
 
-    def apply(self, resps: list[list[str]], docs: list[Dict[str, Any]]) -> list[Dict[str, float]]:
+    def apply(self, resps: list[list[str]], docs: list[Dict[str, Any]], predict_only: bool = False) -> list[Dict[str, float]]:
+        if predict_only:
+            return resps
+        self.judge.load_data()
         with ThreadPoolExecutor(os.getenv('JUDGE_MAX_WORKERS', 50)) as executor:
             tasks = [(idx, sample[0], doc) for idx, (sample, doc) in enumerate(zip(resps, docs))]
             results = list(executor.map(lambda x: self.process_sample(*x), tasks))

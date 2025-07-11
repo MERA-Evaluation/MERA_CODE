@@ -44,15 +44,19 @@ def process_results(doc: Dict, results: List[str]) -> Dict[str, float]:
 	
 @register_filter("rucodelinterevalscoring")
 class ruCodeLinterEvalScoring(Filter):
+    DISABLE_ON_PREDICT_ONLY = True
+
     def __init__(self) -> None:
         """
         Считывание необходимых для фильтра параметров
         """
 
-    def apply(self, resps, docs):
+    def apply(self, resps, docs, predict_only=False):
         """
         Метод, который отвечает за применение фильтра
         """
+        if predict_only:
+            return resps
         code_results = []
         for idx, sample in enumerate(resps):
             sample_metrics = []
@@ -64,7 +68,7 @@ class ruCodeLinterEvalScoring(Filter):
         return code_results
 		
   
-def preprocess_generation(completion: str, language: str = "python") -> list[str]:
+def preprocess_generation(text: str, language: str = "python"):
     """Outputs extracted code blocks from a list of strings of markdown text"""
     regex = re.compile(
         r"(?P<start>^```(?P<block_language>(\w|-)+)\n)(?P<code>.*?\n)(?P<end>```)",
@@ -84,8 +88,11 @@ def preprocess_generation(completion: str, language: str = "python") -> list[str
             (match.group("block_language"), match.group("code"))
             for match in regex.finditer(text)
         ]
+    if len(blocks) == 0:
+        # if no code was found, return the original text
+        return text
 
-    return "\n".join(
+    return "\n" + "\n".join(
         [block for block_language, block in blocks if block_language == language]
     )
     

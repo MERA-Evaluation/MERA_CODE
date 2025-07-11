@@ -48,11 +48,15 @@ def parse_generation(text):
 
 @register_filter("extract_from_tag")
 class FromTagExtractor(Filter):
+    DISABLE_ON_PREDICT_ONLY = True
+
     def __init__(self) -> None:
         super().__init__()
 
-    def apply(self, resps, docs):
+    def apply(self, resps, docs, predict_only = False):
         # resps: List[List[str]] - list of list generations
+        if predict_only:
+            return resps
         code_results = []
         for idx, sample in enumerate(resps):
             sample_metrics = list(map(self._extract_from_tag, sample))
@@ -65,6 +69,8 @@ class FromTagExtractor(Filter):
 
 @register_filter("scoring")
 class ScoringFilter(Filter):
+    DISABLE_ON_PREDICT_ONLY = True
+
     def __init__(self, working_dir, bench_version, generations_output_filepath, metrics_output_filepath) -> None:
         super().__init__()
         self.working_dir = working_dir
@@ -72,7 +78,9 @@ class ScoringFilter(Filter):
         self.generations_output_filepath = generations_output_filepath
         self.metrics_output_filepath = metrics_output_filepath
 
-    def apply(self, resps, docs):
+    def apply(self, resps, docs, predict_only = False):
+        if predict_only:
+            return resps
         generations = [[gen[0]] for gen in resps]  # Extract first generation per response
         self._save_to_file(self.generations_output_filepath, generations)
 
@@ -82,7 +90,12 @@ class ScoringFilter(Filter):
         }
 
         sys.path.append(self.working_dir)
-        from compute import run_tests
+        
+        try:
+            from compute import run_tests
+        except ImportError:
+            print("WARNING! You are running task `yabloco` but do not have library `compute` installed.\nIf you are running the evaluation with `--predict_only` flag, ignore this warning. Otherwise consider installing the required library.")
+
         metrics = run_tests(generations, self.working_dir, self.bench_version)
 
         self._save_to_file(self.metrics_output_filepath, metrics)
