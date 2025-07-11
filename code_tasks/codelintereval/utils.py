@@ -1,15 +1,13 @@
+import json
 import os
+import re
+import subprocess
+import uuid
 from typing import Dict, List
 
 import numpy as np
-
 from lm_eval.api.filter import Filter
 from lm_eval.api.registry import register_filter
-
-import uuid
-import subprocess
-import json
-import re
 
 
 def process_results(doc: Dict, results: List[str]) -> Dict[str, float]:
@@ -30,8 +28,8 @@ def process_results(doc: Dict, results: List[str]) -> Dict[str, float]:
         "pass@5": 0.0,
         "pass@10": 0.0,
     }  # if no label provided (test answers are secret)
-	
-	
+
+
 @register_filter("rucodelinterevalscoring")
 class ruCodeLinterEvalScoring(Filter):
     DISABLE_ON_PREDICT_ONLY = True
@@ -56,8 +54,8 @@ class ruCodeLinterEvalScoring(Filter):
                 sample_metrics.extend([pass1])
             code_results.extend([sample_metrics])
         return code_results
-		
-  
+
+
 def preprocess_generation(text: str, language: str = "python"):
     """Outputs extracted code blocks from a list of strings of markdown text"""
     regex = re.compile(
@@ -82,52 +80,54 @@ def preprocess_generation(text: str, language: str = "python"):
         # if no code was found, return the original text
         return text
 
-    return "\n" + "\n".join(
-        [block for block_language, block in blocks if block_language == language]
-    )
-    
-	
+    return "\n" + "\n".join([block for block_language,
+                             block in blocks if block_language == language])
+
 
 def execute_function(processed_completion):
     id = str(uuid.uuid4())
     LINTER_PATH = os.getenv("LINTER_PATH")
-    os.makedirs('./extracted_codes', exist_ok=True)
-    os.makedirs('./reports', exist_ok=True)
-    
-    code_file_path = f'./extracted_codes/temporary_file_{id}.py'
-    json_report_file = f'./reports/temporary_file_{id}.json'
-    json_error_report_file = f'./reports/temporary_file_{id}.json'
-    
-    with open(code_file_path, 'w') as f:
-        f.write(processed_completion) 
-        
+    os.makedirs("./extracted_codes", exist_ok=True)
+    os.makedirs("./reports", exist_ok=True)
+
+    code_file_path = f"./extracted_codes/temporary_file_{id}.py"
+    json_report_file = f"./reports/temporary_file_{id}.json"
+    json_error_report_file = f"./reports/temporary_file_{id}.json"
+
+    with open(code_file_path, "w") as f:
+        f.write(processed_completion)
+
     try:
-        proc = subprocess.Popen([LINTER_PATH, "--format=json", code_file_path], 
-                                stdout=open(json_report_file, "w"),
-                                stderr=open(json_error_report_file, "w"))
-    except:
-        raise ValueError('Ошибка! Проверьте установлена ли переменная окружения LINTER_PATH для линтера flake8') 
-            
+        proc = subprocess.Popen(
+            [LINTER_PATH, "--format=json", code_file_path],
+            stdout=open(json_report_file, "w"),
+            stderr=open(json_error_report_file, "w"),
+        )
+    except BaseException:
+        raise ValueError(
+            "Ошибка! Проверьте установлена ли переменная окружения LINTER_PATH для линтера flake8"
+        )
+
     proc.wait()
     status = proc.returncode
     if status == 1:
-        with open(f'./reports/temporary_file_{id}.json', 'r') as file:
+        with open(f"./reports/temporary_file_{id}.json", "r") as file:
             data = json.load(file)
     else:
-        with open(f'./reports/temporary_file_{id}.json', 'r') as file:
+        with open(f"./reports/temporary_file_{id}.json", "r") as file:
             data = json.load(file)
-    
+
     codes = []
     for error in data[code_file_path]:
-        codes.append(error.get('code', ''))
+        codes.append(error.get("code", ""))
 
-    if len(codes)>0:
+    if len(codes) > 0:
         pass1 = 0
     else:
         pass1 = 1
     return pass1
-	
-	
+
+
 def compute_pass_k(n, c, k):
     if n - c < k:
         return 1.0

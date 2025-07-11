@@ -1,15 +1,14 @@
-from typing import List, Dict, Any
-import sys
+import json
 import logging
 import os
-import json
+import sys
+from typing import Any, Dict, List
 
 from lm_eval.api.filter import Filter
 from lm_eval.api.registry import register_filter
 
 sys.path.append("code_tasks/javatestgen/")
 from logger import setup_logger
-
 
 setup_logger()
 logger = logging.getLogger("java_testgen_bench")
@@ -19,30 +18,34 @@ try:
     from repotest.core.docker.java import JavaDockerRepo
     from repotest.utils.git.git_diff_wrapper import GitDiffWrapper
 except ImportError:
-    print("WARNING! You are running task `javatestgen` but do not have library `repotest` installed.\nIf you are running the evaluation with `--predict_only` flag, ignore this warning. Otherwise consider installing the required library.")
-
+    print(
+        "WARNING! You are running task `javatestgen` but do not have library `repotest` installed.\nIf you are running the evaluation with `--predict_only` flag, ignore this warning. Otherwise consider installing the required library."
+    )
 
 
 def doc_to_text_java_testgen(doc: Dict[str, Any]) -> str:
     return doc["instruction"].format(**doc["inputs"])
 
 
-def process_results_java_testgen(doc: Dict, results: List[Dict]) -> Dict[str, float]:
-    metrics = results[0]['evaluation']
+def process_results_java_testgen(
+        doc: Dict, results: List[Dict]) -> Dict[str, float]:
+    metrics = results[0]["evaluation"]
     return {
         "pass@1": float(metrics["parser"]["success"]),
         "compile@1": float(metrics["parser"]["compiled"]),
     }
 
 
-def evaluate(repo: str,
-             base_commit: str,
-             image_name: str,
-             test_command: str,
-             fn_test: str,
-             source_code: str,
-             code: str,
-             timeout: int = 300) -> Dict[str, Any]:
+def evaluate(
+    repo: str,
+    base_commit: str,
+    image_name: str,
+    test_command: str,
+    fn_test: str,
+    source_code: str,
+    code: str,
+    timeout: int = 300,
+) -> Dict[str, Any]:
     """
     Evaluates generated Java code in a Dockerized test environment.
 
@@ -70,24 +73,29 @@ def evaluate(repo: str,
     Dict[str, Any]
         Result dictionary containing test execution details.
     """
-    repo_instance = JavaDockerRepo(repo=repo, base_commit=base_commit, 
-                                   image_name=image_name, cache_mode='volume')
+    repo_instance = JavaDockerRepo(
+        repo=repo,
+        base_commit=base_commit,
+        image_name=image_name,
+        cache_mode="volume")
     repo_instance.clean()
 
-    git_diff_wrapper = GitDiffWrapper(repo=repo_instance, 
-                                      base_commit=base_commit)
-    git_diff_wrapper.change_test(fn_test=fn_test, str_test=code, 
-                                 str_source=source_code)
+    git_diff_wrapper = GitDiffWrapper(
+        repo=repo_instance, base_commit=base_commit)
+    git_diff_wrapper.change_test(
+        fn_test=fn_test,
+        str_test=code,
+        str_source=source_code)
     git_diff_wrapper.fix_pom_file()
     git_diff = git_diff_wrapper.git_diff()
     repo_instance.clean()
 
-    logger.info("len(git_diff)=%s"%len(git_diff))
+    logger.info("len(git_diff)=%s" % len(git_diff))
 
-    repo_instance.apply_patch(git_diff + '\n')
+    repo_instance.apply_patch(git_diff + "\n")
     result = repo_instance.run_test(test_command, timeout=timeout)
 
-    logger.info("Attempt1: %s"%str(result)[:100])
+    logger.info("Attempt1: %s" % str(result)[:100])
 
     if not result.get("parser", {}).get("success", False):
         logger.info("Fail")
@@ -103,14 +111,15 @@ class ExtractFromTagJava(Filter):
     def apply(self, resps, docs, predict_only=False):
         if predict_only:
             return resps
-        return [[self._extract_java(gen) for gen in generations] for generations in resps]
+        return [[self._extract_java(gen) for gen in generations]
+                for generations in resps]
 
     @staticmethod
     def _extract_java(text):
-        if '```java' in text:
-            text = text.split('```java')[1]
-        if '```' in text:
-            text = text.split('```')[0]
+        if "```java" in text:
+            text = text.split("```java")[1]
+        if "```" in text:
+            text = text.split("```")[0]
         return text.strip()
 
 
@@ -122,16 +131,23 @@ class ScoringJavaTestgen(Filter):
         self,
     ) -> None:
         super().__init__()
-    
+
     def load_config(self):
         import yaml
 
         with open("code_tasks/javatestgen/javatestgen_config.yaml") as f:
             config = yaml.safe_load(f)
 
-        self.working_dir = os.getenv("JAVATESTGEN_WORKING_DIR", config["working_dir"])
-        self.generations_output_filepath = os.getenv("JAVATESTGEN_GENERATION_OUTPUT_FILEPATH", config["generations_output_filepath"])
-        self.metrics_output_filepath = os.getenv("JAVATESTGEN_METRICS_OUTPUT_FILEPATH", config["metrics_output_filepath"])
+        self.working_dir = os.getenv(
+            "JAVATESTGEN_WORKING_DIR",
+            config["working_dir"])
+        self.generations_output_filepath = os.getenv(
+            "JAVATESTGEN_GENERATION_OUTPUT_FILEPATH",
+            config["generations_output_filepath"],
+        )
+        self.metrics_output_filepath = os.getenv(
+            "JAVATESTGEN_METRICS_OUTPUT_FILEPATH",
+            config["metrics_output_filepath"])
         os.makedirs(self.working_dir, exist_ok=True)
 
     def apply(self, resps, docs, predict_only=False):
@@ -151,16 +167,16 @@ class ScoringJavaTestgen(Filter):
         return [[{"evaluation": res}] for res in results]
 
     def _evaluate(self, doc, code):
-        meta = doc['meta']
+        meta = doc["meta"]
         if code.strip():
             result = evaluate(
-                repo=meta['repo'],
-                base_commit=meta['base_commit'],
-                image_name=meta['image_name'],
-                fn_test=meta['fn_test'],
-                test_command=meta['test_command'],
-                source_code=meta['source_code'],
-                code=code
+                repo=meta["repo"],
+                base_commit=meta["base_commit"],
+                image_name=meta["image_name"],
+                fn_test=meta["fn_test"],
+                test_command=meta["test_command"],
+                source_code=meta["source_code"],
+                code=code,
             )
         else:
             result = {
@@ -168,8 +184,8 @@ class ScoringJavaTestgen(Filter):
                 "stderr": "empty code",
                 "std": "empty code",
                 "returncode": -2,
-                "parser": {'success': False, 'compiled': False},
-                "time": 0.01
+                "parser": {"success": False, "compiled": False},
+                "time": 0.01,
             }
         return result
 

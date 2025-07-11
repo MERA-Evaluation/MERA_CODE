@@ -4,15 +4,14 @@ import faulthandler
 import io
 import os
 import platform
+import re
 import signal
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List
-import re
 
 import multiprocess as mp
 import numpy as np
-
 from lm_eval.api.filter import Filter
 from lm_eval.api.registry import register_filter
 
@@ -50,7 +49,7 @@ class ruHumanEvalScoring(Filter):
         Can define custom behavior here, if an individual instantiation of a Filter class should have state.
         """
 
-    def apply(self, resps, docs, predict_only = False):
+    def apply(self, resps, docs, predict_only=False):
         """
         Assuming each entry of `resps` is a list of model responses, we discard all but the first response.
         """
@@ -62,7 +61,8 @@ class ruHumanEvalScoring(Filter):
             sample_metrics = []
             for completion in sample:
                 processed_completion = preprocess_generation(completion)
-                result = execute_function(processed_completion, docs[idx])  # List
+                result = execute_function(
+                    processed_completion, docs[idx])  # List
                 sample_metrics.extend([result])
             code_results.extend([sample_metrics])
         return code_results
@@ -92,9 +92,8 @@ def preprocess_generation(text: str, language: str = "python"):
         # if no code was found, return the original text
         return text
 
-    return "\n" + "\n".join(
-        [block for block_language, block in blocks if block_language == language]
-    )
+    return "\n" + "\n".join([block for block_language,
+                             block in blocks if block_language == language])
 
 
 def execute_function(resp_func, doc, timeout=3.0, num_workers=2):
@@ -146,7 +145,8 @@ def unsafe_execute(check_program, test_cases, entry_point, result, timeout):
         rmdir = os.rmdir
         chdir = os.chdir
 
-        # Disable functionalities that can make destructive changes to the test.
+        # Disable functionalities that can make destructive changes to the
+        # test.
         reliability_guard()
 
         try:
@@ -157,7 +157,8 @@ def unsafe_execute(check_program, test_cases, entry_point, result, timeout):
             for test in test_cases:
                 try:
                     test_res = locals()[entry_point](**test)
-                    # there are no None in testset outputs, no need in "None" option
+                    # there are no None in testset outputs, no need in "None"
+                    # option
                     if test_res is not None:
                         test_res = str(test_res)
                 except Exception:
@@ -264,8 +265,9 @@ def reliability_guard(maximum_memory_bytes=None):
         )
         if platform.uname().system != "Darwin":
             resource.setrlimit(
-                resource.RLIMIT_STACK, (maximum_memory_bytes, maximum_memory_bytes)
-            )
+                resource.RLIMIT_STACK,
+                (maximum_memory_bytes,
+                 maximum_memory_bytes))
 
     faulthandler.disable()
 

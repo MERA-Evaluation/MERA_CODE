@@ -1,29 +1,33 @@
 import json
 import os
 import re
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
 from lm_eval.api.filter import Filter
 from lm_eval.api.registry import register_filter
 
-
 try:
     from repotest import __version__ as repotest_version
     from repotest.constants import disable_stdout_logs, enable_stdout_logs
-    from repotest.manager.realcode_java_task_manager import JavaEvaluatorRealcode
+    from repotest.manager.realcode_java_task_manager import \
+        JavaEvaluatorRealcode
+
     min_repotest_version = "0.4.4"
     if not (repotest_version >= min_repotest_version):
-        raise ImportError("Current repotest version is {} it should be {}".format(
-            repotest_version, min_repotest_version
-        ))
+        raise ImportError(
+            "Current repotest version is {} it should be {}".format(
+                repotest_version, min_repotest_version
+            )
+        )
 except ImportError:
-    print("WARNING! You are running task `realcode` but do not have library `repotest` installed or its version is less than 0.4.4.\nIf you are running the evaluation with `--predict_only` flag, ignore this warning. Otherwise consider installing the required library.")
+    print(
+        "WARNING! You are running task `realcode` but do not have library `repotest` installed or its version is less than 0.4.4.\nIf you are running the evaluation with `--predict_only` flag, ignore this warning. Otherwise consider installing the required library."
+    )
 
 
-
-#ToDo: move this to repotest level
+# ToDo: move this to repotest level
 # Disable frozen=True, make it inplace
 @dataclass(frozen=True)
 class Task:
@@ -62,7 +66,7 @@ def doc_to_text_realcode_java(doc: Dict[str, Any]) -> str:
     # из-за чего str.format падает
     instruction = doc["instruction"]
     for field, value in doc["inputs"].items():
-        instruction = instruction.replace('{'+field+'}', value)
+        instruction = instruction.replace("{" + field + "}", value)
     return instruction
 
 
@@ -73,7 +77,12 @@ class FromTagExtractorRCJava(Filter):
     def __init__(self) -> None:
         super().__init__()
 
-    def apply(self, resps: List[List[str]], docs: List[Dict[str, Any]], predict_only: bool = False) -> List[List[str]]:
+    def apply(
+        self,
+        resps: List[List[str]],
+        docs: List[Dict[str, Any]],
+        predict_only: bool = False,
+    ) -> List[List[str]]:
         """
         Extract code blocks from responses.
 
@@ -127,7 +136,7 @@ class FromTagExtractorRCJava(Filter):
         if index_start != -1:
             text = text[index_start + len(tag_start):]
         return text
-    
+
 
 def cut_c_style_func_body(prediction: str, left_ctx: Optional[str] = None):
     """
@@ -166,13 +175,13 @@ def cut_c_style_func_body(prediction: str, left_ctx: Optional[str] = None):
             quotes_open = not quotes_open
         if quotes_open:
             continue
-        if char == '{':
+        if char == "{":
             is_body = True
             c += 1
-        elif char == '}':
+        elif char == "}":
             c -= 1
-            if c == 0 and is_body and i-j >= 5:
-                return prediction[:i-j+1]
+            if c == 0 and is_body and i - j >= 5:
+                return prediction[: i - j + 1]
     # Ну не получилось..
     return prediction
 
@@ -192,30 +201,54 @@ class ScoringFilterRCJava(Filter):
         Initializes the scoring filter with configuration for dataset, paths and logging.
         """
         super().__init__()
-    
+
     def load_config(self):
         import yaml
 
         with open("code_tasks/realcodejava/realcodejava_config.yaml") as f:
             config = yaml.safe_load(f)
-    
-        self.working_dir = os.getenv("REALCODEJAVA_WORKING_DIR", config["working_dir"])
+
+        self.working_dir = os.getenv(
+            "REALCODEJAVA_WORKING_DIR",
+            config["working_dir"])
         self.run_id = get_run_id()
 
-        self.enable_full_logs = os.getenv("REALCODEJAVA_ENABLE_FULL_LOGS", config["enable_full_logs"])
-        self.mode = os.getenv("REALCODEJAVA_SCORING_MODE", config["scoring_mode"])
+        self.enable_full_logs = os.getenv(
+            "REALCODEJAVA_ENABLE_FULL_LOGS", config["enable_full_logs"]
+        )
+        self.mode = os.getenv(
+            "REALCODEJAVA_SCORING_MODE",
+            config["scoring_mode"])
         self.n_jobs = os.getenv("REALCODEJAVA_N_JOBS", config["n_jobs"])
-        self.gen_columns = os.getenv("REALCODEJAVA_GET_COMUNS", config["gen_columns"])
-        self.raise_exception = os.getenv("REALCODEJAVA_RAISE_EXCEPTION", config["raise_exception"])
-        self.n_jobs_build = os.getenv("REALCODEJAVA_N_JOBS_BUILD", config["n_jobs_build"])
+        self.gen_columns = os.getenv(
+            "REALCODEJAVA_GET_COMUNS",
+            config["gen_columns"])
+        self.raise_exception = os.getenv(
+            "REALCODEJAVA_RAISE_EXCEPTION", config["raise_exception"]
+        )
+        self.n_jobs_build = os.getenv(
+            "REALCODEJAVA_N_JOBS_BUILD", config["n_jobs_build"]
+        )
 
         # Verbose output folder
-        print("Run_id=%s output folder=%s"%(self.run_id, os.path.abspath(os.path.join(self.working_dir, self.run_id))))
-        self.generations_output_filepath = os.getenv("REALCODEJAVA_GENERATION_OUTPUT_FILEPATH", config["generations_output_filepath"])
-        self.metrics_output_filepath = os.getenv("REALCODEJAVA_METRICS_OUTPUT_FILEPATH", config["metrics_output_filepath"])
-        self.html_output_filepath = os.getenv("REALCODEJAVA_HTML_OUTPUT_FILEPATH", config["html_output_filepath"])
+        print(
+            "Run_id=%s output folder=%s"
+            % (
+                self.run_id,
+                os.path.abspath(os.path.join(self.working_dir, self.run_id)),
+            )
+        )
+        self.generations_output_filepath = os.getenv(
+            "REALCODEJAVA_GENERATION_OUTPUT_FILEPATH",
+            config["generations_output_filepath"],
+        )
+        self.metrics_output_filepath = os.getenv(
+            "REALCODEJAVA_METRICS_OUTPUT_FILEPATH",
+            config["metrics_output_filepath"])
+        self.html_output_filepath = os.getenv(
+            "REALCODEJAVA_HTML_OUTPUT_FILEPATH", config["html_output_filepath"]
+        )
 
-    
     def load(self):
         if self.enable_full_logs:
             enable_stdout_logs()
@@ -227,10 +260,15 @@ class ScoringFilterRCJava(Filter):
             n_jobs=self.n_jobs,
             gen_columns=self.gen_columns,
             raise_exception=self.raise_exception,
-            n_jobs_build=self.n_jobs_build
+            n_jobs_build=self.n_jobs_build,
         )
 
-    def apply(self, resps: List[List[str]], docs: List[Dict[str, Any]], predict_only: bool = False) -> List[List[Dict[str, Any]]]:
+    def apply(
+        self,
+        resps: List[List[str]],
+        docs: List[Dict[str, Any]],
+        predict_only: bool = False,
+    ) -> List[List[Dict[str, Any]]]:
         """
         Process generations and run scoring.
 
@@ -247,7 +285,7 @@ class ScoringFilterRCJava(Filter):
         list of list of dict
             Evaluation results per task.
 
-        
+
         """
         if predict_only:
             return resps
@@ -255,11 +293,14 @@ class ScoringFilterRCJava(Filter):
         self.load()
         generations = [[gen[0]] for gen in resps]
         self._save_to_file(self.generations_output_filepath, generations)
-        self._save_to_file(os.path.join(self.working_dir, self.run_id, "generations.json"), 
-                           generations
-                          )
+        self._save_to_file(
+            os.path.join(
+                self.working_dir,
+                self.run_id,
+                "generations.json"),
+            generations)
 
-        dataset = self._load_dataset(docs)[:len(generations)]
+        dataset = self._load_dataset(docs)[: len(generations)]
         # processed_gens = [
         #     [cut_c_style_func_body(gen, task.left_context) for gen in gens]
         #     for task, gens in zip(dataset, generations)
@@ -267,18 +308,23 @@ class ScoringFilterRCJava(Filter):
 
         task_list = []
         for task, gens in zip(dataset, generations):
-            task_list.append({
-                **asdict(task),
-                "gen": gens[0],
-                "gt": task.gt,
-                "stub": task.stub,
-            })
+            task_list.append(
+                {
+                    **asdict(task),
+                    "gen": gens[0],
+                    "gt": task.gt,
+                    "stub": task.stub,
+                }
+            )
         self.pipeline.inplace_build_and_eval(task_list)
 
         # Save artifacts after generations
-        self._save_to_file(os.path.join(self.working_dir, self.run_id, "task_list.json"), 
-                           task_list
-                           )
+        self._save_to_file(
+            os.path.join(
+                self.working_dir,
+                self.run_id,
+                "task_list.json"),
+            task_list)
 
         return [[i] for i in task_list]
 
@@ -311,10 +357,12 @@ class ScoringFilterRCJava(Filter):
         -------
         list of Task
         """
-        return [Task(**doc['meta']) for doc in docs]
+        return [Task(**doc["meta"]) for doc in docs]
 
 
-def process_results_realcode_java(doc: Dict[str, Any], results: List[Dict[str, Any]]) -> Dict[str, float]:
+def process_results_realcode_java(
+    doc: Dict[str, Any], results: List[Dict[str, Any]]
+) -> Dict[str, float]:
     """
     Extract and summarize metrics from task results.
 
@@ -362,7 +410,10 @@ def sum_metric(values: List[float]) -> float:
 class JavaLMEvalAngel(Filter):
     DISABLE_ON_PREDICT_ONLY = True
 
-    def apply(self, resps: list[list[str]], docs: list[dict], predict_only: bool = False) -> list[list[str]]:
+    def apply(self,
+              resps: list[list[str]],
+              docs: list[dict],
+              predict_only: bool = False) -> list[list[str]]:
         if predict_only:
             return resps
         fixed = []
@@ -378,7 +429,7 @@ class JavaLMEvalAngel(Filter):
                 fixed_gens.append(gen)
             fixed.append(fixed_gens)
         return fixed
-    
+
 
 def find_code_block_braces(snippet: str) -> List[Tuple[str, int]]:
     code_braces = []
@@ -387,44 +438,48 @@ def find_code_block_braces(snippet: str) -> List[Tuple[str, int]]:
     inside_short_comment = False
     inside_multi_line_comment = False
     for i, char in enumerate(snippet):
-        two_chars = snippet[max(0,i-1):i+1]
-        if char == '"' and two_chars != r'\"':
+        two_chars = snippet[max(0, i - 1): i + 1]
+        if char == '"' and two_chars != r"\"":
             inside_string = not inside_string
-        if (char == "'" and
-            two_chars != r"\'" and
-            not inside_string and
-            not inside_short_comment and
-            not inside_multi_line_comment):
+        if (
+            char == "'"
+            and two_chars != r"\'"
+            and not inside_string
+            and not inside_short_comment
+            and not inside_multi_line_comment
+        ):
             is_char = not is_char
 
-        if two_chars == '//':
+        if two_chars == "//":
             inside_short_comment = True
-        elif two_chars == '/*':
+        elif two_chars == "/*":
             inside_multi_line_comment = True
-        elif two_chars == '*/':
+        elif two_chars == "*/":
             inside_multi_line_comment = False
-        if char == '\n':
+        if char == "\n":
             inside_short_comment = False
-        
-        if (is_char or
-            inside_string or
-            inside_short_comment or 
-            inside_multi_line_comment):
+
+        if (
+            is_char
+            or inside_string
+            or inside_short_comment
+            or inside_multi_line_comment
+        ):
             # На такие случаи лучше убедиться, что is_char выключится точно
             # ", email='" + email + '\'' +
             # is_char = False
             continue
-        if char in '{}':
+        if char in "{}":
             code_braces.append((char, i))
     return code_braces
-    
+
 
 def count_open_curly_braces(snippet: str) -> int:
     c = 0
     for char, pos in find_code_block_braces(snippet):
-        if char == '{':
+        if char == "{":
             c += 1
-        elif char == '}':
+        elif char == "}":
             c -= 1
     return c
 
@@ -433,7 +488,7 @@ def fix_missing_closing_brace(generation: str, gt: str):
     """
     Дорисует скобку }, если функция не закрыта
     """
-    if generation.rstrip().endswith('}'):
+    if generation.rstrip().endswith("}"):
         c = count_open_curly_braces(generation)
         # Левый контекст содержит сигнатуру с открытой скобкой
         # поэтому должно быть -1 и меньше
@@ -441,10 +496,10 @@ def fix_missing_closing_brace(generation: str, gt: str):
             return generation
 
     # ищем в конце пустую строчку с }
-    endings = re.findall(r'(?<=\n)[\t ]*}[\n\t ]*?$', gt)
+    endings = re.findall(r"(?<=\n)[\t ]*}[\n\t ]*?$", gt)
     if len(endings) > 0:
-        if not generation.endswith('\n'):
-            generation = generation + '\n'
+        if not generation.endswith("\n"):
+            generation = generation + "\n"
         return generation + endings[0]
     return generation
 
@@ -453,8 +508,10 @@ def find_signature(code: str, intent: str) -> str:
     """
     Найдет первую сигнатуру
     """
-    open_brace = re.escape('{')
-    signature_pattern = re.compile(rf"\s+{re.escape(intent)}\b.*{open_brace}[\n\t ]*?$", re.MULTILINE)
+    open_brace = re.escape("{")
+    signature_pattern = re.compile(
+        rf"\s+{re.escape(intent)}\b.*{open_brace}[\n\t ]*?$", re.MULTILINE
+    )
     match = signature_pattern.search(code)
     if match:
         return match.group(0)
@@ -465,10 +522,12 @@ def find_signature_last(code: str, intent: str) -> str:
     """
     Найдет последнюю сигнатуру.
     В Java может быть несколько функций с одним названием.
-    
+
     """
-    open_brace = re.escape('{')
-    signature_pattern = re.compile(rf"\s+{re.escape(intent)}\b.*{open_brace}[\n\t ]*?$", re.MULTILINE)
+    open_brace = re.escape("{")
+    signature_pattern = re.compile(
+        rf"\s+{re.escape(intent)}\b.*{open_brace}[\n\t ]*?$", re.MULTILINE
+    )
     matches = signature_pattern.findall(code)
     if len(matches) > 0:
         return matches[-1]
@@ -480,9 +539,9 @@ def remove_signature(code: str, left_context: str, intent: str) -> str:
     Если код начинается с сигнатуры, как в левом контексте,
     удалим ее.
     """
-    intent = intent.split('[')[0]
+    intent = intent.split("[")[0]
     # Берем последние строчки левого контекста
-    lc_end = '\n'.join( left_context.splitlines()[-20:] )
+    lc_end = "\n".join(left_context.splitlines()[-20:])
     # И ищем там сигнатуру ближе к самому концу
     signature = find_signature_last(lc_end, intent)
     if signature is None:
@@ -492,11 +551,11 @@ def remove_signature(code: str, left_context: str, intent: str) -> str:
 
 def cut_c_style_func_body_v2(snippet: str, c: Optional[int] = 0):
     for char, pos in find_code_block_braces(snippet):
-        if char == '{':
+        if char == "{":
             c += 1
-        if char == '}':
+        if char == "}":
             c -= 1
             if c == 0 and pos >= 5:
-                return snippet[:pos+1]
+                return snippet[: pos + 1]
     # Ну не получилось..
     return snippet

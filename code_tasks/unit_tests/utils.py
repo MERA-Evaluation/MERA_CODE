@@ -3,7 +3,9 @@ import re
 try:
     from code_bleu import calc_code_bleu
 except ImportError:
-    print("WARNING! You are running task `unittests` or `unittestspublic` but do not have library `code_bleu` installed.\nIf you are running the evaluation with `--predict_only` flag, ignore this warning. Otherwise consider installing the required library from the repository:\nhttps://github.com/Pstva/code_bleu")
+    print(
+        "WARNING! You are running task `unittests` or `unittestspublic` but do not have library `code_bleu` installed.\nIf you are running the evaluation with `--predict_only` flag, ignore this warning. Otherwise consider installing the required library from the repository:\nhttps://github.com/Pstva/code_bleu"
+    )
 
 
 def doc_to_text(doc: dict) -> str:
@@ -91,9 +93,12 @@ def get_code_from_markdown(text: str, language: str = "python") -> list[str]:
             r"```\n(?P<code>.*?)```",
             re.DOTALL | re.MULTILINE,
         )
-        blocks = [(language, match.group("code")) for match in regex.finditer(text)]
+        blocks = [(language, match.group("code"))
+                  for match in regex.finditer(text)]
 
-    blocks = [block for block_language, block in blocks if block_language == language]
+    blocks = [
+        block for block_language,
+        block in blocks if block_language == language]
     parsed_text_from_md = "\n".join(blocks)
 
     # if no code was found, return the original text
@@ -124,7 +129,7 @@ def process_results(doc: dict, results: list[str]) -> dict[str, float]:
         scores = calc_code_bleu(
             refs=refs, hyps=hyps, params=(0.25, 0.25, 0.25, 0.25), lang=lang
         )
-    except:
+    except BaseException:
         return {"code_bleu": 0}
 
     return {

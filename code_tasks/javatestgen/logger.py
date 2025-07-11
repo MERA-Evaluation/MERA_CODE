@@ -1,12 +1,14 @@
-import os
 import logging
+import os
 from datetime import datetime
 
 LOG_LEVEL_CONSOLE = logging.DEBUG
-LOG_LEVEL_FILE    = logging.DEBUG
+LOG_LEVEL_FILE = logging.DEBUG
 
-def setup_logger(LOG_DIR = os.path.join(os.path.dirname(__file__), "logs")):
-    os.makedirs(LOG_DIR, exist_ok=True)  # Create the logs directory if it doesn't exist
+
+def setup_logger(LOG_DIR=os.path.join(os.path.dirname(__file__), "logs")):
+    # Create the logs directory if it doesn't exist
+    os.makedirs(LOG_DIR, exist_ok=True)
     # This is (faster then setup pyproject to work with empty folder)
 
     # Log file name with today's date
@@ -21,14 +23,16 @@ def setup_logger(LOG_DIR = os.path.join(os.path.dirname(__file__), "logs")):
 
     if not logger.hasHandlers():  # Ensure we don't add duplicate handlers
         # Set up the root logger
-        logger.setLevel(logging.DEBUG)  # Set the highest level for the root logger
+        # Set the highest level for the root logger
+        logger.setLevel(logging.DEBUG)
 
         # Formatter
         formatter = logging.Formatter(LOG_FORMAT)
 
         # Console handler (LOG_LEVEL_CONSOLE)
         console_handler = logging.StreamHandler()
-        console_handler.setLevel(LOG_LEVEL_CONSOLE)  # Set log level for console
+        # Set log level for console
+        console_handler.setLevel(LOG_LEVEL_CONSOLE)
         console_handler.setFormatter(formatter)
 
         # File handler (LOG_LEVEL_FILE)
@@ -40,5 +44,6 @@ def setup_logger(LOG_DIR = os.path.join(os.path.dirname(__file__), "logs")):
         logger.addHandler(console_handler)
         logger.addHandler(file_handler)
 
-    logger.info("Logger initialized and logs will be saved to %s", log_filepath)
-    
+    logger.info(
+        "Logger initialized and logs will be saved to %s",
+        log_filepath)

@@ -38,7 +38,8 @@ class FewshotSampler(ContextSampler):
         # need doc parameter to filter sample by metadata
         fewshotex = self.sample(n_samples, doc)
 
-        # get rid of the doc that's the one we're evaluating, if it's in the fewshot
+        # get rid of the doc that's the one we're evaluating, if it's in the
+        # fewshot
         selected_docs = [x for x in fewshotex if x != doc][:num_fewshot]
 
         # Load extra templates from fewshot config parameters
@@ -68,13 +69,16 @@ class FewshotSampler(ContextSampler):
             labeled_examples += (
                 str(doc_target[0])
                 if isinstance(doc_target, list)
-                else doc_target
-                if self.config.doc_to_choice is None or isinstance(doc_target, str)
-                else str(self.doc_to_choice(doc)[doc_target])
+                else (
+                    doc_target
+                    if self.config.doc_to_choice is None or isinstance(doc_target, str)
+                    else str(self.doc_to_choice(doc)[doc_target])
+                )
             )
             labeled_examples += self.fewshot_delimiter
 
-        # set doc_to_text to be instructionless to be usable with the next sample
+        # set doc_to_text to be instructionless to be usable with the next
+        # sample
         self.task.config.doc_to_text = no_instruction_template
 
         return labeled_examples
@@ -98,7 +102,8 @@ class FewshotSampler(ContextSampler):
         fewshotex = self.sample(n_samples, doc)
 
         # get rid of the doc that's the one we're evaluating, if it's in the fewshot
-        # TODO: should we just stop people from using fewshot from same split as evaluating?
+        # TODO: should we just stop people from using fewshot from same split
+        # as evaluating?
         selected_docs = [x for x in fewshotex if x != doc][:num_fewshot]
 
         # Load extra templates from fewshot config parameters
@@ -119,24 +124,30 @@ class FewshotSampler(ContextSampler):
                     {
                         "role": "user",
                         "content": (
-                            doc_content
-                            if self.config.doc_to_choice is None
-                            or isinstance(doc_content, str)
-                            else self.doc_to_choice(doc)[doc_content]
-                        )
-                        if idx == 0
-                        else apply_template(no_instruction_template, doc),
+                            (
+                                doc_content
+                                if self.config.doc_to_choice is None
+                                or isinstance(doc_content, str)
+                                else self.doc_to_choice(doc)[doc_content]
+                            )
+                            if idx == 0
+                            else apply_template(no_instruction_template, doc)
+                        ),
                     }
                 )
                 chat_history.append(
                     {
                         "role": "assistant",
-                        "content": str(doc_target[0])
-                        if isinstance(doc_target, list)
-                        else doc_target
-                        if self.config.doc_to_choice is None
-                        or isinstance(doc_target, str)
-                        else str(self.doc_to_choice(doc)[doc_target]),
+                        "content": (
+                            str(doc_target[0])
+                            if isinstance(doc_target, list)
+                            else (
+                                doc_target
+                                if self.config.doc_to_choice is None
+                                or isinstance(doc_target, str)
+                                else str(self.doc_to_choice(doc)[doc_target])
+                            )
+                        ),
                     }
                 )
         else:
@@ -145,7 +156,8 @@ class FewshotSampler(ContextSampler):
                 {"role": "user", "content": self.get_context(doc, num_fewshot)}
             )
 
-        # set doc_to_text to be instructionless to be usable with the next sample
+        # set doc_to_text to be instructionless to be usable with the next
+        # sample
         self.task.config.doc_to_text = no_instruction_template
 
         return chat_history

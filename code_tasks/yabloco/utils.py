@@ -16,7 +16,7 @@ def parse_generation(text):
         return ""
 
     # most probably code is tagged with ```
-    sections = text.split('```')
+    sections = text.split("```")
     generated_code = "-"
     if len(sections) >= 3:
         generated_code = sections[1]
@@ -26,13 +26,11 @@ def parse_generation(text):
     remove_prefix = ["cpp", "c++", "c", "++"]
     for pref in remove_prefix:
         generated_code = generated_code.removeprefix(pref)
-    generated_lines = generated_code.split('\n')
+    generated_lines = generated_code.split("\n")
 
     # remove redundant code around the target function
     generated_lines = [
-        line
-        for line in generated_lines
-        if not line.startswith("#include")
+        line for line in generated_lines if not line.startswith("#include")
     ]
     ind_of_main = [
         ind
@@ -41,7 +39,7 @@ def parse_generation(text):
     ]
 
     if len(ind_of_main) != 0:
-        generated_lines = generated_lines[:ind_of_main[0]]
+        generated_lines = generated_lines[: ind_of_main[0]]
 
     return "\n".join(generated_lines) + "\n"
 
@@ -53,7 +51,7 @@ class FromTagExtractor(Filter):
     def __init__(self) -> None:
         super().__init__()
 
-    def apply(self, resps, docs, predict_only = False):
+    def apply(self, resps, docs, predict_only=False):
         # resps: List[List[str]] - list of list generations
         if predict_only:
             return resps
@@ -71,38 +69,50 @@ class FromTagExtractor(Filter):
 class ScoringFilter(Filter):
     DISABLE_ON_PREDICT_ONLY = True
 
-    def __init__(self,) -> None:
+    def __init__(
+        self,
+    ) -> None:
         super().__init__()
-    
+
     def load_config(self):
         import yaml
 
         with open("code_tasks/yabloco/yabloco_config.yaml") as f:
             config = yaml.safe_load(f)
-    
-        self.working_dir = os.getenv("YABLOCO_WORKING_DIR", config["working_dir"])
-        self.bench_version = os.getenv("YABLOCO_BENCH_VERSION", config["bench_version"])
-        self.generations_output_filepath = os.getenv("YABLOCO_GENERATION_OUTPUT_FILEPATH", config["generations_output_filepath"])
-        self.metrics_output_filepath = os.getenv("YABLOCO_METRICS_OUTPUT_FILEPATH", config["metrics_output_filepath"])
 
-    def apply(self, resps, docs, predict_only = False):
+        self.working_dir = os.getenv(
+            "YABLOCO_WORKING_DIR",
+            config["working_dir"])
+        self.bench_version = os.getenv(
+            "YABLOCO_BENCH_VERSION",
+            config["bench_version"])
+        self.generations_output_filepath = os.getenv(
+            "YABLOCO_GENERATION_OUTPUT_FILEPATH",
+            config["generations_output_filepath"])
+        self.metrics_output_filepath = os.getenv(
+            "YABLOCO_METRICS_OUTPUT_FILEPATH",
+            config["metrics_output_filepath"])
+
+    def apply(self, resps, docs, predict_only=False):
         if predict_only:
             return resps
         self.load_config()
-        generations = [[gen[0]] for gen in resps]  # Extract first generation per response
+        generations = [
+            [gen[0]] for gen in resps
+        ]  # Extract first generation per response
         self._save_to_file(self.generations_output_filepath, generations)
 
-        generations = {
-            doc["meta"]["original_id"]: gen[0]
-            for doc, gen in zip(docs, generations)
-        }
+        generations = {doc["meta"]["original_id"]: gen[0]
+                       for doc, gen in zip(docs, generations)}
 
         sys.path.append(self.working_dir)
 
         try:
             from compute import run_tests
         except ImportError:
-            print("WARNING! You are running task `yabloco` but do not have library `compute` installed.\nIf you are running the evaluation with `--predict_only` flag, ignore this warning. Otherwise consider installing the required library.")
+            print(
+                "WARNING! You are running task `yabloco` but do not have library `compute` installed.\nIf you are running the evaluation with `--predict_only` flag, ignore this warning. Otherwise consider installing the required library."
+            )
 
         metrics = run_tests(generations, self.working_dir, self.bench_version)
 
