@@ -27,9 +27,8 @@ RESULTS_SUFFIX = "results_"
 INDEX_TO_GET = 0
 
 TASKS_WITH_RAW_RESPS = [
-    "realcode", "realcodejava", "ruhumaneval", 
-    "javatestgen", "rucodereviewer", "yabloco", 
-    "codelintereval", "rucodeeval"
+    "realcode", "realcodejava", "codelintereval",
+    "javatestgen", "rucodereviewer", "yabloco"
 ]
 
 
