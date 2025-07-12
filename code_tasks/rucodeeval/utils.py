@@ -42,20 +42,17 @@ def process_results(doc: Dict, results: List[str]) -> Dict[str, float]:
 
 @register_filter("ruhumanevalscoring")
 class ruHumanEvalScoring(Filter):
-    DISABLE_ON_PREDICT_ONLY = True
 
     def __init__(self) -> None:
         """
         Can define custom behavior here, if an individual instantiation of a Filter class should have state.
         """
 
-    def apply(self, resps, docs, predict_only=False):
+    def apply(self, resps, docs):
         """
         Assuming each entry of `resps` is a list of model responses, we discard all but the first response.
         """
         # resps: List[List[str]] - list of lists of generations
-        if predict_only:
-            return resps
         code_results = []
         for idx, sample in enumerate(resps):
             sample_metrics = []
