@@ -1,25 +1,124 @@
 # MERA_CODE
 
+<p align="center">
+  <picture>
+    <img alt="MERA" src="docs/mera-code-logo.svg" style="max-width: 100%;">
+  </picture>
+</p>
 
-# Как добавить новую задачу (датасет) в MERA
+<p align="center">
+    <a href="https://opensource.org/licenses/MIT">
+    <img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg">
+    </a>
+    <a href="https://github.com/MERA-Evaluation/MERA_CODE/tree/main">
+    <img alt="Release" src="https://img.shields.io/badge/release-v1.2.0-blue">
+    </a>
 
-Задачи в MERA делятся на приватные и публичные.
-- **Приватные датасеты** (задачи рейтинга) созданы с нуля с использованием оригинальных текстов и мультимодальных элементов. Материалы не опубликованы в сети (в том числе не передавались через мессенджеры, почту и другие средства связи) и не запланированы к публикации. Ответы к вопросам хранятся в защищенном виде только у организаторов MERA.
-- **Публичные датасеты** (открытые задачи) собраны на основе открытых материалов, например, переведенных и адаптированных публичных датасетов для других языков. Датасеты вместе с ответами публикуются в открытом доступе.
+</p>
 
-В MERA можно проводить оценку моделей на задачах обоих типов. Предложить можно как приватную, так и публичную задачу — отличия будут только в формате хранения ответов (в случае приватных датасетов ответы никуда не выкладываются, а передаются организаторам напрямую).
+<h2 align="center">
+    <p> MERA Code: A Unified Framework for Evaluating Code Generation Across Tasks.
+</p>
+</h2>
 
-## Наша последовательность действий
+## 🚀 About
 
-Мы храним все датасеты локально в закрытом хранилище, доступ к которым есть только у членов MERA CODE. Доступ в хранилище можно запросить у Егора или Алёны.
+**Code-Tasks Benchmark** brings together a rich collection of code-focused evaluation tasks—both private and public—under one roof. Built on top of the [Language Model Evaluation Harness](https://github.com/EleutherAI/lm-evaluation-harness) (v0.4.8), it enables researchers and practitioners to:
 
-1) Сами датасеты в "сыром" виде мы кладем в это хранилище.
-2) Когда все сеты будут собраны от участников, мы будем думать над финальным форматом хранения. 
-Сейчас предлагается по умолчанию формат доступный в MERA TEXT вот такой https://huggingface.co/datasets/MERA-evaluation/MERA/viewer/ruhumaneval.
-Так как сетов много, наверняка будут нюансы, связанные с кодом и мы формат видоизменим, но для начала нужно сделать пункт 1 и проанализировать все сеты, чтобы это понять.
-3) Далее, имея датасет в нужном формате, пробуем добавить по [инструкции](docs/task_codebase.md) ваш датасет.
-4) Прогоняем код, для этого используйте [инструкцию](docs/model_scoring.md).
-5) Обсуждаем есть ли какие-то нюансы, на какой стороне делать тесты, какого функционала общего у тестов не хватает и тд.
-6) Добавляем датасет на Huggingface по [инструкции](docs/dataset_contribution.md).
+- **Compare models** on identical tasks and metrics
+- **Reproduce results** with fixed prompts and few-shot settings
+- **Submit** standardized ZIP archives for leaderboard integration
 
+
+## 🔍 Dataset Overview
+
+| Set         | Task Name          | Language                         | Metrics                        | Size | Prompts | Skills                                                        |
+| ----------- | ------------------ | -------------------------------- | ------------------------------ | ---- | ------- | ------------------------------------------------------------- |
+| **Private** | **rucodeeval**     | Python                           | pass@k                         | 164  | 10      | Instruction Following, Code Perception, Completion, Algorithms & Data Structures |
+|             | **rucodereviewer** | Java, Scala, Go, Python          | Judge@k, BLEU, chrF            | 689  | 10      | Instruction Following, Code Perception, Review, Simulation, Explanation, Design Patterns, Style Guides |
+|             | **codelintereval** | Python                           | pass@k                         | 110  | 10      | Instruction Following, Code Perception, Style Guides, Review, Editing |
+| **Public**  | **ruhumaneval**    | Python                           | pass@k                         | 164  | 10      | Instruction Following, Code Perception, Completion            |
+|             | **strucom**        | Python, Java, Go, C#, JavaScript | chrF                           | 500  | 10      | Instruction Following, Code Perception, Simulation, Documentation |
+|             | **unittests**      | Python, Java, Go, C#, JavaScript | CodeBLEU                       | 2500 | 20      | Instruction Following, Code Perception, Synthesis, Testing, Long Context Comprehension |
+|             | **codecorrectness**| Python, Java, Go                 | EM                             | 1361 | 11      | Instruction Following, Code Perception, Simulation, Error Classification |
+|             | **realcode**       | Python                           | pass@k                         | 802  | 10      | Instruction Following, Code Perception, Completion            |
+|             | **realcodejava**   | Java                             | pass@k                         | 298  | 10      | Instruction Following, Code Perception, Completion            |
+|             | **javatestgen**    | Java                             | pass@k, compile@k              | 227  | 10      | Instruction Following, Code Perception, Completion, Testing   |
+|             | **yabloco**        | C, C++                           | pass@k, EM   
+
+
+## 🛠 Getting Started
+
+ 
+There are two evaluation regimes:
+1. The Remote Scoring regime: quick setup for cloud-based scoring—install only core deps, run the evaluation, zip logs, and upload via the website. 
+2. The Local Scoring: full setup for on-premise evaluation — install extra deps with metrics and runing Docker containers. Make sure you have internet, enough disk space, and CPU resources.
+
+
+```bash
+### Go to the folder where the repository will be cloned ###
+mkdir mera_code
+cd mera_code
+
+### Clone & install core libs ###
+git clone --recurse-submodules https://github.com/MERA-Evaluation/MERA_CODE.git
+cd MERA_CODE/lm-evaluation-harness
+pip install -e .
+
+### Install additional libs for models evaluation [Optional] ###
+# vLLM engine
+pip install -e ".[vllm]"
+# API scoring
+pip install -e ".[api]"
+
+### Go to MERA_CODE folder ###
+cd ../
+
+### Install libs for Local Scoring only usage [Optional] ###
+# Install code_bleu metric for UnitTests
+git clone https://github.com/Pstva/code_bleu.git
+cd code_bleu
+pip install -e .
+# Install metrics for YABLoCo
+cd ..
+mkdir workspace
+cd workspace
+git clone -b mera_code https://github.com/yabloco-codegen/yabloco-benchmark
+# Install metrics for RealCode, RealCodeJava, JavaTestGen
+cd ..
+<code to install repotest>
+
+### Run evaluation and pack logs ###
+bash scripts/run_evaluation.py
+```
+
+## 📁 Repository Structure
+
+```text
+MERA_CODE/
+├── code_tasks/                     # Code for each task
+├── datasets/                       # Task descriptions, metadata, readme
+├── docs/                           # Additional documentation and design notes
+    ├── templates                   # Templates of tasks readme
+    ├── dataset_contribution.md     # How to add a new dataset into MERA Code
+    ├── dataset_criteria.md         # Creteria to add new dataset into MERA Code
+    ├── dataset_formatting.md       # Dataset formatting requirements
+    ├── dataset_hf.md               # How to add new datasets on MERA HuggingFace page
+    ├── dataset_review.md           # General dataset requirements
+    ├── model_scoring.md            # How to use lm-eval to evaluate the LMs
+    ├── task_codebase.md            # How to add a new task into codebase
+├── lm-evaluation-harness/          # Submodule (codebase)
+└── scripts/                        # Helpers: add tasks, run evaluations, scoring
+```
+
+
+## 🤝 Contributing
+
+We welcome issues, feature requests, and pull requests! Please read [the documentation](docs/) for our guidelines.
+
+
+
+## 📝 License
+
+Distributed under the MIT License. See LICENSE for details.
 
