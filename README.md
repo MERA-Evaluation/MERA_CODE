@@ -1,8 +1,10 @@
-# MERA_CODE
+# MERA Code
 
 <p align="center">
   <picture>
-    <img alt="MERA Code" src="docs/mera-code-logo.svg" style="max-width: 100%;">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/mera-code-logo-white.png">
+    <source media="(prefers-color-scheme: light)" srcset="docs/mera-code-logo-black.svg">
+    <img alt="MERA Code" src="docs/mera-code-logo-white.png" style="max-width: 100%;">
   </picture>
 </p>
 
@@ -107,6 +109,7 @@ MERA_CODE/
     ├── dataset_review.md           # General dataset requirements
     ├── model_scoring.md            # How to use lm-eval to evaluate the LMs
     ├── task_codebase.md            # How to add a new task into codebase
+    ├── MERA_code_tax.png           # Taxonomy of coding skills
 ├── lm-evaluation-harness/          # Submodule (codebase)
 └── scripts/                        # Helpers: add tasks, run evaluations, scoring
 ```
@@ -114,10 +117,17 @@ MERA_CODE/
 
 ## 🤝 Contributing
 
-We welcome issues, feature requests, and pull requests! Please read [the documentation](docs/) for our guidelines.
+We are interested in improvement of MERA Code and inviting the community to contribute to the development of new complex tasks and the project’s codebase. 
 
-
-
+### Steps to Add a New Task:  
+0) Develop a dataset (on the contributor’s side; see [task requirements](docs/dataset_review.md))  
+1) Convert the dataset to MERA format ([guide](docs/dataset_formatting.md))  
+2) Upload the dataset to 🤗HF Hub ([guide](docs/dataset_hf.md))  
+3) Submit the dataset for MERA organizer review ([guide](docs/dataset_hf.md))  
+4) Write evaluation code using lm-harness ([guide](docs/task_codebase.md))  
+5) Benchmark state-of-the-art baseline models on the dataset 
+6) Final moderation and your dataset is officially added!
+   
 ## 📝 License
 
 Distributed under the MIT License. See LICENSE for details.
