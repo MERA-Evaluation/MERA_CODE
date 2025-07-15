@@ -127,7 +127,7 @@ MERA_CODE/
 
 4. Wait till scroring is done. Scoring of one submission may take up to 2 hours! When scoring is done, go to the submission on your [profile page](https://dev.score.mlrnd.ru/en/code/profile), select it and choose "Submit for moderation" on top right of the page.
 
-5. Now the submission changes its status for "On moderation". Wait till the administrators validate your submission. If some essential information is missing, the administrators will get in contact with you. Otherwise, once the moderation is passed the submission will have the status "Public" and appear on the leaderboard.
+5. Now the submission changes its status for "On moderation". Wait till the administrators validate your submission. If some essential information is missing, the administrators will get in contact with you. Otherwise, once the moderation is passed the submission will have the status "Public" and appear on [the leaderboard](https://dev.score.mlrnd.ru/en/code/leaderboard).
 
 
 ## 🤝 Contributing
