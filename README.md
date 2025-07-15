@@ -86,12 +86,9 @@ cd ..
 mkdir workspace
 cd workspace
 git clone -b mera_code https://github.com/yabloco-codegen/yabloco-benchmark
-# Install metrics for RealCode, RealCodeJava, JavaTestGen
-cd ..
-<code to install repotest>
 
 ### Run evaluation and pack logs ###
-bash scripts/run_evaluation.py
+bash scripts/run_evaluation.sh --model vllm --model_args "pretrained=Qwen/Qwen2.5-0.5B-Instruct,tensor_parallel_size=1"
 ```
 
 ## 📁 Repository Structure
