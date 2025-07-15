@@ -117,10 +117,17 @@ MERA_CODE/
 
 ## 🤝 Contributing
 
-We welcome issues, feature requests, and pull requests! Please read [the documentation](docs/) for our guidelines.
+We are interested in improvement of MERA Code and inviting the community to contribute to the development of new complex tasks and the project’s codebase. 
 
-
-
+### Steps to Add a New Task:  
+0) Develop a dataset (on the contributor’s side; see [task requirements](docs/dataset_review.md))  
+1) Convert the dataset to MERA format ([guide](docs/dataset_formatting.md))  
+2) Upload the dataset to 🤗HF Hub ([guide](docs/dataset_hf.md))  
+3) Submit the dataset for MERA organizer review ([guide](docs/dataset_hf.md))  
+4) Write evaluation code using lm-harness ([guide](docs/task_codebase.md))  
+5) Benchmark state-of-the-art baseline models on the dataset 
+6) Final moderation and your dataset is officially added!
+   
 ## 📝 License
 
 Distributed under the MIT License. See LICENSE for details.
