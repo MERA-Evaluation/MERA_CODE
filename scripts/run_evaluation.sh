@@ -30,8 +30,8 @@ Model / runtime options:
   -d, --device DEVICE         cuda | cpu (overrides --device)
   -b, --batch_size SIZE       integer or "auto"
   -v, --verbosity LEVEL       DEBUG | INFO | WARNING | ERROR
-      --no_predict_only       disable --predict_only (compute metrics instead)
-      --no_log_samples        disable --log_samples (skip logging inputs/outputs)
+      --compute_metrics       disable --predict_only (compute metrics instead)
+      --no_logs               disable --log_samples (skip logging inputs/outputs)
       --use_cache PATH        enable --use_cache PATH (cache intermediate results)
       --trust_remote_code     pass --trust_remote_code into models or datasets init
   -o, --output_path DIR       directory for logs & results (default: "./results")
@@ -102,10 +102,10 @@ while [[ $# -gt 0 ]]; do
     -d|--device)             DEVICE="$2"; shift 2;;
     -b|--batch_size)         BATCH_SIZE="$2"; shift 2;;
     -v|--verbosity)          VERBOSITY="$2"; shift 2;;
-    --no-predict_only)       PREDICT_ONLY=false; shift;;
-    --no-log_samples)        LOG_SAMPLES=false; shift;;
+    --compute_metrics)       PREDICT_ONLY=false; shift;;
+    --no_log_samples)        LOG_SAMPLES=false; shift;;
     --trust_remote_code)     TRUST_REMOTE_CODE=true; shift;;
-    --use-cache)             USE_CACHE_PATH="$2"; shift 2;;
+    --use_cache)             USE_CACHE_PATH="$2"; shift 2;;
     -o|--output_path)        OUTPUT_PATH="$2"; shift 2;;
     -h|--help)               usage;;
     *) echo "Unknown option: $1" >&2; usage;;

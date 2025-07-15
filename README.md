@@ -49,13 +49,11 @@
 |             | **YABLoCo**        | C, C++                           | pass@k, EM                     | 208  | 11      | Instruction Following, Code Perception, Completion,  Long Context Comprehension    |
 
 
-## 🛠 Getting Started
+## 🛠 Getting Started <a name="evaluation"></a>
 
  
 There are two evaluation regimes:
 1. **Remote Scoring** (default): quick setup for cloud-based scoring — install only core dependencies, run the evaluation, and submit resulting ZIP-archive to our website to get the score. 
-2. **Local Scoring** (optional): full setup for on-premise evaluation — install extra dependencies with metrics and runing Docker containers. Available only for Public sets. Make sure you have a stable internet connection, enough disk space, and CPU resources.
-
 
 ```bash
 ### Go to the folder where the repository will be cloned ###
@@ -76,7 +74,15 @@ pip install -e ".[api]"
 ### Go to MERA_CODE folder ###
 cd ../
 
-### Install libs for Local Scoring only usage [Optional] ###
+### Run evaluation and pack logs ###
+bash scripts/run_evaluation.sh --model vllm --model_args "pretrained=Qwen/Qwen2.5-0.5B-Instruct,tensor_parallel_size=1" --output_path "./results/Qwen2.5-0.5B-Instruct"
+```
+
+2. **Local Scoring** (optional): full setup for on-premise evaluation — install extra dependencies with metrics and runing Docker containers. Available only for Public sets. Make sure you have a stable internet connection, enough disk space, and CPU resources.
+
+```bash
+### BEFORE RUNNING run_evaluation.sh ###
+### Install additional libs for Local Scoring only usage [Optional] ###
 # Install code_bleu metric for UnitTests
 git clone https://github.com/Pstva/code_bleu.git
 cd code_bleu
@@ -88,7 +94,7 @@ cd workspace
 git clone -b mera_code https://github.com/yabloco-codegen/yabloco-benchmark
 
 ### Run evaluation and pack logs ###
-bash scripts/run_evaluation.sh --model vllm --model_args "pretrained=Qwen/Qwen2.5-0.5B-Instruct,tensor_parallel_size=1"
+bash scripts/run_evaluation.sh --model vllm --model_args "pretrained=Qwen/Qwen2.5-0.5B-Instruct,tensor_parallel_size=1" --compute_metrics --output_path "./results/Qwen2.5-0.5B-Instruct"
 ```
 
 ## 📁 Repository Structure
@@ -110,6 +116,18 @@ MERA_CODE/
 ├── lm-evaluation-harness/          # Submodule (codebase)
 └── scripts/                        # Helpers: add tasks, run evaluations, scoring
 ```
+
+## 💪 How to get on the leaderboard
+
+1. To get on the leaderboard you need to [run the evaluation](#evaluation) of you model in **Remote Scoring** regime. 
+
+2. The evaluation script saves the logs into a zip archive. Take this zip archive, go to the [Create submission page](https://dev.score.mlrnd.ru/en/code/submits/create) of MERA Code website.
+
+3. Attach the archive. Fill the form with relevant information for the benchmark organizers to validate the submission. Send the submission.
+
+4. Wait till scroring is done. Scoring of one submission may take up to 2 hours! When scoring is done, go to the submission on your [profile page](https://dev.score.mlrnd.ru/en/code/profile), select it and choose "Submit for moderation" on top right of the page.
+
+5. Now the submission changes its status for "On moderation". Wait till the administrators validate your submission. If some essential information is missing, the administrators will get in contact with you. Otherwise, once the moderation is passed the submission will have the status "Public" and appear on the leaderboard.
 
 
 ## 🤝 Contributing
