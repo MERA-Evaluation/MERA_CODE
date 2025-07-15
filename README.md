@@ -11,7 +11,7 @@
     <img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg">
     </a>
     <a href="https://github.com/MERA-Evaluation/MERA_CODE/tree/main">
-    <img alt="Release" src="https://img.shields.io/badge/release-v1.2.0-blue">
+    <img alt="Release" src="https://img.shields.io/badge/release-v1.0.0-blue">
     </a>
 
 </p>
