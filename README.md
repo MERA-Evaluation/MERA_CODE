@@ -51,8 +51,8 @@
 
  
 There are two evaluation regimes:
-1. The Remote Scoring regime: quick setup for cloud-based scoring—install only core deps, run the evaluation, zip logs, and upload via the website. 
-2. The Local Scoring: full setup for on-premise evaluation — install extra deps with metrics and runing Docker containers. Make sure you have internet, enough disk space, and CPU resources.
+1. **Remote Scoring**(default): quick setup for cloud-based scoring — install only core dependencies, run the evaluation, and submit resulting ZIP-archive to our website to get the score. 
+2. **Local Scoring**(optional): full setup for on-premise evaluation — install extra dependencies with metrics and runing Docker containers. Available only for Public sets. Make sure you have a stable internet connection, enough disk space, and CPU resources.
 
 
 ```bash
