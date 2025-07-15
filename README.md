@@ -107,6 +107,7 @@ MERA_CODE/
     ├── dataset_review.md           # General dataset requirements
     ├── model_scoring.md            # How to use lm-eval to evaluate the LMs
     ├── task_codebase.md            # How to add a new task into codebase
+    ├── MERA_code_tax.png           # Taxonomy of coding skills
 ├── lm-evaluation-harness/          # Submodule (codebase)
 └── scripts/                        # Helpers: add tasks, run evaluations, scoring
 ```
