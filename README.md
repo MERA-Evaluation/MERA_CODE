@@ -1,4 +1,4 @@
-# MERA_CODE
+# MERA Code
 
 <p align="center">
   <picture>
