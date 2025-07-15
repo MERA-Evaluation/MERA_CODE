@@ -2,7 +2,9 @@
 
 <p align="center">
   <picture>
-    <img alt="MERA Code" src="docs/mera-code-logo.svg" style="max-width: 100%;">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/mera-code-logo-white.png">
+    <source media="(prefers-color-scheme: light)" srcset="docs/mera-code-logo-black.svg">
+    <img alt="MERA Code" src="docs/mera-code-logo-white.png" style="max-width: 100%;">
   </picture>
 </p>
 
