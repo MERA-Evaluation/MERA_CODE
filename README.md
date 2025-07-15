@@ -2,7 +2,7 @@
 
 <p align="center">
   <picture>
-    <img alt="MERA" src="docs/mera-code-logo.svg" style="max-width: 100%;">
+    <img alt="MERA Code" src="docs/mera-code-logo.svg" style="max-width: 100%;">
   </picture>
 </p>
 
