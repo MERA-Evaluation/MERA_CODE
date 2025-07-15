@@ -1,11 +1,46 @@
-export CUDA_VISIBLE_DEVICES=0 
-export LINTER_PATH="/home/akharitonov/.conda/envs/mera-code-yabloco/bin/flake8" 
-export JUDGE_FEW_SHOT_PATH="/home/akharitonov/MERA_CODE_exp/datasets/few_shot.json" 
-export JUDGE_URL="http://77.223.120.158:50000/v1" 
-export JUDGE_MODEL_NAME="qwen-coder-32b"
-export MODEL_URL="http://0.0.0.0:8000/v1"
-export MODEL_NAME="Qwen/Qwen2.5-Coder-0.5B-Instruct" 
-export MERA_FOLDER="$PWD/mera_results/$MODEL_NAME" 
-export MERA_MODEL_STRING="model=$MODEL_NAME,base_url=$MODEL_URL/completions,num_concurrent=1000,max_retries=3,tokenized_requests=True,tokenizer=Qwen/Qwen2.5-Coder-0.5B-Instruct" 
-export MERA_COMMON_SETUP="--model local-completions --predict_only --log_samples --seed 1234 --verbosity ERROR --trust_remote_code --apply_chat_template"
-bash scripts/run_benchmark.sh
+#!/usr/bin/bash
+
+# internal MERA_COMMON_SETUP will be assigned 'default' value if external MERA_COMMON_SETUP not set or null.
+# The value of external MERA_COMMON_SETUP remains untouched.
+MERA_COMMON_SETUP_default="--model hf --device cuda --batch_size=1 --predict_only --log_samples --seed 1234 --verbosity ERROR"
+MERA_COMMON_SETUP="${MERA_COMMON_SETUP:-$MERA_COMMON_SETUP_default}"
+RUHUMANEVAL_GEN_KWARGS="${RUHUMANEVAL_GEN_KWARGS:-temperature=0.6,do_sample=True}"
+GENERATION_KWARGS="${GENERATION_KWARGS:-do_sample=True}"
+
+FEWSHOTS=(
+ 0
+)
+
+TASKS=(
+"rucodeeval codelintereval rucodereviewer ruhumaneval strucom unittests codecorrectness realcode javatestgen yabloco"
+)
+
+for fewshot_idx in "${!FEWSHOTS[@]}"
+do
+  for cur_task in ${TASKS[$fewshot_idx]}
+  do
+    printf "task: %s \n" "$cur_task"
+    
+    HF_DATASETS_CACHE="${MERA_FOLDER}/ds_cache" TOKENIZERS_PARALLELISM=false HF_DATASETS_IN_MEMORY_MAX_SIZE=23400000 \
+        CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES  PYTHONPATH=$PWD \
+        lm_eval --model hf --model_args "${MERA_MODEL_STRING}" --tasks $cur_task \
+        --num_fewshot=${FEWSHOTS[$fewshot_idx]} --gen_kwargs="${GEN_KWARGS}" \
+        --output_path="${MERA_FOLDER}" ${MERA_COMMON_SETUP} \
+        --include_path=./code_tasks
+
+  done
+done
+
+# Try to save regular submission
+HF_DATASETS_CACHE="${MERA_FOLDER}/ds_cache" HF_DATASETS_IN_MEMORY_MAX_SIZE=23400000 \
+python scripts/log_to_submission.py --outputs_dir "${MERA_FOLDER}" --dst_dir "${MERA_FOLDER}_submission" --model_args ${MERA_MODEL_STRING}
+
+# Remove datasets cache folder
+rm -r "${MERA_FOLDER}/ds_cache"
+
+# Remove other temporary folders
+rm -rf extracted_codes
+rm -rf reports
+rm -rf working_dir
+rm -rf workspace/data
+rm -rf workspace/java_testgen_workdir
