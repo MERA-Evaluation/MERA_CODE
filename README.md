@@ -71,7 +71,9 @@ Now there are two evaluation regimes:
 <summary>
 Details on Remote Scoring
 </summary>
-Just install only those libraries that are required to get the model's generations (answers for the queries of each task). All answers are packed in a zip archive that is uploaded into the submission form on the website. Then the remote deploy makes all the scoring in an isolated environment. The mtrics will appear on the submission page in your account once the scoring is over.
+> Just install only those libraries that are required to get the model's generations (answers for the queries of each task). 
+> All answers are packed in a zip archive that is uploaded into the submission form on the website. Then the remote deploy makes all the scoring in an isolated environment. 
+> The mtrics will appear on the submission page in your account once the scoring is over.
 </details>
 
 ```bash
@@ -82,6 +84,7 @@ bash scripts/install_dependencies.sh
 <summary>
 How it works inside...
 </summary>
+
 ```bash
 ### Install lm-eval ###
 cd lm-evaluation-harness
@@ -90,6 +93,7 @@ pip install -e .
 ### Go to MERA_CODE folder ###
 cd ../
 ```
+
 </details>
 
 You may also need additional libraries for models inference or evaluation. Use lm-eval compatible libraries and their versions:
@@ -114,9 +118,12 @@ bash scripts/run_evaluation.sh \
 <summary>
 Details on Local Scoring
 </summary>
-This regime assumes that you want to get the metrics for all public tasks of MERA Code. Keep in mind that evaluation of RealCode, RealCodeJava, JavaTestGen assumes running hundreds of docker containers. Each one assumes to get one CPU to function correctly. YABLoCo also requires lots of resources and time. 
+> This regime assumes that you want to get the metrics for all public tasks of MERA Code. 
+> Keep in mind that evaluation of RealCode, RealCodeJava, JavaTestGen assumes running hundreds of docker containers. Each one assumes to get one CPU to function correctly. YABLoCo also requires lots of resources and time. 
 
-If you are running the evaluation from inside the Docker container the integrity of the local scoring is not guaranteed (and [this is also not recommended at all](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)). Even without Docker-in-Docker issue, being short in resources means that although you would get the metrics, they would definitely be lower than those computed in the environment that fits the scoring in terms of resources.
+If you are running the evaluation from inside the Docker container the integrity of the local scoring is not guaranteed (and [this is also not recommended at all](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)). 
+
+Even without Docker-in-Docker issue, being short in resources means that although you would get the metrics, they would definitely be lower than those computed in the environment that fits the scoring in terms of resources.
 </details>
 
 ```bash
@@ -127,6 +134,7 @@ bash scripts/install_dependencies.sh --local_scoring
 <summary>
 How it works inside...
 </summary>
+
 ```bash
 # Install code_bleu metric for UnitTests
 git clone https://github.com/Pstva/code_bleu.git
@@ -139,6 +147,7 @@ mkdir workspace
 cd workspace
 git clone -b mera_code https://github.com/yabloco-codegen/yabloco-benchmark
 ```
+
 </details>
 
 Now get to the evaluations but with flag `--compute_metrics` that enables local metrics computation. 
