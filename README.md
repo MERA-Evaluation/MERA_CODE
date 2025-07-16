@@ -76,9 +76,7 @@ Now you choose one of two evaluation regimes depending on whether you want to ge
 Details on Remote Scoring
 </summary>
 
-<mark>
 > Just install only those libraries that are required to get the model's generations (answers for the queries of each task).
-</mark>
 
 </details>
 
@@ -131,11 +129,11 @@ bash scripts/run_evaluation.sh \
 Details on Local Scoring
 </summary>
 
-<p>> Evaluation of RealCode, RealCodeJava, JavaTestGen assumes running hundreds of docker containers. Each one assumes to get one CPU to function correctly. YABLoCo also requires lots of resources and time. </p>
+> Evaluation of RealCode, RealCodeJava, JavaTestGen assumes running hundreds of docker containers. Each one assumes to get one CPU to function correctly. YABLoCo also requires lots of resources and time.
 
-<p>> If you are running the evaluation from inside the Docker container the integrity of the local scoring is not guaranteed (and [this is also not recommended at all](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)). </p>
+> If you are running the evaluation from inside the Docker container the integrity of the local scoring is not guaranteed (and [this is also not recommended at all](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)).
 
-<p>> Even without Docker-in-Docker issue, being short in resources means that although you would get the metrics, they would definitely be lower than those computed in the environment that fits the scoring in terms of resources.</p>
+> Even without Docker-in-Docker issue, being short in resources means that although you would get the metrics, they would definitely be lower than those computed in the environment that fits the scoring in terms of resources.
 
 </details>
 
