@@ -51,9 +51,7 @@
 
 ## 🛠 Getting Started <a name="evaluation"></a>
 
- 
-There are two evaluation regimes:
-1. **Remote Scoring** (default): quick setup for cloud-based scoring — install only core dependencies, run the evaluation, and submit resulting ZIP-archive to our website to get the score. 
+First, you need to clone the MERA_CODE repository and load the submodule:
 
 ```bash
 ### Go to the folder where the repository will be cloned ###
@@ -62,39 +60,101 @@ cd mera_code
 
 ### Clone & install core libs ###
 git clone --recurse-submodules https://github.com/MERA-Evaluation/MERA_CODE.git
-cd MERA_CODE/lm-evaluation-harness
+cd MERA_CODE
+```
+
+ 
+Now there are two evaluation regimes:
+1. **Remote Scoring** (default): quick setup for cloud-based scoring — install only core dependencies, run the evaluation, and submit resulting ZIP-archive to our website to get the score. You will not get the metrics even for public datasets (for each dataset you will see "bypass" placeholder instead of actual metrics) in terminal.
+
+<details>
+<summary>
+Details on Remote Scoring
+</summary>
+Just install only those libraries that are required to get the model's generations (answers for the queries of each task). All answers are packed in a zip archive that is uploaded into the submission form on the website. Then the remote deploy makes all the scoring in an isolated environment. The mtrics will appear on the submission page in your account once the scoring is over.
+</details>
+
+```bash
+bash scripts/install_dependencies.sh
+```
+
+<details>
+<summary>
+How it works inside...
+</summary>
+```bash
+### Install lm-eval ###
+cd lm-evaluation-harness
 pip install -e .
 
+### Go to MERA_CODE folder ###
+cd ../
+```
+</details>
+
+You may also need additional libraries for models inference or evaluation. Use lm-eval compatible libraries and their versions:
+
+```bash
 ### Install additional libs for models evaluation [Optional] ###
 # vLLM engine
 pip install -e ".[vllm]"
 # API scoring
 pip install -e ".[api]"
 
-### Go to MERA_CODE folder ###
-cd ../
-
 ### Run evaluation and pack logs ###
-bash scripts/run_evaluation.sh --model vllm --model_args "pretrained=Qwen/Qwen2.5-0.5B-Instruct,tensor_parallel_size=1" --output_path "./results/Qwen2.5-0.5B-Instruct"
+bash scripts/run_evaluation.sh \
+    --model vllm \
+    --model_args "pretrained=Qwen/Qwen2.5-0.5B-Instruct,tensor_parallel_size=1" \
+    --output_path "./results/Qwen2.5-0.5B-Instruct"
 ```
 
 2. **Local Scoring** (optional): full setup for on-premise evaluation — install extra dependencies with metrics and runing Docker containers. Available only for Public sets. Make sure you have a stable internet connection, enough disk space, and CPU resources.
 
+<details>
+<summary>
+Details on Local Scoring
+</summary>
+This regime assumes that you want to get the metrics for all public tasks of MERA Code. Keep in mind that evaluation of RealCode, RealCodeJava, JavaTestGen assumes running hundreds of docker containers. Each one assumes to get one CPU to function correctly. YABLoCo also requires lots of resources and time. 
+
+If you are running the evaluation from inside the Docker container the integrity of the local scoring is not guaranteed (and [this is also not recommended at all](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)). Even without Docker-in-Docker issue, being short in resources means that although you would get the metrics, they would definitely be lower than those computed in the environment that fits the scoring in terms of resources.
+</details>
+
 ```bash
-### BEFORE RUNNING run_evaluation.sh ###
-### Install additional libs for Local Scoring only usage [Optional] ###
+bash scripts/install_dependencies.sh --local_scoring
+```
+
+<details>
+<summary>
+How it works inside...
+</summary>
+```bash
 # Install code_bleu metric for UnitTests
 git clone https://github.com/Pstva/code_bleu.git
 cd code_bleu
 pip install -e .
+
 # Install metrics for YABLoCo
 cd ..
 mkdir workspace
 cd workspace
 git clone -b mera_code https://github.com/yabloco-codegen/yabloco-benchmark
+```
+</details>
 
+Now get to the evaluations but with flag `--compute_metrics` that enables local metrics computation. 
+
+```bash
 ### Run evaluation and pack logs ###
-bash scripts/run_evaluation.sh --model vllm --model_args "pretrained=Qwen/Qwen2.5-0.5B-Instruct,tensor_parallel_size=1" --compute_metrics --output_path "./results/Qwen2.5-0.5B-Instruct"
+bash scripts/run_evaluation.sh \
+    --model hf \
+    --model_args "pretrained=Qwen/Qwen2.5-0.5B-Instruct,dtype=bfloat16" \
+    --compute_metrics \
+    --output_path "./results/Qwen2.5-0.5B-Instruct"
+```
+
+More details on `run_evaluation.sh` usage may be obtained by:
+```bash
+bash scripts/run_evaluation.sh --help
 ```
 
 ## 📁 Repository Structure
@@ -117,17 +177,29 @@ MERA_CODE/
 └── scripts/                        # Helpers: add tasks, run evaluations, scoring
 ```
 
-## 💪 How to get on the leaderboard
 
-1. To get on the leaderboard you need to [run the evaluation](#evaluation) of you model in **Remote Scoring** regime. 
+## 💪 How to Join the Leaderboard
 
-2. The evaluation script saves the logs into a zip archive. Take this zip archive, go to the [Create submission page](https://dev.score.mlrnd.ru/en/code/submits/create) of MERA Code website.
+Follow these steps to see your model on the leaderboard:
 
-3. Attach the archive. Fill the form with relevant information for the benchmark organizers to validate the submission. Send the submission.
+1. **Run Remote Scoring**  
+   Evaluate the benchmark in **Remote Scoring** regime (see [“🛠 Getting Started”](#evaluation) above). You may run **Local Scoring** but will have to wait twice for submission scoring.
+   > You’ll end up with a logs folder **and** a ready-to-submit zip archive like `Qwen2.5-0.5B-Instruct_submission.zip`.
 
-4. Wait till scroring is done. Scoring of one submission may take up to 2 hours! When scoring is done, go to the submission on your [profile page](https://dev.score.mlrnd.ru/en/code/profile), select it and choose "Submit for moderation" on top right of the page.
+2. **Submit on the website**  
+   Head over to [Create Submission](https://dev.score.mlrnd.ru/en/code/submits/create), upload the archive, and move on to the form.
 
-5. Now the submission changes its status for "On moderation". Wait till the administrators validate your submission. If some essential information is missing, the administrators will get in contact with you. Otherwise, once the moderation is passed the submission will have the status "Public" and appear on [the leaderboard](https://dev.score.mlrnd.ru/en/code/leaderboard).
+3. **Fill in Model Details**  
+   Provide accurate info about the model and evaluation. These details are crucial for reproducibility—if something’s missing, admins may ping you (or your submission might be rejected).
+
+4. **Wait for Scoring** ⏳  
+   Scoring usually wraps up in **~2 hours**. There is a progress bar to track the scoring process. 
+   > Keep in mind that if you submit more than one archive, they are scored sequentially one after another (not in parallel).
+
+5. **Publish your result**  
+   Once scoring finishes, click **“Submit for moderation”**. After approval, your model goes **Public** and appears on the [Leaderboard](https://dev.score.mlrnd.ru/en/code/leaderboard).  
+
+Good luck, and happy benchmarking! 🎉
 
 
 ## 🤝 Contributing
