@@ -3,14 +3,14 @@ set -euo pipefail
 IFS=$'\n\t'
 
 ################################################################################
-# evaluate_tasks.sh
+# run_evaluation.sh
 #
 # A flexible wrapper around lm_eval that splits a comma-separated task list,
 # iterates over each, and handles failures without stopping the entire run.
 # At the end, packages results for submission and cleans up temporary files.
 #
-# Usage: ./evaluate_tasks.sh [options]
-#        ./evaluate_tasks.sh --help    # to show documentation below
+# Usage: ./run_evaluation.sh [options]
+#        ./run_evaluation.sh --help    # to show documentation below
 ################################################################################
 
 # Print usage/help information
@@ -27,10 +27,10 @@ Model / runtime options:
   -m, --model ENGINE          lm_eval engine (hf | vllm | local-chat-completions)
   -a, --model_args ARGS       comma-separated key=val pairs for model init
   -g, --gen_kwargs JSON       comma-separated key=val pairs for generation kwargs
-  -d, --device DEVICE         cuda | cpu (overrides --device)
+  -d, --device DEVICE         cuda | cpu
   -b, --batch_size SIZE       integer or "auto"
   -v, --verbosity LEVEL       DEBUG | INFO | WARNING | ERROR
-      --compute_metrics       disable --predict_only (compute metrics instead)
+      --compute_metrics       disable --predict_only (compute metrics instead of bypass)
       --no_logs               disable --log_samples (skip logging inputs/outputs)
       --use_cache PATH        enable --use_cache PATH (cache intermediate results)
       --trust_remote_code     pass --trust_remote_code into models or datasets init
@@ -38,20 +38,32 @@ Model / runtime options:
   -h, --help                  show this help message and exit
 
 Examples:
+  # All tasks, hf, one GPU:
+  bash scripts/run_evaluation.sh \
+    --model_args "pretrained=Qwen/Qwen2.5-0.5B-Instruct,dtype=bfloat16" \
+    --output_path ./mera_code_results/Qwen2.5-0.5B-Instruct
+
   # Custom tasks, vllm, two GPUs:
   CUDA_VISIBLE_DEVICES="0,1" bash scripts/run_evaluation.sh \
     --tasks rucodeeval,realcode \
     --model vllm
     --model_args "pretrained=Qwen/Qwen2.5-0.5B-Instruct,tensor_parallel_size=2" \
-    --output_path ./mera_code_results
+    --output_path ./mera_code_results/Qwen2.5-0.5B-Instruct
 
   # All tasks, API, save cache:
   OPENAI_API_KEY="..." bash scripts/run_evaluation.sh \
     --model openai-chat-completions
     --device cpu
     --model_args "model=gpt-4o,num_concurrent=8,timeout=90000" \
-    --output_path ./mera_code_results
+    --output_path ./mera_code_results/gpt-4o
     --use_cache ./models_cache/gpt-4o
+  
+  # All tasks, vllm serve:
+  bash scripts/run_evaluation.sh \
+    --model local-chat-completions
+    --device cpu
+    --model_args "model=Qwen/Qwen2.5-0.5B-Instruct,num_concurrent=8,timeout=200,base_url=http://localhost:8888/v1/chat/completions" \
+    --output_path ./mera_code_results/Qwen2.5-0.5B-Instruct
 
 EOF
   exit 1
