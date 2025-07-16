@@ -65,15 +65,18 @@ cd MERA_CODE
 
  
 Now there are two evaluation regimes:
-1. **Remote Scoring** (default): quick setup for cloud-based scoring — install only core dependencies, run the evaluation, and submit resulting ZIP-archive to our website to get the score. You will not get the metrics even for public datasets (for each dataset you will see "bypass" placeholder instead of actual metrics) in terminal.
+
+### Remote Scoring
+
+**Remote Scoring** (default): quick setup for cloud-based scoring — install only core dependencies, run the evaluation, and submit resulting ZIP-archive to our website to get the score. 
+
+> You will not get the metrics even for public datasets (for each dataset you will see "bypass" placeholder instead of actual metrics) in terminal.
 
 <details>
 <summary>
 Details on Remote Scoring
 </summary>
-> Just install only those libraries that are required to get the model's generations (answers for the queries of each task). 
-> All answers are packed in a zip archive that is uploaded into the submission form on the website. Then the remote deploy makes all the scoring in an isolated environment. 
-> The mtrics will appear on the submission page in your account once the scoring is over.
+Just install only those libraries that are required to get the model's generations (answers for the queries of each task). 
 </details>
 
 ```bash
@@ -112,18 +115,23 @@ bash scripts/run_evaluation.sh \
     --output_path "./results/Qwen2.5-0.5B-Instruct"
 ```
 
-2. **Local Scoring** (optional): full setup for on-premise evaluation — install extra dependencies with metrics and runing Docker containers. Available only for Public sets. Make sure you have a stable internet connection, enough disk space, and CPU resources.
+### Local Scoring
+
+**Local Scoring** (optional): full setup for on-premise evaluation — install extra dependencies with metrics and runing Docker containers. Available only for Public sets. 
+
+> Make sure you have a stable internet connection, enough disk space, and CPU resources.
 
 <details>
 <summary>
 Details on Local Scoring
 </summary>
-> This regime assumes that you want to get the metrics for all public tasks of MERA Code. 
-> Keep in mind that evaluation of RealCode, RealCodeJava, JavaTestGen assumes running hundreds of docker containers. Each one assumes to get one CPU to function correctly. YABLoCo also requires lots of resources and time. 
+
+Evaluation of RealCode, RealCodeJava, JavaTestGen assumes running hundreds of docker containers. Each one assumes to get one CPU to function correctly. YABLoCo also requires lots of resources and time. 
 
 If you are running the evaluation from inside the Docker container the integrity of the local scoring is not guaranteed (and [this is also not recommended at all](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)). 
 
 Even without Docker-in-Docker issue, being short in resources means that although you would get the metrics, they would definitely be lower than those computed in the environment that fits the scoring in terms of resources.
+
 </details>
 
 ```bash
