@@ -76,7 +76,9 @@ Now you choose one of two evaluation regimes depending on whether you want to ge
 Details on Remote Scoring
 </summary>
 
-<p>> Just install only those libraries that are required to get the model's generations (answers for the queries of each task).</p>
+<mark>
+> Just install only those libraries that are required to get the model's generations (answers for the queries of each task).
+</mark>
 
 </details>
 
