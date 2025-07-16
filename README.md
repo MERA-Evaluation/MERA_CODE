@@ -63,8 +63,7 @@ git clone --recurse-submodules https://github.com/MERA-Evaluation/MERA_CODE.git
 cd MERA_CODE
 ```
 
- 
-Now there are two evaluation regimes:
+Now you choose one of two evaluation regimes depending on whether you want to get the metrics for public tasks locally or intend to use our remote scoring via website.
 
 ### Remote Scoring
 
@@ -76,8 +75,14 @@ Now there are two evaluation regimes:
 <summary>
 Details on Remote Scoring
 </summary>
-Just install only those libraries that are required to get the model's generations (answers for the queries of each task). 
+
+```text
+> Just install only those libraries that are required to get the model's generations (answers for the queries of each task).
+```
+
 </details>
+
+
 
 ```bash
 bash scripts/install_dependencies.sh
@@ -126,13 +131,17 @@ bash scripts/run_evaluation.sh \
 Details on Local Scoring
 </summary>
 
-Evaluation of RealCode, RealCodeJava, JavaTestGen assumes running hundreds of docker containers. Each one assumes to get one CPU to function correctly. YABLoCo also requires lots of resources and time. 
+```text
+> Evaluation of RealCode, RealCodeJava, JavaTestGen assumes running hundreds of docker containers. Each one assumes to get one CPU to function correctly. YABLoCo also requires lots of resources and time. 
 
-If you are running the evaluation from inside the Docker container the integrity of the local scoring is not guaranteed (and [this is also not recommended at all](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)). 
+> If you are running the evaluation from inside the Docker container the integrity of the local scoring is not guaranteed (and [this is also not recommended at all](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)). 
 
-Even without Docker-in-Docker issue, being short in resources means that although you would get the metrics, they would definitely be lower than those computed in the environment that fits the scoring in terms of resources.
+> Even without Docker-in-Docker issue, being short in resources means that although you would get the metrics, they would definitely be lower than those computed in the environment that fits the scoring in terms of resources.
+```
 
 </details>
+
+
 
 ```bash
 bash scripts/install_dependencies.sh --local_scoring
