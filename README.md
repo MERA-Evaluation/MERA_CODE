@@ -242,7 +242,7 @@ We are interested in improving the MERA Code and invite the community to contrib
 Distributed under the MIT License. See LICENSE for details.
 
 
-## Cite as
+## 📑 Cite as
 
 ```
 @misc{chervyakov2025meracodeunifiedframework,
