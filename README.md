@@ -206,7 +206,7 @@ Follow these steps to see your model on the Leaderboard:
 
 1. **Run Remote Scoring**  
  Evaluate the benchmark in the **Remote Scoring** regime (see [🛠 Getting Started](#evaluation) above). You may run **Local Scoring**, but you will have to wait twice for submission scoring.
-   > You’ll end up with a logs folder **and** a ready-to-submit zip archive like `Qwen2.5-0.5B-Instruct_submission.zip`.
+ > You’ll end up with a logs folder **and** a ready-to-submit zip archive like `Qwen2.5-0.5B-Instruct_submission.zip`.
 
 2. **Submit on the website**  
  Head over to [Create Submission](https://dev.score.mlrnd.ru/en/code/submits/create), upload the archive, and move on to the form.
@@ -216,7 +216,7 @@ Follow these steps to see your model on the Leaderboard:
 
 4. **Wait for Scoring** ⏳  
  Scoring usually wraps up in **~2 hours**. There is a progress bar to track the scoring process. 
-   > Keep in mind that if you submit more than one archive, they are scored sequentially, one after another (not in parallel).
+ > Keep in mind that if you submit more than one archive, they are scored sequentially, one after another (not in parallel).
 
 5. **Publish your result**  
  Once scoring finishes, click **"Submit for moderation"**. After approval, your model goes **Public** and appears on the [Leaderboard](https://dev.score.mlrnd.ru/en/code/leaderboard).  
