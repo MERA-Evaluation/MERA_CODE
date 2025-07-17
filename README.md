@@ -241,3 +241,40 @@ We are interested in improvement of MERA Code and inviting the community to cont
 
 Distributed under the MIT License. See LICENSE for details.
 
+
+## Cite as
+
+```
+@misc{chervyakov2025meracodeunifiedframework,
+      title={MERA Code: A Unified Framework for Evaluating Code Generation Across Tasks}, 
+      author={Artem Chervyakov and 
+        Alexander Kharitonov and 
+        Pavel Zadorozhny and 
+        Adamenko Pavel and 
+        Rodion Levichev and 
+        Dmitrii Vorobev and 
+        Dmitrii Salikhov and 
+        Aidar Valeev and 
+        Alena Pestova and 
+        Maria Dziuba and 
+        Ilseyar Alimova and 
+        Artem Zavgorodnev and 
+        Aleksandr Medvedev and 
+        Stanislav Moiseev and 
+        Elena Bruches and 
+        Daniil Grebenkin and 
+        Roman Derunets and 
+        Vikulov Vladimir and 
+        Anton Emelyanov and 
+        Dmitrii Babaev and 
+        Vladimir V. Ivanov and 
+        Valentin Malykh and 
+        Alena Fenogenova},
+      year={2025},
+      eprint={2507.12284},
+      archivePrefix={arXiv},
+      primaryClass={cs.SE},
+      url={https://arxiv.org/abs/2507.12284}, 
+}
+```
+
