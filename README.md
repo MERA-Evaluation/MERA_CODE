@@ -277,4 +277,6 @@ Distributed under the MIT License. See LICENSE for details.
       url={https://arxiv.org/abs/2507.12284}, 
 }
 ```
+> Read the paper on [arXiv](https://arxiv.org/abs/2507.12284)
+
 
