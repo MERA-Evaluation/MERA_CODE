@@ -34,6 +34,7 @@ Model / runtime options:
       --no_logs               disable --log_samples (skip logging inputs/outputs)
       --use_cache PATH        enable --use_cache PATH (cache intermediate results)
       --trust_remote_code     pass --trust_remote_code into models or datasets init
+      --no_chat_template      disables chat_template usage for model evaluation
   -o, --output_path DIR       directory for logs & results (default: "./results")
   -h, --help                  show this help message and exit
 
@@ -64,6 +65,12 @@ Examples:
     --device cpu
     --model_args "model=Qwen/Qwen2.5-0.5B-Instruct,num_concurrent=8,timeout=200,base_url=http://localhost:8888/v1/chat/completions" \
     --output_path ./mera_code_results/Qwen2.5-0.5B-Instruct
+  
+  # All tasks, pre-trained (base, no chat template) model:
+  bash scripts/run_evaluation.sh \
+    --model_args "pretrained=bigcode/starcoder2-7b,dtype=auto" \
+    --output_path ./mera_code_results/starcoder2-7b
+    --no_chat_template
 
 EOF
   exit 1
@@ -100,7 +107,8 @@ PREDICT_ONLY=true            # include --predict_only by default
 LOG_SAMPLES=true             # include --log_samples by default
 USE_CACHE_PATH=""            # path for --use_cache (optional)
 OUTPUT_PATH="./results"      # output/ log directory (required)
-TRUST_REMOTE_CODE=false
+TRUST_REMOTE_CODE=false      # include --trust_remote_code by default
+CHAT_TEMPLATE=true           # include --apply_chat_template and --fewshot_as_multiturn by default
 
 ################################################################################
 # Parse command-line arguments
@@ -117,6 +125,7 @@ while [[ $# -gt 0 ]]; do
     --compute_metrics)       PREDICT_ONLY=false; shift;;
     --no_log_samples)        LOG_SAMPLES=false; shift;;
     --trust_remote_code)     TRUST_REMOTE_CODE=true; shift;;
+    --no_chat_template)      CHAT_TEMPLATE=false; shift;;
     --use_cache)             USE_CACHE_PATH="$2"; shift 2;;
     -o|--output_path)        OUTPUT_PATH="$2"; shift 2;;
     -h|--help)               usage;;
@@ -162,6 +171,7 @@ COMMON_FLAGS=(
 $PREDICT_ONLY       && COMMON_FLAGS+=(--predict_only)
 $LOG_SAMPLES        && COMMON_FLAGS+=(--log_samples)
 $TRUST_REMOTE_CODE  && COMMON_FLAGS+=(--trust_remote_code)
+$CHAT_TEMPLATE      && COMMON_FLAGS+=(--apply_chat_template --fewshot_as_multiturn)
 
 COMMON_FLAGS+=(
   --seed          "$SEED"
@@ -188,6 +198,7 @@ echo "  verbosity:           $VERBOSITY"
 echo "  include_path:        $INCLUDE_PATH"
 echo "  output_path:         $OUTPUT_PATH"
 echo "  trust_remote_code:   $TRUST_REMOTE_CODE"
+echo "  chat_template:       $CHAT_TEMPLATE
 [[ -n "$USE_CACHE_PATH" ]] && echo "  use_cache:           $USE_CACHE_PATH"
 echo
 
