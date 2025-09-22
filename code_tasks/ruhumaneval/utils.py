@@ -71,6 +71,8 @@ def preprocess_generation(text: str, language: str = "python"):
         r"(?P<start>^```(?P<block_language>(\w|-)+)\n)(?P<code>.*?\n)(?P<end>```)",
         re.DOTALL | re.MULTILINE,
     )
+    if text is None:
+        text = ""
     blocks = [
         (match.group("block_language"), match.group("code"))
         for match in regex.finditer(text)
