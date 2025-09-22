@@ -52,6 +52,31 @@ class Task:
     left_context: str
     right_context: str
 
+def doc_to_text_fg_right_context(doc: Dict[str, Any]) -> str:
+    """
+    Extracts foreground text from a document.
+
+    Parameters
+    ----------
+    doc : dict
+        Document containing at least 'left_context'.
+
+    Returns
+    -------
+    str
+        The extracted foreground text.
+    """
+    meta = doc.get("meta", {})
+    
+    left_context = meta.get("left_context", "")
+    right_context = meta.get("right_context", "")
+    insert_token = "        # === ТВОЙ КОД ==="
+    
+    combined_context = f"\n{left_context.rstrip()}\n{insert_token}\n{right_context.lstrip()}\n"
+    
+    prompt = doc['instruction'].format(left_context=combined_context)
+    
+    return prompt
 
 def doc_to_text_fg(doc: Dict[str, Any]) -> str:
     """
