@@ -81,16 +81,17 @@ EOF
 ################################################################################
 DEFAULT_TASK_LIST=(
   rucodeeval
-  codelintereval
-  rucodereviewer
   ruhumaneval
-  strucom
-  unittests
-  codecorrectness
-  realcode
-  realcodejava
-  javatestgen
-  yabloco
+  # codelintereval
+  # rucodereviewer
+  # ruhumaneval
+  # strucom
+  # unittests
+  # codecorrectness
+  # realcode
+  # realcodejava
+  # javatestgen
+  # yabloco
 )
 
 ################################################################################
@@ -198,7 +199,7 @@ echo "  verbosity:           $VERBOSITY"
 echo "  include_path:        $INCLUDE_PATH"
 echo "  output_path:         $OUTPUT_PATH"
 echo "  trust_remote_code:   $TRUST_REMOTE_CODE"
-echo "  chat_template:       $CHAT_TEMPLATE
+echo "  chat_template:       $CHAT_TEMPLATE"
 [[ -n "$USE_CACHE_PATH" ]] && echo "  use_cache:           $USE_CACHE_PATH"
 echo
 
