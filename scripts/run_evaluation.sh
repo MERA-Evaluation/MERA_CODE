@@ -82,16 +82,16 @@ EOF
 DEFAULT_TASK_LIST=(
   rucodeeval
   ruhumaneval
-  # codelintereval
-  # rucodereviewer
-  # ruhumaneval
-  # strucom
-  # unittests
-  # codecorrectness
-  # realcode
-  # realcodejava
-  # javatestgen
-  # yabloco
+  codelintereval
+  rucodereviewer
+  ruhumaneval
+  strucom
+  unittests
+  codecorrectness
+  realcode
+  realcodejava
+  javatestgen
+  yabloco
 )
 
 ################################################################################
