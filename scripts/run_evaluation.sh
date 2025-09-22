@@ -81,7 +81,6 @@ EOF
 ################################################################################
 DEFAULT_TASK_LIST=(
   rucodeeval
-  ruhumaneval
   codelintereval
   rucodereviewer
   ruhumaneval
