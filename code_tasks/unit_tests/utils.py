@@ -102,7 +102,6 @@ def get_code_from_markdown(text: str, language: str = "python") -> list[str]:
 
 def process_results(doc: dict, results: list[str]) -> dict[str, float]:
 
-    # results - двумерный список, распаковываем его
     gen_test = results[0]
     processed_gen_test = get_code_from_markdown(gen_test, doc["inputs"]["language"])
 
