@@ -110,11 +110,8 @@ def get_code_from_markdown(text: str, language: str = "python") -> list[str]:
 
 def process_results(doc: dict, results: list[str]) -> dict[str, float]:
 
-    # results - двумерный список, распаковываем его
-    gen_tests = results[0]
-    processed_gen_tests = [
-        get_code_from_markdown(x, doc["inputs"]["language"]) for x in gen_tests
-    ]
+    gen_test = results[0]
+    processed_gen_test = get_code_from_markdown(gen_test, doc["inputs"]["language"])
 
     if doc["inputs"]["language"] == "csharp":
         lang = "c_sharp"
@@ -124,7 +121,7 @@ def process_results(doc: dict, results: list[str]) -> dict[str, float]:
         lang = doc["inputs"]["language"]
 
     target = doc["outputs"]
-    hyps, refs = processed_gen_tests, [[target] for _ in processed_gen_tests]
+    hyps, refs = [processed_gen_test], [[target]]
     try:
         scores = calc_code_bleu(
             refs=refs, hyps=hyps, params=(0.25, 0.25, 0.25, 0.25), lang=lang
